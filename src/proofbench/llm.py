@@ -16,7 +16,12 @@ from claude_agent_sdk import AssistantMessage, ClaudeAgentOptions, TextBlock, qu
 # Pinned so every run is reproducible (see RunManifest.model): an unpinned
 # "CLI default" model can silently change out from under old runs, breaking
 # CONCEPT.md's replayability success criterion. Override with PROOFBENCH_MODEL.
-DEFAULT_MODEL = "claude-sonnet-5"
+#
+# z-ai/glm-5.2 over OpenRouter: ~10x cheaper than claude-sonnet-5 on this
+# workload (measured ~$0.018 vs ~$0.18 per call) with no observed accuracy
+# loss on the Northstar fixture. Requires OPENROUTER_API_KEY -- a direct
+# ANTHROPIC_API_KEY setup can't reach non-Anthropic models this way.
+DEFAULT_MODEL = "z-ai/glm-5.2"
 
 
 def resolve_model(model: str | None = None) -> str:
