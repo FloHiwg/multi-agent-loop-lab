@@ -14,7 +14,7 @@ from pathlib import Path
 from proofbench.corpus import render_document
 from proofbench.ingest import load_audit_config
 from proofbench.jsonutil import extract_json
-from proofbench.llm import run_agent
+from proofbench.llm import resolve_model, run_agent
 from proofbench.models import AgentRole, Claim, RunManifest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -48,8 +48,9 @@ async def extract_claims_async(audit_id: str) -> list[Claim]:
 
     run_id = f"{audit_id}/extract-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
     started_at = datetime.now(timezone.utc)
+    model = resolve_model()
 
-    reply = await run_agent(SYSTEM_PROMPT, master_text)
+    reply = await run_agent(SYSTEM_PROMPT, master_text, model=model)
     raw_claims = extract_json(reply)
 
     claims: list[Claim] = []
@@ -65,6 +66,7 @@ async def extract_claims_async(audit_id: str) -> list[Claim]:
         run_id=run_id,
         audit_id=audit_id,
         agent_role=AgentRole.CLAIM_EXTRACTOR,
+        model=model,
         started_at=started_at,
         finished_at=datetime.now(timezone.utc),
         input_refs=[config.master_doc_id],

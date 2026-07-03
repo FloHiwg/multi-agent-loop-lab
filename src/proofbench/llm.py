@@ -13,6 +13,15 @@ import os
 
 from claude_agent_sdk import AssistantMessage, ClaudeAgentOptions, TextBlock, query
 
+# Pinned so every run is reproducible (see RunManifest.model): an unpinned
+# "CLI default" model can silently change out from under old runs, breaking
+# CONCEPT.md's replayability success criterion. Override with PROOFBENCH_MODEL.
+DEFAULT_MODEL = "claude-sonnet-5"
+
+
+def resolve_model(model: str | None = None) -> str:
+    return model or os.environ.get("PROOFBENCH_MODEL", DEFAULT_MODEL)
+
 
 def _openrouter_env() -> dict[str, str] | None:
     """Build the env overrides needed to route the Agent SDK through OpenRouter's
@@ -47,7 +56,7 @@ async def run_agent(system_prompt: str, user_prompt: str, *, model: str | None =
         system_prompt=system_prompt,
         allowed_tools=[],
         permission_mode="bypassPermissions",
-        model=model,
+        model=resolve_model(model),
         env=env_overrides or {},
     )
 

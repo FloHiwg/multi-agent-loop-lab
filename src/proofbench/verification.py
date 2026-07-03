@@ -20,7 +20,7 @@ from pathlib import Path
 from proofbench.corpus import render_document
 from proofbench.ingest import load_audit_config
 from proofbench.jsonutil import extract_json
-from proofbench.llm import run_agent
+from proofbench.llm import resolve_model, run_agent
 from proofbench.models import (
     AgentRole,
     Claim,
@@ -79,9 +79,11 @@ def _vault_corpus_text(config) -> str:
     return "\n\n".join(parts)
 
 
-async def verify_claim_async(claim: Claim, vault_text: str, run_id: str) -> tuple[list[EvidenceCandidate], Verdict]:
+async def verify_claim_async(
+    claim: Claim, vault_text: str, run_id: str, *, model: str | None = None
+) -> tuple[list[EvidenceCandidate], Verdict]:
     user_prompt = f"CLAIM:\n{claim.model_dump_json(indent=2)}\n\nVAULT:\n{vault_text}"
-    reply = await run_agent(SYSTEM_PROMPT, user_prompt)
+    reply = await run_agent(SYSTEM_PROMPT, user_prompt, model=model)
     raw = extract_json(reply)
 
     evidence: list[EvidenceCandidate] = []
@@ -112,19 +114,21 @@ async def verify_audit_async(audit_id: str) -> list[Verdict]:
     config = load_audit_config(audit_id)
     vault_text = _vault_corpus_text(config)
     claims = _load_claims(audit_id)
+    model = resolve_model()
 
     verdicts: list[Verdict] = []
     for claim in claims:
         run_id = f"{audit_id}/verify-{claim.claim_id.split('/')[-1]}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
         started_at = datetime.now(timezone.utc)
 
-        evidence, verdict = await verify_claim_async(claim, vault_text, run_id)
+        evidence, verdict = await verify_claim_async(claim, vault_text, run_id, model=model)
         verdicts.append(verdict)
 
         manifest = RunManifest(
             run_id=run_id,
             audit_id=audit_id,
             agent_role=AgentRole.VERIFIER,
+            model=model,
             started_at=started_at,
             finished_at=datetime.now(timezone.utc),
             input_refs=[claim.claim_id],

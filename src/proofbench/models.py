@@ -168,6 +168,7 @@ class RunManifest(BaseModel):
     run_id: str
     audit_id: str
     agent_role: AgentRole
+    model: str
     started_at: datetime
     finished_at: datetime | None = None
     input_refs: list[str] = Field(default_factory=list, description="claim_ids / doc_ids consumed")

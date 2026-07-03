@@ -25,6 +25,10 @@
     "agent_role": {
       "$ref": "#/$defs/AgentRole"
     },
+    "model": {
+      "title": "Model",
+      "type": "string"
+    },
     "started_at": {
       "format": "date-time",
       "title": "Started At",
@@ -106,6 +110,7 @@
     "run_id",
     "audit_id",
     "agent_role",
+    "model",
     "started_at"
   ],
   "title": "RunManifest",
