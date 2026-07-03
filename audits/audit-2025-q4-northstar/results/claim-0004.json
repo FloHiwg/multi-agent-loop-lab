@@ -6,7 +6,7 @@
     "canonical_value": 2100000.0,
     "unit": "currency",
     "currency": "EUR",
-    "entity": "Northstar Analytics",
+    "entity": "Northstar Analytics GmbH",
     "time_scope": "2025-12-31",
     "tolerance_rule": {
       "kind": "exact"
@@ -29,7 +29,7 @@
       "unit": "currency",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.99
+      "extractor_confidence": 0.98
     }
   ],
   "verdict": {
@@ -40,8 +40,8 @@
     ],
     "delta": 0.0,
     "confidence": 0.99,
-    "rationale": "The Q4 2025 Finance Pack's Liquidity table reports 'Cash and cash equivalents' of EUR 2.1000 million as of 31 Dec 2025, matching the claim's EUR 2.10 million exactly.",
+    "rationale": "The Q4 2025 Finance Pack lists Cash and cash equivalents at 31 Dec 2025 as EUR 2.1000 million (EUR 2,100,000), which exactly matches the claim's quarter-end cash figure of EUR 2.10 million.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0004-20260703T095617Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0004-20260703T101619Z"
   }
 }

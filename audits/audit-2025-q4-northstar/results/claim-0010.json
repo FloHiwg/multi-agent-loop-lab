@@ -6,7 +6,7 @@
     "canonical_value": 0.031,
     "unit": "percent",
     "currency": null,
-    "entity": "Northstar Analytics",
+    "entity": "Northstar Analytics GmbH",
     "time_scope": "Q4 2025",
     "tolerance_rule": {
       "kind": "exact"
@@ -28,7 +28,7 @@
       "canonical_value": null,
       "unit": "percent",
       "role": "other",
-      "effective_date": "2026-01-16",
+      "effective_date": "2025-12-31",
       "extractor_confidence": 0.95
     },
     {
@@ -36,14 +36,14 @@
       "claim_id": "audit-2025-q4-northstar/claim-0010",
       "doc_id": "northstar-customer-appendix-q4-2025",
       "page": null,
-      "span_text": "Enterprise total | 126 | 2318400 | 18400 | 2025-12-31 | actual",
+      "span_text": "Enterprise customers Q4 2025 = 126; Q3 2025 = 119 (from ops review). Customer appendix provides period-end customer counts only; no churn, loss, or gross logo churn figure is disclosed.",
       "bbox": null,
       "char_offsets": null,
-      "canonical_value": 126.0,
-      "unit": "customers",
+      "canonical_value": null,
+      "unit": "percent",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.9
+      "extractor_confidence": 0.7
     }
   ],
   "verdict": {
@@ -54,9 +54,9 @@
       "audit-2025-q4-northstar/claim-0010/evidence-002"
     ],
     "delta": null,
-    "confidence": 0.9,
-    "rationale": "The Q4 2025 Operations Review explicitly states no quarterly gross logo churn metric was approved for this review cycle, and the customer appendix provides only period-end customer counts (no logo losses), so 3.1% cannot be confirmed or derived.",
-    "suggested_action": "Ask Northstar revenue operations to supply the underlying logo churn calculation (logos lost / beginning-period logos) before publishing this figure.",
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0010-20260703T095738Z"
+    "confidence": 0.85,
+    "rationale": "The Q4 2025 operations review explicitly states that no quarterly gross logo churn metric was approved for this review cycle, and the customer appendix discloses only period-end customer counts (not lost-logo data needed to derive gross churn), so no vault span confirms or contradicts the claimed 3.1%.",
+    "suggested_action": "Human reviewer should obtain the underlying logo add/loss detail for Q3\u2192Q4 2025 (or the source computation behind 3.1%) since the vault neither reports nor approves this metric.",
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0010-20260703T101644Z"
   }
 }

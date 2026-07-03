@@ -5,7 +5,7 @@
   "canonical_value": 740000.0,
   "unit": "currency",
   "currency": "EUR",
-  "entity": "Northstar Analytics",
+  "entity": "Northstar Analytics GmbH",
   "time_scope": "Q4 2025",
   "tolerance_rule": {
     "kind": "exact"

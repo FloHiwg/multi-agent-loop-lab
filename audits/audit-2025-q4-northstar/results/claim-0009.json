@@ -6,7 +6,7 @@
     "canonical_value": -0.12,
     "unit": "percent_change",
     "currency": null,
-    "entity": "Northstar Analytics",
+    "entity": "Northstar Analytics GmbH",
     "time_scope": "Q4 2025 vs Q3 2025",
     "tolerance_rule": {
       "kind": "exact"
@@ -22,14 +22,14 @@
       "claim_id": "audit-2025-q4-northstar/claim-0009",
       "doc_id": "northstar-ops-q4-2025",
       "page": 1,
-      "span_text": "Tickets opened 1,100 1,250 -150 ... The quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%.",
+      "span_text": "Tickets opened 1,100 (Q4 2025) vs 1,250 (Q3 2025), change -150. The quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%.",
       "bbox": null,
       "char_offsets": null,
       "canonical_value": -0.12,
       "unit": "percent_change",
       "role": "actual",
       "effective_date": "2026-01-16",
-      "extractor_confidence": 0.99
+      "extractor_confidence": 0.98
     }
   ],
   "verdict": {
@@ -39,9 +39,9 @@
       "audit-2025-q4-northstar/claim-0009/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.99,
-    "rationale": "The Q4 2025 Operations Review states tickets opened fell from 1,250 (Q3) to 1,100 (Q4) and explicitly computes the quarter-over-quarter change as -12.0%, exactly matching the claim.",
+    "confidence": 0.98,
+    "rationale": "The Q4 2025 Operations Review explicitly states tickets opened declined from 1,250 in Q3 to 1,100 in Q4, computing the QoQ change as (1,100-1,250)/1,250 = -12.0%, exactly matching the claim.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0009-20260703T095728Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0009-20260703T101644Z"
   }
 }

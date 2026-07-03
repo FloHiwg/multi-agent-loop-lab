@@ -6,7 +6,7 @@
     "canonical_value": 4280000.0,
     "unit": "currency",
     "currency": "EUR",
-    "entity": "Northstar Analytics",
+    "entity": "Northstar Analytics GmbH",
     "time_scope": "Q4 2025",
     "tolerance_rule": {
       "kind": "exact"
@@ -26,10 +26,10 @@
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 4280000.0,
-      "unit": "EUR million",
+      "unit": "currency",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.99
+      "extractor_confidence": 0.95
     }
   ],
   "verdict": {
@@ -39,9 +39,9 @@
       "audit-2025-q4-northstar/claim-0001/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.99,
-    "rationale": "The Q4 2025 Finance Pack income statement reports Revenue of EUR 4.2800 million for Q4 2025 actual, which equals the claimed EUR 4.28 million exactly after unit normalization.",
+    "confidence": 0.95,
+    "rationale": "The Q4 2025 finance pack lists Revenue actual at 4.2800 million EUR, matching the claim's EUR 4.28 million exactly after unit normalization.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0001-20260703T095527Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0001-20260703T101619Z"
   }
 }

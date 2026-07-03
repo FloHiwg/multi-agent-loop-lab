@@ -6,8 +6,8 @@
     "canonical_value": 1.08,
     "unit": "percent",
     "currency": null,
-    "entity": "Northstar Analytics",
-    "time_scope": "Trailing 12 months",
+    "entity": "Northstar Analytics GmbH",
+    "time_scope": "Trailing 12 months ending 2025-12-31",
     "tolerance_rule": {
       "kind": "exact"
     },
@@ -40,8 +40,8 @@
     ],
     "delta": 0.02,
     "confidence": 0.9,
-    "rationale": "The operations review reports Q4 2025 net revenue retention on a trailing 12-month cohort basis as 106.0%, contradicting the master document's claimed 108.0%. The customer appendix contains no net revenue retention figure despite being the expected evidence type.",
-    "suggested_action": "Reconcile the 2-percentage-point discrepancy between the master document (108.0%) and the operations review (106.0%), and confirm the correct cohort definition before publishing.",
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0007-20260703T095654Z"
+    "rationale": "The operations review reports Q4 2025 net revenue retention of 106.0% on a trailing 12-month cohort basis, which is 2 percentage points below the master document's claimed 108.0%.",
+    "suggested_action": "Reconcile the master document's 108.0% figure against the operations review's 106.0%; determine whether the master value is a typo, a different methodology, or drawn from a superseded source.",
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0007-20260703T101633Z"
   }
 }
