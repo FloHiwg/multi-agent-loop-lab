@@ -1,17 +1,20 @@
-"""Thin wrapper around the Claude Agent SDK for one-shot, tool-free agent calls.
+"""Thin wrapper around the Claude Agent SDK for bounded, tool-scoped agent calls.
 
-Every Proofbench agent (Claim Extractor, Verifier) is a single stateless
-query: fixed system prompt in, JSON text out, parsed and validated by the
-caller against a Pydantic model. None of them get file or shell tools --
-CONCEPT.md's bounded-worker design means these agents read what they're
-handed and return typed output, nothing else.
+Every Proofbench agent (Claim Extractor, Verifier) is one stateless
+query() session: fixed system prompt in, JSON text out, parsed and
+validated by the caller against a Pydantic model. They may be handed a
+small set of read-only search/read tools scoped to one document `kind`
+(see tools.py) -- never file or shell tools. The tool-execution loop
+(calling a tool, feeding the result back, deciding the next step) is
+handled entirely by the Claude Code runtime underneath query(); this
+wrapper just waits for the final turn's text.
 """
 
 from __future__ import annotations
 
 import os
 
-from claude_agent_sdk import AssistantMessage, ClaudeAgentOptions, TextBlock, query
+from claude_agent_sdk import AssistantMessage, ClaudeAgentOptions, McpSdkServerConfig, TextBlock, query
 
 # Pinned so every run is reproducible (see RunManifest.model): an unpinned
 # "CLI default" model can silently change out from under old runs, breaking
@@ -44,8 +47,21 @@ def _openrouter_env() -> dict[str, str] | None:
     }
 
 
-async def run_agent(system_prompt: str, user_prompt: str, *, model: str | None = None) -> str:
-    """Send one stateless prompt to Claude and return the concatenated text reply.
+async def run_agent(
+    system_prompt: str,
+    user_prompt: str,
+    *,
+    model: str | None = None,
+    mcp_servers: dict[str, McpSdkServerConfig] | None = None,
+    allowed_tools: list[str] | None = None,
+) -> str:
+    """Run one bounded agent session and return the final turn's text reply.
+
+    With no mcp_servers/allowed_tools, this is a plain one-shot call (no
+    tools granted). With them, the model may call tools across several
+    turns before its final answer -- only the last AssistantMessage's text
+    is returned, since intermediate turns may carry commentary alongside
+    tool calls rather than the final JSON answer.
 
     Raises RuntimeError if no credentials (OPENROUTER_API_KEY or an ambient
     ANTHROPIC_API_KEY) are available.
@@ -59,16 +75,17 @@ async def run_agent(system_prompt: str, user_prompt: str, *, model: str | None =
 
     options = ClaudeAgentOptions(
         system_prompt=system_prompt,
-        allowed_tools=[],
+        allowed_tools=allowed_tools or [],
+        mcp_servers=mcp_servers or {},
         permission_mode="bypassPermissions",
         model=resolve_model(model),
         env=env_overrides or {},
     )
 
-    chunks: list[str] = []
+    final_text = ""
     async for message in query(prompt=user_prompt, options=options):
         if isinstance(message, AssistantMessage):
-            for block in message.content:
-                if isinstance(block, TextBlock):
-                    chunks.append(block.text)
-    return "".join(chunks)
+            texts = [block.text for block in message.content if isinstance(block, TextBlock)]
+            if texts:
+                final_text = "".join(texts)
+    return final_text

@@ -1,29 +1,39 @@
-"""Claim Extractor agent: master document text -> typed, schema-valid Claim objects.
+"""Claim Extractor agent: master document -> typed, schema-valid Claim objects.
 
-Bounded per CONCEPT.md §6: this agent reads one document and emits claims or
-nothing. It does not decide verdicts and does not see the vault.
+Bounded per CONCEPT.md §6: this agent gets read-only search/read tools
+scoped to the master document only (see tools.py) -- it explores the
+document itself, coding-agent style, rather than receiving the whole text
+dumped into its prompt. It does not decide verdicts and cannot see the
+vault; that bound comes from which tools it's handed, not from prompting.
 """
 
 from __future__ import annotations
 
 import asyncio
-import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from proofbench.corpus import render_document
+from proofbench.index_db import db_path
 from proofbench.ingest import load_audit_config
 from proofbench.jsonutil import extract_json
 from proofbench.llm import resolve_model, run_agent
 from proofbench.models import AgentRole, Claim, RunManifest
+from proofbench.tools import allowed_tool_names, build_server
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+SERVER_NAME = "proofbench_master"
 
 SYSTEM_PROMPT = """\
 You are the Claim Extractor agent in Proofbench, an audit workbench.
 
-Read the master document text you are given and split it into atomic,
-independently verifiable numeric claims. A claim is one number with a clear
+You have read-only tools to explore the master document:
+- list_documents: find the master document and see what locations it has
+- read_span: read the full text of a page or table row
+- search_vault / search_facts: search within the master document if it's long
+
+Start by calling list_documents to find the master doc_id and its locations,
+then read through it (read_span each location) to find every atomic,
+independently verifiable numeric claim. A claim is one number with a clear
 meaning -- do not combine two figures into one claim, and do not editorialize.
 
 For each claim, output an object with exactly these fields:
@@ -38,19 +48,29 @@ For each claim, output an object with exactly these fields:
   (e.g. "finance_pack", "operations_review", "customer_appendix"), or null if unclear
 - source_page: the page number in the master document this came from, or null
 
-Respond with ONLY a JSON array of these objects. No prose, no markdown fences.
+Once you've read the whole document, respond with ONLY a JSON array of these
+objects as your final answer. No prose, no markdown fences.
 """
 
 
 async def extract_claims_async(audit_id: str) -> list[Claim]:
+    if not db_path(audit_id).exists():
+        raise FileNotFoundError(f"{db_path(audit_id)} not found -- run `proofbench index {audit_id}` first")
+
     config = load_audit_config(audit_id)
-    master_text = render_document(config.master_doc_id)
+    model = resolve_model()
+    server = build_server(audit_id, "master", SERVER_NAME)
 
     run_id = f"{audit_id}/extract-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
     started_at = datetime.now(timezone.utc)
-    model = resolve_model()
 
-    reply = await run_agent(SYSTEM_PROMPT, master_text, model=model)
+    reply = await run_agent(
+        SYSTEM_PROMPT,
+        "Extract all atomic numeric claims from the master document.",
+        model=model,
+        mcp_servers={SERVER_NAME: server},
+        allowed_tools=allowed_tool_names(SERVER_NAME),
+    )
     raw_claims = extract_json(reply)
 
     claims: list[Claim] = []

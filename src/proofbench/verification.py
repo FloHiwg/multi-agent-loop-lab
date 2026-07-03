@@ -1,10 +1,12 @@
-"""Vault Retriever + Verifier, combined for v1.
+"""Vault Retriever + Verifier, combined into one tool-equipped agent.
 
-CONCEPT.md splits retrieval and verification into separate agents, but with
-a vault of a handful of documents, full-text search adds no recall over
-just handing the Verifier the whole corpus (see CONCEPT.md open question
-#3). Split this into a real retrieval step once the vault is too large to
-fit in one prompt.
+CONCEPT.md splits retrieval and verification into separate agents; here
+they're one agent that searches the vault itself via tools scoped to
+vault-kind documents (see tools.py) -- full-text search_vault plus the
+structured search_facts entity/attribute graph, coding-agent style,
+rather than the whole corpus stuffed into the prompt. Split retrieval into
+its own agent only if verification quality suggests the search step itself
+needs different judgment than the compare-and-decide step.
 
 The Verifier never decides alone in the product sense -- everything short
 of `supported` lands in review_queue/ for a human.
@@ -17,8 +19,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from proofbench.corpus import render_document
-from proofbench.ingest import load_audit_config
+from proofbench.index_db import db_path
 from proofbench.jsonutil import extract_json
 from proofbench.llm import resolve_model, run_agent
 from proofbench.models import (
@@ -29,16 +30,27 @@ from proofbench.models import (
     Verdict,
     VerdictStatus,
 )
+from proofbench.tools import allowed_tool_names, build_server
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+SERVER_NAME = "proofbench_vault"
 
 SYSTEM_PROMPT = """\
 You are the Verifier agent in Proofbench, an audit workbench.
 
-You are given one numeric claim from a master document, and the full text
-of the vault (all basis/support documents). Find every span in the vault
-that is relevant to this claim -- supporting, contradicting, or otherwise
-bearing on it -- and decide a verdict.
+You are given one numeric claim from a master document. You have read-only
+tools to search the vault (all basis/support documents):
+- list_documents: see what vault documents exist and their locations
+- search_facts: structured search over extracted entity/attribute/value facts
+  (e.g. entity="Revenue", attribute="Q4 2025 actual") -- prefer this for
+  precise numeric lookups
+- search_vault: full-text search over document contents
+- read_span: read the full text of a specific location
+
+Use these tools to find every span relevant to this claim -- supporting,
+contradicting, or otherwise bearing on it -- before deciding a verdict.
+Search under a few different phrasings/entities if your first search finds
+nothing; only conclude missing_evidence after making a genuine effort.
 
 Comparison rules:
 - exact match: values must be equal after unit/currency normalization
@@ -67,23 +79,24 @@ Then output a verdict object with:
 - rationale (one or two sentences)
 - suggested_action (one sentence on what a human reviewer should do next, or null if status is "supported")
 
-Respond with ONLY a JSON object: {"evidence": [...], "verdict": {...}}.
+Once you've searched enough to be confident, respond with ONLY a JSON object
+as your final answer: {"evidence": [...], "verdict": {...}}.
 No prose, no markdown fences.
 """
 
 
-def _vault_corpus_text(config) -> str:
-    from proofbench.models import DocumentKind
-
-    parts = [render_document(doc.doc_id) for doc in config.documents if doc.kind == DocumentKind.VAULT]
-    return "\n\n".join(parts)
-
-
 async def verify_claim_async(
-    claim: Claim, vault_text: str, run_id: str, *, model: str | None = None
+    claim: Claim, audit_id: str, run_id: str, *, model: str | None = None
 ) -> tuple[list[EvidenceCandidate], Verdict]:
-    user_prompt = f"CLAIM:\n{claim.model_dump_json(indent=2)}\n\nVAULT:\n{vault_text}"
-    reply = await run_agent(SYSTEM_PROMPT, user_prompt, model=model)
+    server = build_server(audit_id, "vault", SERVER_NAME)
+    user_prompt = f"CLAIM:\n{claim.model_dump_json(indent=2)}"
+    reply = await run_agent(
+        SYSTEM_PROMPT,
+        user_prompt,
+        model=model,
+        mcp_servers={SERVER_NAME: server},
+        allowed_tools=allowed_tool_names(SERVER_NAME),
+    )
     raw = extract_json(reply)
 
     evidence: list[EvidenceCandidate] = []
@@ -111,8 +124,9 @@ async def verify_claim_async(
 
 
 async def verify_audit_async(audit_id: str) -> list[Verdict]:
-    config = load_audit_config(audit_id)
-    vault_text = _vault_corpus_text(config)
+    if not db_path(audit_id).exists():
+        raise FileNotFoundError(f"{db_path(audit_id)} not found -- run `proofbench index {audit_id}` first")
+
     claims = _load_claims(audit_id)
     model = resolve_model()
 
@@ -121,7 +135,7 @@ async def verify_audit_async(audit_id: str) -> list[Verdict]:
         run_id = f"{audit_id}/verify-{claim.claim_id.split('/')[-1]}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
         started_at = datetime.now(timezone.utc)
 
-        evidence, verdict = await verify_claim_async(claim, vault_text, run_id, model=model)
+        evidence, verdict = await verify_claim_async(claim, audit_id, run_id, model=model)
         verdicts.append(verdict)
 
         manifest = RunManifest(
