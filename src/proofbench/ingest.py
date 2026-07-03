@@ -31,11 +31,26 @@ def parse_pdf(path: Path) -> dict:
     tables = []
     with fitz.open(path) as pdf:
         for page_number, page in enumerate(pdf, start=1):
-            pages.append({"page": page_number, "text": page.get_text()})
+            pages.append(
+                {
+                    "page": page_number,
+                    "text": page.get_text(),
+                    "width": page.rect.width,
+                    "height": page.rect.height,
+                }
+            )
             for table_index, table in enumerate(page.find_tables().tables, start=1):
                 rows = table.extract()
                 if rows:
-                    tables.append({"page": page_number, "table_index": table_index, "rows": rows})
+                    tables.append(
+                        {
+                            "page": page_number,
+                            "table_index": table_index,
+                            "rows": rows,
+                            # one bbox per row in `rows`, same indexing (row 0 = header)
+                            "row_bboxes": [list(row.bbox) for row in table.rows],
+                        }
+                    )
     return {"pages": pages, "tables": tables}
 
 

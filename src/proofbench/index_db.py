@@ -12,6 +12,12 @@ from vault/ directly -- ingest is the only thing that reads raw documents):
   refs). This is what lets an agent ask "all actuals for Northstar Q4"
   instead of only keyword matches.
 
+There's also a `locations` table -- doc_id + location -> page + bounding
+box, from PyMuPDF's per-row table bboxes -- that the workbench UI's
+Document view uses to draw real highlight boxes over a rendered page
+image (web/api.py's document-view endpoints), rather than guessing where
+a claim or evidence span sits on the page.
+
 Tool functions in tools.py query this database; nothing else should.
 """
 
@@ -43,6 +49,22 @@ CREATE TABLE facts (
     entity TEXT NOT NULL,
     attribute TEXT NOT NULL,
     value TEXT NOT NULL
+);
+
+CREATE TABLE locations (
+    doc_id TEXT NOT NULL,
+    location TEXT NOT NULL,
+    page INTEGER,
+    bbox_json TEXT,
+    PRIMARY KEY (doc_id, location)
+);
+
+CREATE TABLE pages (
+    doc_id TEXT NOT NULL,
+    page INTEGER NOT NULL,
+    width REAL NOT NULL,
+    height REAL NOT NULL,
+    PRIMARY KEY (doc_id, page)
 );
 """
 
@@ -82,9 +104,18 @@ def _index_pdf(conn: sqlite3.Connection, doc_id: str, parsed: dict) -> None:
             "INSERT INTO spans_fts (doc_id, location, text) VALUES (?, ?, ?)",
             (doc_id, f"page:{page['page']}", page["text"]),
         )
+        conn.execute(
+            "INSERT INTO locations (doc_id, location, page, bbox_json) VALUES (?, ?, ?, NULL)",
+            (doc_id, f"page:{page['page']}", page["page"]),
+        )
+        conn.execute(
+            "INSERT INTO pages (doc_id, page, width, height) VALUES (?, ?, ?, ?)",
+            (doc_id, page["page"], page["width"], page["height"]),
+        )
 
     for table in parsed.get("tables", []):
         rows = table["rows"]
+        row_bboxes = table.get("row_bboxes", [])
         if len(rows) < 2:
             continue
         header, data_rows = rows[0], rows[1:]
@@ -95,7 +126,7 @@ def _index_pdf(conn: sqlite3.Connection, doc_id: str, parsed: dict) -> None:
         # indexed either way, since it's valid full-text search material.
         has_header = len(header) >= 3
         location_prefix = f"page:{table['page']}/table:{table['table_index']}"
-        for row in data_rows:
+        for row_index, row in enumerate(data_rows, start=1):
             entity = str(row[0] or "").strip()
             if not entity:
                 continue
@@ -104,6 +135,11 @@ def _index_pdf(conn: sqlite3.Connection, doc_id: str, parsed: dict) -> None:
             conn.execute(
                 "INSERT INTO spans_fts (doc_id, location, text) VALUES (?, ?, ?)",
                 (doc_id, row_location, row_text),
+            )
+            bbox = row_bboxes[row_index] if row_index < len(row_bboxes) else None
+            conn.execute(
+                "INSERT OR REPLACE INTO locations (doc_id, location, page, bbox_json) VALUES (?, ?, ?, ?)",
+                (doc_id, row_location, table["page"], json.dumps(bbox) if bbox else None),
             )
             if not has_header:
                 continue
