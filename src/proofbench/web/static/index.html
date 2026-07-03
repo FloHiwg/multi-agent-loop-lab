@@ -38,6 +38,13 @@
   .status.succeeded { background: #e3f3e1; color: #2b6b26; }
   .status.running { background: #eef3fb; color: #345; }
   .status.skipped_budget { background: #fdf1dc; color: var(--amber); }
+  .status.manager { background: var(--navy); color: white; }
+  tr.manager-row { background: var(--pale); font-weight: 600; }
+  tr.manager-row:hover { background: #dcece9; }
+  .orchestration-summary { border: 1px solid var(--teal); background: var(--pale); border-radius: 6px; padding: 12px 16px; margin-bottom: 16px; }
+  .orchestration-summary h3 { margin: 0 0 8px 0; font-size: 13px; color: var(--teal); }
+  .job-outcome-row.clickable { cursor: pointer; }
+  .job-outcome-row.clickable:hover { background: var(--pale); }
   .panel { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 16px; margin-top: 16px; }
   .panel h3 { margin-top: 0; font-size: 14px; color: var(--teal); }
   .kv { display: grid; grid-template-columns: 160px 1fr; gap: 4px 12px; font-size: 13px; margin-bottom: 12px; }
@@ -117,6 +124,7 @@
   </section>
 
   <section id="view-runs" class="view">
+    <div id="orchestration-summary"></div>
     <table>
       <thead><tr><th>Run</th><th>Agent</th><th>Status</th><th>Model</th><th>Cost</th><th>Tools called</th><th>Started</th></tr></thead>
       <tbody id="runs-body"></tbody>
@@ -348,7 +356,7 @@ async function loadRunsView() {
   const runs = await api(`/api/runs?audit_id=${state.auditId || ""}`);
   const body = document.getElementById("runs-body");
   body.innerHTML = runs.map(r => `
-    <tr class="clickable" data-run="${r.run_id}">
+    <tr class="clickable ${r.agent_role === "manager" ? "manager-row" : ""}" data-run="${r.run_id}">
       <td>${r.run_id.split('/').pop()}</td>
       <td>${r.agent_role}</td>
       <td>${statusBadge(r.status)}</td>
@@ -361,11 +369,39 @@ async function loadRunsView() {
   body.querySelectorAll("tr.clickable").forEach(tr =>
     tr.addEventListener("click", () => showRun(tr.dataset.run))
   );
+
+  const summaryEl = document.getElementById("orchestration-summary");
+  const latestManagerRun = runs.find(r => r.agent_role === "manager");
+  if (!latestManagerRun) {
+    summaryEl.innerHTML = "";
+    return;
+  }
+  const full = await api(`/api/runs/${encodeURIComponent(latestManagerRun.run_id)}`);
+  const outcomes = full.job_outcomes || [];
+  const counts = outcomes.reduce((acc, o) => { acc[o.status] = (acc[o.status] || 0) + 1; return acc; }, {});
+  summaryEl.innerHTML = `
+    <div class="orchestration-summary">
+      <h3>Latest orchestration — ${full.run_id.split('/').pop()}</h3>
+      <div class="kv">
+        <div>Scheduled</div><div>${outcomes.length} jobs, max_concurrency=${full.max_concurrency ?? "–"}, max_budget_usd=${full.max_budget_usd ?? "unlimited"}</div>
+        <div>Outcomes</div><div>${Object.entries(counts).map(([s, n]) => `${n} ${s}`).join(", ") || "–"}</div>
+        <div>Total cost</div><div>${fmtCost(full.cost_usd)}</div>
+        <div>Duration</div><div>${full.started_at} → ${full.finished_at ?? "running"}</div>
+      </div>
+      <a class="back-link" href="#" onclick="event.preventDefault(); showRun('${full.run_id}');">view full orchestration record ↓</a>
+    </div>
+  `;
 }
 
 async function showRun(runId) {
   const r = await api(`/api/runs/${encodeURIComponent(runId)}`);
   const panel = document.getElementById("run-panel");
+
+  if (r.agent_role === "manager") {
+    showManagerRun(r, panel);
+    return;
+  }
+
   const trace = (r.tool_trace || []).map(t => `
     <div class="trace-entry ${t.is_error ? "error" : ""}">
       <div class="tool-name">#${t.seq} ${t.tool}</div>
@@ -395,6 +431,43 @@ async function showRun(runId) {
       <div class="mono">${r.prompt ?? ""}</div>
     </div>
   `;
+}
+
+function showManagerRun(r, panel) {
+  const outcomes = r.job_outcomes || [];
+  const counts = outcomes.reduce((acc, o) => { acc[o.status] = (acc[o.status] || 0) + 1; return acc; }, {});
+  panel.innerHTML = `
+    <div class="panel">
+      <span class="back-link" onclick="document.getElementById('run-panel').innerHTML=''">✕ close</span>
+      <h3>Orchestration: ${r.run_id} ${statusBadge(r.status)}</h3>
+      <div class="kv">
+        <div>Jobs scheduled</div><div>${outcomes.length}</div>
+        <div>Max concurrency</div><div>${r.max_concurrency ?? "–"}</div>
+        <div>Max budget</div><div>${r.max_budget_usd != null ? "$" + r.max_budget_usd : "unlimited"}</div>
+        <div>Outcomes</div><div>${Object.entries(counts).map(([s, n]) => `${n} ${s}`).join(", ") || "–"}</div>
+        <div>Total cost</div><div>${fmtCost(r.cost_usd)}</div>
+        <div>Started</div><div>${r.started_at}</div>
+        <div>Finished</div><div>${r.finished_at ?? "–"}</div>
+      </div>
+      <h3>Job outcomes (in scheduling order)</h3>
+      <table>
+        <thead><tr><th>Job</th><th>Status</th><th>Cost</th><th>Run</th></tr></thead>
+        <tbody>
+          ${outcomes.map(o => `
+            <tr class="job-outcome-row clickable" data-run="${o.run_id}">
+              <td>${o.job_id.split('/').pop()}</td>
+              <td>${statusBadge(o.status)}</td>
+              <td>${fmtCost(o.cost_usd)}</td>
+              <td class="muted">${o.run_id.split('/').pop()}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
+  panel.querySelectorAll(".job-outcome-row").forEach(tr =>
+    tr.addEventListener("click", () => showRun(tr.dataset.run))
+  );
 }
 
 function switchView(view) {
