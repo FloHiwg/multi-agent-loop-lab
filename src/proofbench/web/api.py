@@ -13,13 +13,13 @@ import json
 import sqlite3
 from pathlib import Path
 
+import fitz  # PyMuPDF
 import yaml
-from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, HTTPException, Response
 from fastapi.staticfiles import StaticFiles
 
 from proofbench.index_db import db_path
-from proofbench.models import AuditConfig
+from proofbench.models import AuditConfig, DocumentRef
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 AUDITS_DIR = REPO_ROOT / "audits"
@@ -164,6 +164,156 @@ def vault_detail(audit_id: str) -> dict:
         return {"documents": docs, "indexed": True}
     finally:
         conn.close()
+
+
+def _find_document(config: AuditConfig, doc_id: str) -> DocumentRef:
+    for doc in config.documents:
+        if doc.doc_id == doc_id:
+            return doc
+    raise HTTPException(404, f"no such document: {doc_id}")
+
+
+@app.get("/api/audits/{audit_id}/docs/{doc_id}/pages")
+def doc_pages(audit_id: str, doc_id: str) -> dict:
+    config = _load_audit_config(audit_id)
+    doc = _find_document(config, doc_id)
+    if doc.format.value != "pdf":
+        return {"format": doc.format.value, "pages": []}
+
+    conn = sqlite3.connect(db_path(audit_id))
+    try:
+        rows = conn.execute(
+            "SELECT page, width, height FROM pages WHERE doc_id = ? ORDER BY page", (doc_id,)
+        ).fetchall()
+    finally:
+        conn.close()
+    return {"format": "pdf", "pages": [{"page": p, "width": w, "height": h} for p, w, h in rows]}
+
+
+@app.get("/api/audits/{audit_id}/docs/{doc_id}/page/{page_num}.png")
+def doc_page_png(audit_id: str, doc_id: str, page_num: int) -> Response:
+    config = _load_audit_config(audit_id)
+    doc = _find_document(config, doc_id)
+    if doc.format.value != "pdf":
+        raise HTTPException(400, "page rendering is only supported for PDF documents")
+
+    with fitz.open(REPO_ROOT / doc.path) as pdf:
+        if page_num < 1 or page_num > pdf.page_count:
+            raise HTTPException(404, f"page {page_num} out of range (doc has {pdf.page_count} pages)")
+        pixmap = pdf[page_num - 1].get_pixmap(dpi=150)
+        png_bytes = pixmap.tobytes("png")
+    return Response(content=png_bytes, media_type="image/png")
+
+
+@app.get("/api/audits/{audit_id}/docs/{doc_id}/highlights")
+def doc_highlights(audit_id: str, doc_id: str, page: int) -> list[dict]:
+    """Claims (if doc_id is the master doc) or evidence spans (if it's a
+    vault doc) located on this page, each with a bounding box for the
+    frontend to draw a clickable highlight over the rendered page image.
+    """
+    config = _load_audit_config(audit_id)
+    doc = _find_document(config, doc_id)
+    if doc.format.value != "pdf":
+        return []
+
+    if doc_id == config.master_doc_id:
+        return _claim_highlights(audit_id, doc, page)
+    return _evidence_highlights(audit_id, doc, page)
+
+
+def _claim_highlights(audit_id: str, doc: DocumentRef, page: int) -> list[dict]:
+    claims, statuses = _claims_with_status(audit_id)
+    on_page = [c for c in claims if c.get("source_doc_id") == doc.doc_id and c.get("source_page") == page]
+    if not on_page:
+        return []
+
+    highlights = []
+    with fitz.open(REPO_ROOT / doc.path) as pdf:
+        pdf_page = pdf[page - 1]
+        for claim in on_page:
+            rects = pdf_page.search_for(claim["raw_text"])
+            for rect in rects:
+                highlights.append(
+                    {
+                        "kind": "claim",
+                        "claim_id": claim["claim_id"],
+                        "label": claim["label"],
+                        "status": claim["effective_status"],
+                        "raw_text": claim["raw_text"],
+                        "canonical_value": claim["canonical_value"],
+                        "unit": claim["unit"],
+                        "bbox": list(rect),
+                    }
+                )
+    return highlights
+
+
+def _evidence_highlights(audit_id: str, doc: DocumentRef, page: int) -> list[dict]:
+    results = _read_json_dir(AUDITS_DIR / audit_id / "results")
+    reviews = _read_json_dir(AUDITS_DIR / audit_id / "review_queue")
+    all_results = {**results, **reviews}
+
+    entries = []
+    for suffix, result in all_results.items():
+        verdict = result["verdict"]
+        for evidence in result["evidence"]:
+            if evidence["doc_id"] == doc.doc_id and evidence.get("page") == page:
+                entries.append((suffix, verdict, evidence))
+    if not entries:
+        return []
+
+    conn = sqlite3.connect(db_path(audit_id))
+    highlights = []
+    pdf = fitz.open(REPO_ROOT / doc.path)
+    try:
+        pdf_page = pdf[page - 1]
+        for suffix, verdict, evidence in entries:
+            bbox = _lookup_indexed_bbox(conn, doc.doc_id, evidence["span_text"])
+            if bbox is None:
+                rects = pdf_page.search_for(evidence["span_text"])
+                bboxes = [list(r) for r in rects]
+            else:
+                bboxes = [bbox]
+            for b in bboxes:
+                highlights.append(
+                    {
+                        "kind": "evidence",
+                        "claim_id": verdict["claim_id"],
+                        "evidence_id": evidence["evidence_id"],
+                        "status": verdict["status"],
+                        "span_text": evidence["span_text"],
+                        "canonical_value": evidence.get("canonical_value"),
+                        "unit": evidence.get("unit"),
+                        "bbox": b,
+                    }
+                )
+    finally:
+        pdf.close()
+        conn.close()
+    return highlights
+
+
+def _lookup_indexed_bbox(conn: sqlite3.Connection, doc_id: str, text: str) -> list[float] | None:
+    """Exact-match the evidence's span_text against our own indexed span
+    text to recover the bbox recorded at index time -- reliable for
+    table-row evidence, since the model's span_text is literally copied
+    from what search_vault/read_span returned (see verification.py's
+    system prompt). Falls back to a live PDF text search by the caller
+    when this returns None (narrative/paragraph evidence, whose span_text
+    is a real substring of the page but not a whole indexed span).
+    """
+    row = conn.execute(
+        """
+        SELECT locations.bbox_json FROM spans_fts
+        JOIN locations ON locations.doc_id = spans_fts.doc_id AND locations.location = spans_fts.location
+        WHERE spans_fts.doc_id = ? AND spans_fts.text = ? AND locations.bbox_json IS NOT NULL
+        LIMIT 1
+        """,
+        (doc_id, text),
+    ).fetchone()
+    if row is None:
+        return None
+    return json.loads(row[0])
 
 
 def _find_run_manifest(run_id: str) -> dict | None:

@@ -49,6 +49,22 @@
   .muted { color: var(--muted); font-size: 12px; }
   .back-link { cursor: pointer; color: var(--teal); font-size: 13px; font-weight: 600; }
   .refresh-indicator { font-size: 11px; color: var(--muted); margin-left: auto; }
+  .source-link { display: inline-block; margin: 2px 6px 2px 0; padding: 3px 9px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; }
+  .doc-toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .doc-toolbar select, .doc-toolbar button { font-size: 13px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 4px; background: white; }
+  .doc-toolbar button { cursor: pointer; }
+  .doc-stage { position: relative; display: inline-block; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: white; }
+  .doc-stage img { display: block; max-width: 100%; height: auto; }
+  .highlight-box { position: absolute; border: 2px solid; border-radius: 2px; cursor: pointer; background: rgba(255,255,255,0.05); transition: background 0.1s; }
+  .highlight-box:hover { background-color: rgba(30,122,120,0.18); }
+  .highlight-box.supported { border-color: #2b6b26; }
+  .highlight-box.contradicted { border-color: var(--red); }
+  .highlight-box.ambiguous, .highlight-box.outdated { border-color: var(--amber); }
+  .highlight-box.missing_evidence, .highlight-box.pending { border-color: var(--muted); }
+  .highlight-box.failed { border-color: var(--red); }
+  .doc-side { display: flex; gap: 16px; align-items: flex-start; }
+  .doc-page-col { flex: 1; min-width: 0; }
+  .doc-info-col { width: 320px; flex-shrink: 0; }
 </style>
 </head>
 <body>
@@ -60,6 +76,7 @@
 <nav>
   <button data-view="audit" class="active">Audit</button>
   <button data-view="vault">Vault</button>
+  <button data-view="document">Document</button>
   <button data-view="runs">Agent Runs</button>
 </nav>
 <main>
@@ -79,6 +96,26 @@
     </table>
   </section>
 
+  <section id="view-document" class="view">
+    <div class="doc-toolbar">
+      <select id="doc-select"></select>
+      <button id="doc-prev">‹ prev page</button>
+      <span id="doc-page-label" class="muted"></span>
+      <button id="doc-next">next page ›</button>
+    </div>
+    <div class="doc-side">
+      <div class="doc-page-col">
+        <div class="doc-stage" id="doc-stage"></div>
+        <div id="doc-not-renderable" class="muted" style="margin-top: 8px;"></div>
+      </div>
+      <div class="doc-info-col">
+        <div class="panel" id="doc-highlight-info">
+          <div class="muted">Click a highlighted box to see what it is and jump to the claim or its evidence.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section id="view-runs" class="view">
     <table>
       <thead><tr><th>Run</th><th>Agent</th><th>Status</th><th>Model</th><th>Cost</th><th>Tools called</th><th>Started</th></tr></thead>
@@ -89,7 +126,7 @@
 </main>
 
 <script>
-const state = { auditId: null, view: "audit" };
+const state = { auditId: null, view: "audit", doc: { docId: null, page: 1, pagesMeta: [] } };
 
 async function api(path) {
   const res = await fetch(path);
@@ -146,14 +183,20 @@ async function loadAuditView() {
 async function showClaim(claimSuffix) {
   const d = await api(`/api/audits/${state.auditId}/claims/${claimSuffix}`);
   const panel = document.getElementById("claim-panel");
+  const statusClass = d.effective_status;
   const evidenceHtml = d.evidence.length
-    ? d.evidence.map(e => `
+    ? d.evidence.map((e, i) => `
         <div class="trace-entry">
           <div class="tool-name">${e.doc_id}${e.page != null ? " p." + e.page : ""}</div>
           <div class="mono">${e.span_text || ""}</div>
           <div class="muted">value: ${e.canonical_value ?? "–"} ${e.unit || ""} | role: ${e.role} | confidence: ${e.extractor_confidence}</div>
+          ${e.page != null ? `<a class="source-link status ${statusClass}" href="#" onclick="viewSourceFromClaim(event, '${e.doc_id}', ${e.page})">view in document ↗</a>` : `<span class="muted">(spreadsheet -- no page view)</span>`}
         </div>`).join("")
     : `<div class="muted">No evidence recorded.</div>`;
+
+  const masterLink = d.claim.source_page != null
+    ? `<a class="source-link status ${statusClass}" href="#" onclick="viewSourceFromClaim(event, '${d.claim.source_doc_id}', ${d.claim.source_page})">view claim in master document ↗</a>`
+    : "";
 
   panel.innerHTML = `
     <div class="panel">
@@ -164,6 +207,7 @@ async function showClaim(claimSuffix) {
         <div>Source</div><div>${d.claim.source_doc_id} ${d.claim.source_page ? "p." + d.claim.source_page : ""}</div>
         <div>Expected evidence</div><div>${d.claim.expected_evidence_type ?? "–"}</div>
       </div>
+      ${masterLink}
       ${d.verdict ? `
         <div class="kv">
           <div>Rationale</div><div>${d.verdict.rationale}</div>
@@ -173,7 +217,7 @@ async function showClaim(claimSuffix) {
           <div>Produced by run</div><div><a href="#" onclick="viewRunFromClaim(event)" data-run="${d.verdict.produced_by_run_id}">${d.verdict.produced_by_run_id}</a></div>
         </div>
       ` : `<div class="muted">Not yet verified.</div>`}
-      <h3>Evidence</h3>
+      <h3>Evidence &amp; sources</h3>
       ${evidenceHtml}
     </div>
   `;
@@ -186,12 +230,20 @@ function viewRunFromClaim(evt) {
   showRun(runId);
 }
 
+function viewSourceFromClaim(evt, docId, page) {
+  evt.preventDefault();
+  document.querySelector('nav button[data-view="document"]').click();
+  state.doc.docId = docId;
+  state.doc.page = page;
+  loadDocumentView();
+}
+
 async function loadVaultView() {
   if (!state.auditId) return;
   const d = await api(`/api/audits/${state.auditId}/vault`);
   const body = document.getElementById("vault-body");
   body.innerHTML = d.documents.map(doc => `
-    <tr>
+    <tr class="clickable" data-doc="${doc.doc_id}">
       <td>${doc.doc_id}</td>
       <td>${doc.kind}</td>
       <td>${doc.tag ?? "–"}</td>
@@ -200,6 +252,96 @@ async function loadVaultView() {
       <td>${doc.fact_count ?? "–"}</td>
     </tr>
   `).join("");
+  body.querySelectorAll("tr.clickable").forEach(tr =>
+    tr.addEventListener("click", () => {
+      document.querySelector('nav button[data-view="document"]').click();
+      state.doc.docId = tr.dataset.doc;
+      state.doc.page = 1;
+      loadDocumentView();
+    })
+  );
+}
+
+async function loadDocumentView() {
+  if (!state.auditId) return;
+  const detail = await api(`/api/audits/${state.auditId}`);
+  const select = document.getElementById("doc-select");
+  if (!state.doc.docId) state.doc.docId = detail.master_doc_id;
+  select.innerHTML = detail.documents.map(doc =>
+    `<option value="${doc.doc_id}" ${doc.doc_id === state.doc.docId ? "selected" : ""}>${doc.doc_id}${doc.doc_id === detail.master_doc_id ? " (master)" : ""}</option>`
+  ).join("");
+
+  const pagesResp = await api(`/api/audits/${state.auditId}/docs/${state.doc.docId}/pages`);
+  state.doc.pagesMeta = pagesResp.pages;
+  const notRenderable = document.getElementById("doc-not-renderable");
+  const stage = document.getElementById("doc-stage");
+  const pageLabel = document.getElementById("doc-page-label");
+
+  if (pagesResp.format !== "pdf" || pagesResp.pages.length === 0) {
+    stage.innerHTML = "";
+    notRenderable.textContent = `"${state.doc.docId}" is a ${pagesResp.format} document -- page rendering isn't supported for this format. See evidence text in the Audit view's claim panel instead.`;
+    pageLabel.textContent = "";
+    return;
+  }
+  notRenderable.textContent = "";
+
+  if (state.doc.page > pagesResp.pages.length) state.doc.page = 1;
+  const pageMeta = pagesResp.pages[state.doc.page - 1];
+  pageLabel.textContent = `page ${state.doc.page} / ${pagesResp.pages.length}`;
+
+  const highlights = await api(`/api/audits/${state.auditId}/docs/${state.doc.docId}/highlights?page=${state.doc.page}`);
+  const imgUrl = `/api/audits/${state.auditId}/docs/${state.doc.docId}/page/${state.doc.page}.png`;
+
+  stage.innerHTML = `<img id="doc-page-img" src="${imgUrl}" alt="page ${state.doc.page}"><div id="doc-overlay"></div>`;
+  const img = document.getElementById("doc-page-img");
+  const drawOverlay = () => {
+    const scale = img.clientWidth / pageMeta.width;
+    const overlay = document.getElementById("doc-overlay");
+    overlay.style.position = "absolute";
+    overlay.style.left = "0"; overlay.style.top = "0";
+    overlay.style.width = img.clientWidth + "px";
+    overlay.style.height = img.clientHeight + "px";
+    overlay.innerHTML = highlights.map((h, i) => `
+      <div class="highlight-box ${h.status}" data-idx="${i}" style="
+        left: ${h.bbox[0] * scale}px; top: ${h.bbox[1] * scale}px;
+        width: ${(h.bbox[2] - h.bbox[0]) * scale}px; height: ${(h.bbox[3] - h.bbox[1]) * scale}px;
+      "></div>
+    `).join("");
+    overlay.querySelectorAll(".highlight-box").forEach(box =>
+      box.addEventListener("click", () => showHighlightInfo(highlights[parseInt(box.dataset.idx)]))
+    );
+  };
+  if (img.complete) drawOverlay(); else img.addEventListener("load", drawOverlay);
+}
+
+function showHighlightInfo(h) {
+  const panel = document.getElementById("doc-highlight-info");
+  if (h.kind === "claim") {
+    panel.innerHTML = `
+      <h3>Claim ${statusBadge(h.status)}</h3>
+      <div class="kv">
+        <div>Label</div><div>${h.label}</div>
+        <div>Value</div><div>${h.canonical_value} ${h.unit}</div>
+        <div>Raw text</div><div>${h.raw_text}</div>
+      </div>
+      <a class="source-link status ${h.status}" href="#" onclick="jumpToClaimFromDoc(event, '${h.claim_id.split('/').pop()}')">view full claim &amp; evidence ↗</a>
+    `;
+  } else {
+    panel.innerHTML = `
+      <h3>Evidence ${statusBadge(h.status)}</h3>
+      <div class="kv">
+        <div>Span text</div><div>${h.span_text}</div>
+        <div>Value</div><div>${h.canonical_value ?? "–"} ${h.unit || ""}</div>
+      </div>
+      <a class="source-link status ${h.status}" href="#" onclick="jumpToClaimFromDoc(event, '${h.claim_id.split('/').pop()}')">view claim this supports/contradicts ↗</a>
+    `;
+  }
+}
+
+function jumpToClaimFromDoc(evt, claimSuffix) {
+  evt.preventDefault();
+  document.querySelector('nav button[data-view="audit"]').click();
+  showClaim(claimSuffix);
 }
 
 async function loadRunsView() {
@@ -268,6 +410,7 @@ async function refresh() {
     await loadAudits();
     if (state.view === "audit") await loadAuditView();
     if (state.view === "vault") await loadVaultView();
+    if (state.view === "document") await loadDocumentView();
     if (state.view === "runs") await loadRunsView();
     indicator.textContent = `updated ${new Date().toLocaleTimeString()}`;
   } catch (e) {
@@ -280,7 +423,19 @@ document.querySelectorAll("nav button").forEach(b =>
 );
 document.getElementById("audit-select").addEventListener("change", e => {
   state.auditId = e.target.value;
+  state.doc.docId = null;
   refresh();
+});
+document.getElementById("doc-select").addEventListener("change", e => {
+  state.doc.docId = e.target.value;
+  state.doc.page = 1;
+  loadDocumentView();
+});
+document.getElementById("doc-prev").addEventListener("click", () => {
+  if (state.doc.page > 1) { state.doc.page -= 1; loadDocumentView(); }
+});
+document.getElementById("doc-next").addEventListener("click", () => {
+  if (state.doc.page < state.doc.pagesMeta.length) { state.doc.page += 1; loadDocumentView(); }
 });
 
 refresh();
