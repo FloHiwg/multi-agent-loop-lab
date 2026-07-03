@@ -105,6 +105,64 @@ def verify(
 
 
 @app.command()
+def enrich(audit_id: str) -> None:
+    """Generate entity aliases for the facts index (one LLM call, stored in
+    the fact_aliases table). Used by the `catalog_aliases` eval variant."""
+    import asyncio
+
+    from proofbench.catalog import enrich_aliases_async
+
+    written, reply = asyncio.run(enrich_aliases_async(audit_id))
+    cost = f"${reply.cost_usd:.4f}" if reply.cost_usd is not None else "unknown"
+    typer.echo(f"wrote {written} aliases into index/search/{audit_id}.db (cost {cost})")
+
+
+@app.command("eval")
+def eval_cmd(
+    audit_id: str,
+    variants: str = typer.Option(
+        "baseline,catalog,catalog_aliases",
+        help="Comma-separated variant names to run (see eval.py VARIANTS).",
+    ),
+    max_concurrency: int = typer.Option(2, help="Max claims verified at once per variant."),
+    max_budget_usd: float | None = typer.Option(None, help="Soft cap on total experiment cost, across all variants."),
+    experiment_id: str | None = typer.Option(None, help="Name for runs/experiments/<id>/; defaults to a timestamp."),
+) -> None:
+    """Run Verifier variants against gold.yaml and compare cost vs accuracy.
+
+    Writes only to runs/experiments/ -- never touches audits/<id>/results/,
+    review_queue/, or the real run log.
+    """
+    from proofbench.eval import run_eval
+
+    variant_names = [v.strip() for v in variants.split(",") if v.strip()]
+    report = run_eval(
+        audit_id,
+        variant_names,
+        max_concurrency=max_concurrency,
+        max_budget_usd=max_budget_usd,
+        experiment_id=experiment_id,
+    )
+
+    typer.echo(f"experiment {report['experiment_id']} (model {report['model']}) -- total cost ${report['total_cost_usd']:.4f}\n")
+    header = f"{'variant':<18} {'accuracy':>9} {'correct':>8} {'failures':>9} {'avg tools':>10} {'avg cost':>10} {'total cost':>11}"
+    typer.echo(header)
+    typer.echo("-" * len(header))
+    for s in report["summaries"]:
+        accuracy = f"{s['accuracy']:.0%}" if s["accuracy"] is not None else "-"
+        avg_tools = f"{s['avg_tool_calls']:.1f}" if s["avg_tool_calls"] is not None else "-"
+        avg_cost = f"${s['avg_cost_usd']:.4f}" if s["avg_cost_usd"] is not None else "-"
+        total = f"${s['total_cost_usd']:.4f}"
+        if s["enrichment_cost_usd"] is not None:
+            total += "+e"
+        typer.echo(
+            f"{s['variant']:<18} {accuracy:>9} {s['correct']:>5}/{s['n_claims']:<2} {s['failures']:>9} "
+            f"{avg_tools:>10} {avg_cost:>10} {total:>11}"
+        )
+    typer.echo(f"\nfull records in runs/experiments/{report['experiment_id']}/")
+
+
+@app.command()
 def serve(
     host: str = typer.Option("127.0.0.1", help="Bind address."),
     port: int = typer.Option(8420, help="Port to serve the workbench on."),

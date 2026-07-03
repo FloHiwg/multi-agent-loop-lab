@@ -51,6 +51,12 @@ CREATE TABLE facts (
     value TEXT NOT NULL
 );
 
+CREATE TABLE fact_aliases (
+    entity TEXT NOT NULL,
+    alias TEXT NOT NULL,
+    PRIMARY KEY (entity, alias)
+);
+
 CREATE TABLE locations (
     doc_id TEXT NOT NULL,
     location TEXT NOT NULL,

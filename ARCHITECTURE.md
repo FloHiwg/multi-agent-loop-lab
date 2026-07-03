@@ -212,6 +212,8 @@ proofbench init <audit-id>       # parse registered documents into index/parsed/
 proofbench index <audit-id>      # build index/search/<audit-id>.db from index/parsed/
 proofbench extract <audit-id> [--max-budget-usd X]
 proofbench verify <audit-id> [--max-concurrency N] [--max-budget-usd X]
+proofbench enrich <audit-id>     # LLM-generate entity aliases into the facts index (one call)
+proofbench eval <audit-id> [--variants a,b,c] [--max-concurrency N] [--max-budget-usd X] [--experiment-id ID]
 proofbench serve [--host H] [--port P]     # workbench UI at http://127.0.0.1:8420
 ```
 
@@ -407,6 +409,58 @@ dismissing as noise. When it happens, the Manager isolates it as one
 `failed` claim -- rerunning `verify` picks that claim back up (each job
 writes to a fixed path, so reruns are idempotent) rather than needing the
 whole run redone.
+
+## Eval harness (`src/proofbench/eval.py`, `src/proofbench/catalog.py`)
+
+**Why it exists.** Verification runs are both expensive (real LLM spend
+per claim) and noisy (the intermittent JSON-shape failure above means two
+identical runs can score differently), so judging a prompt or retrieval
+change by eyeballing one run is unreliable in both directions. The
+harness turns that into a measurement: named variants of the Verifier's
+context run against the audit's `gold.yaml` fixture and get compared on
+accuracy (verdict status == expected_status), failure rate, avg tool
+calls/claim, and avg cost/claim.
+
+**Isolation.** Experiments write only to
+`runs/experiments/<experiment_id>/<variant>/` (per-claim records with full
+tool traces, a `summary.json` per variant, a `report.json` per
+experiment). They never touch `audits/<id>/results/`, `review_queue/`,
+`claims/`, and never write RunManifests -- the workbench's `/api/runs`
+reads a flat `runs/*.json` glob, so nothing in the experiments
+subdirectory can masquerade as a real audit run. All variants verify the
+identical already-extracted claim list, so extraction variance is held
+constant. A single soft budget spans the whole experiment (all variants
+plus any enrichment call), with the Manager's semantics: no new claim
+starts once the cap is hit, in-flight claims finish.
+
+**First experiment: retrieval-context variants.** The measured cost
+problem was vocabulary mismatch, not over-searching -- e.g. claim-0004
+says "quarter-end cash", the vault fact's entity is "Cash and cash
+equivalents", and the Verifier burned 3 blind `search_facts` guesses
+bridging the gap (avg 4.8 tool calls/claim across a real batch). Two
+levers, both in `catalog.py`, attack that from opposite sides:
+
+- `catalog` variant: a facts **catalog** -- every distinct
+  entity/attribute name in the facts index, ~390 tokens for Northstar --
+  appended to the Verifier's system prompt, so it knows the vault's
+  vocabulary on turn one. Names only, not values: grounding still
+  requires a real tool call, so evidence provenance is unchanged. Built
+  with one SQL query, zero LLM cost.
+- `catalog_aliases` variant: the catalog **plus** LLM-generated entity
+  aliases (`proofbench enrich`, one plain call per index build) stored in
+  a `fact_aliases` table that `search_facts` additionally matches when
+  built with `use_aliases=True` (an explicit flag on `build_server`, off
+  in production until the eval shows it earns its call). This is the
+  deliberately-narrow form of "LLM-assisted preprocessing": an alias can
+  only make search *find* a deterministically-extracted fact more easily
+  -- it can never alter the fact's value or provenance, so it doesn't
+  put LLM output into the trust root the way LLM re-extraction would.
+  Its one-call cost amortizes over every claim in every later run.
+
+The harness itself was validated end-to-end with a mocked `run_agent`
+(scoring, failure handling, budget math, file isolation, alias matching)
+at zero API cost; the real three-variant comparison run is user-triggered
+via `proofbench eval`.
 
 ## What's still ahead
 

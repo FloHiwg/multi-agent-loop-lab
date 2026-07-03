@@ -106,15 +106,25 @@ class VerifyClaimError(ValueError):
         super().__init__(message)
         self.tool_trace = reply.tool_trace
         self.final_text = reply.text
+        self.cost_usd = reply.cost_usd
 
 
 async def verify_claim_async(
-    claim: Claim, audit_id: str, run_id: str, *, model: str | None = None
+    claim: Claim,
+    audit_id: str,
+    run_id: str,
+    *,
+    model: str | None = None,
+    system_prompt: str | None = None,
+    use_aliases: bool = False,
 ) -> tuple[list[EvidenceCandidate], Verdict, AgentReply]:
-    server = build_server(audit_id, "vault", SERVER_NAME)
+    # system_prompt/use_aliases exist for the eval harness (eval.py), which
+    # runs prompt/retrieval variants against gold.yaml -- production callers
+    # leave both at their defaults.
+    server = build_server(audit_id, "vault", SERVER_NAME, use_aliases=use_aliases)
     user_prompt = f"CLAIM:\n{claim.model_dump_json(indent=2)}"
     reply = await run_agent(
-        SYSTEM_PROMPT,
+        system_prompt or SYSTEM_PROMPT,
         user_prompt,
         model=model,
         mcp_servers={SERVER_NAME: server},
