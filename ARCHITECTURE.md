@@ -348,6 +348,21 @@ Extraction is also routed through `run_jobs` (as a single job) for the
 same failure-isolation and manifest-on-failure behavior, even though
 concurrency doesn't apply to it (one document, one job).
 
+**The Manager writes its own orchestration record.** Every `run_jobs()`
+call writes exactly one extra `RunManifest` (`agent_role=MANAGER`), once
+every job finishes: `max_concurrency`, `max_budget_usd`, `cost_usd` (the
+batch total), and `job_outcomes` -- one `{job_id, run_id, status,
+cost_usd}` entry per scheduled job, in original scheduling order (not
+completion order, which varies under concurrency). Before this, "what did
+the orchestrator actually decide for this batch" only existed implicitly,
+scattered across each job's own manifest with nothing tying them
+together. This required `Job.run_fn` to take the run_id the Manager
+assigns (rather than each job minting its own), so `job_outcomes` can
+link to each job's individual `RunManifest`. Surfaced in the workbench
+UI's Agent Runs view as an "orchestration summary" card plus a dedicated
+job-outcomes table, each row clicking through to that job's own run
+detail.
+
 **Observed failure mode, not fully eliminated:** the Verifier's final
 reply is sometimes a bare JSON array (just the evidence list) instead of
 the required `{"evidence": [...], "verdict": {...}}` object -- a
@@ -355,10 +370,13 @@ tool-use formatting slip, not a data-quality problem (the actual evidence
 found was usually correct). Tightened the system prompt and added an
 explicit shape check with a clear error message (`verify_claim_async` in
 verification.py) rather than the raw `AttributeError` this used to
-surface as; this reduced but didn't eliminate the rate. When it happens,
-the Manager isolates it as one `failed` claim -- rerunning `verify`
-picks that claim back up (each job writes to a fixed path, so reruns are
-idempotent) rather than needing the whole run redone.
+surface as; this reduced but didn't eliminate the rate -- in fact later
+runs saw it more often (2/10) than earlier ones (0-1/10), which could be
+model variance or could be a real regression worth watching rather than
+dismissing as noise. When it happens, the Manager isolates it as one
+`failed` claim -- rerunning `verify` picks that claim back up (each job
+writes to a fixed path, so reruns are idempotent) rather than needing the
+whole run redone.
 
 ## What's still ahead
 
