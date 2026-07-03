@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0007",
+  "label": "Net revenue retention",
+  "raw_text": "net revenue retention was 108.0%",
+  "canonical_value": 1.08,
+  "unit": "percent",
+  "currency": null,
+  "entity": "Northstar Analytics GmbH",
+  "time_scope": "Trailing 12 months",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": "customer_appendix",
+  "status": "pending",
+  "source_doc_id": "northstar-master-q4-2025",
+  "source_page": 1
+}

@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0001",
+  "label": "Q4 2025 revenue",
+  "raw_text": "Revenue was EUR 4.28 million",
+  "canonical_value": 4280000.0,
+  "unit": "currency",
+  "currency": "EUR",
+  "entity": "Northstar Analytics GmbH",
+  "time_scope": "Q4 2025",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": "finance_pack",
+  "status": "pending",
+  "source_doc_id": "northstar-master-q4-2025",
+  "source_page": 1
+}

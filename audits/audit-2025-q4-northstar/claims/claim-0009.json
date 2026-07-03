@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0009",
+  "label": "Support ticket change QoQ",
+  "raw_text": "Customer support tickets declined 12.0% quarter over quarter.",
+  "canonical_value": -0.12,
+  "unit": "percent_change",
+  "currency": null,
+  "entity": "Northstar Analytics GmbH",
+  "time_scope": "Q4 vs Q3 2025",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": "operations_review",
+  "status": "pending",
+  "source_doc_id": "northstar-master-q4-2025",
+  "source_page": 1
+}

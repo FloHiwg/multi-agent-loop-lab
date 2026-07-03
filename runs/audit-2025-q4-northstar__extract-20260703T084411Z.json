@@ -1,0 +1,27 @@
+{
+  "run_id": "audit-2025-q4-northstar/extract-20260703T084411Z",
+  "audit_id": "audit-2025-q4-northstar",
+  "agent_role": "claim_extractor",
+  "model": "claude-sonnet-5",
+  "started_at": "2026-07-03T08:44:11.155345Z",
+  "finished_at": "2026-07-03T08:44:40.870040Z",
+  "input_refs": [
+    "northstar-master-q4-2025"
+  ],
+  "output_refs": [
+    "audit-2025-q4-northstar/claim-0001",
+    "audit-2025-q4-northstar/claim-0002",
+    "audit-2025-q4-northstar/claim-0003",
+    "audit-2025-q4-northstar/claim-0004",
+    "audit-2025-q4-northstar/claim-0005",
+    "audit-2025-q4-northstar/claim-0006",
+    "audit-2025-q4-northstar/claim-0007",
+    "audit-2025-q4-northstar/claim-0008",
+    "audit-2025-q4-northstar/claim-0009",
+    "audit-2025-q4-northstar/claim-0010"
+  ],
+  "prompt": "You are the Claim Extractor agent in Proofbench, an audit workbench.\n\nRead the master document text you are given and split it into atomic,\nindependently verifiable numeric claims. A claim is one number with a clear\nmeaning -- do not combine two figures into one claim, and do not editorialize.\n\nFor each claim, output an object with exactly these fields:\n- label: short human-readable name, e.g. \"FY2025 revenue\"\n- raw_text: the verbatim sentence or phrase the number came from\n- canonical_value: the number, normalized (e.g. \"EUR 4.28 million\" -> 4280000, \"63.0%\" -> 0.63)\n- unit: one of \"currency\", \"percent\", \"percent_change\", \"count\", \"ratio\"\n- currency: ISO 4217 code if unit is \"currency\", else null\n- entity: which company/subsidiary/party this is about\n- time_scope: the period or as-of date, e.g. \"FY2025\" or \"2025-12-31\"\n- expected_evidence_type: your best guess at which kind of source document would support this\n  (e.g. \"finance_pack\", \"operations_review\", \"customer_appendix\"), or null if unclear\n- source_page: the page number in the master document this came from, or null\n\nRespond with ONLY a JSON array of these objects. No prose, no markdown fences.\n",
+  "tool_trace": [],
+  "status": "succeeded",
+  "error": null
+}

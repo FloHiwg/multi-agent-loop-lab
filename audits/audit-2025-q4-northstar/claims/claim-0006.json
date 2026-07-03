@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0006",
+  "label": "Enterprise customer count",
+  "raw_text": "Enterprise customers totalled 126",
+  "canonical_value": 126.0,
+  "unit": "count",
+  "currency": null,
+  "entity": "Northstar Analytics GmbH",
+  "time_scope": "2025-12-31",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": "customer_appendix",
+  "status": "pending",
+  "source_doc_id": "northstar-master-q4-2025",
+  "source_page": 1
+}

@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0002",
+  "label": "Q4 2025 adjusted EBITDA",
+  "raw_text": "adjusted EBITDA reached EUR 0.74 million",
+  "canonical_value": 740000.0,
+  "unit": "currency",
+  "currency": "EUR",
+  "entity": "Northstar Analytics GmbH",
+  "time_scope": "Q4 2025",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": "finance_pack",
+  "status": "pending",
+  "source_doc_id": "northstar-master-q4-2025",
+  "source_page": 1
+}

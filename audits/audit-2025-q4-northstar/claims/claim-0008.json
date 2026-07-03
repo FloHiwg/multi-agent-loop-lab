@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0008",
+  "label": "Average annual contract value",
+  "raw_text": "Average annual contract value was EUR 18.4 thousand.",
+  "canonical_value": 18400.0,
+  "unit": "currency",
+  "currency": "EUR",
+  "entity": "Northstar Analytics GmbH",
+  "time_scope": "2025-12-31",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": "customer_appendix",
+  "status": "pending",
+  "source_doc_id": "northstar-master-q4-2025",
+  "source_page": 1
+}

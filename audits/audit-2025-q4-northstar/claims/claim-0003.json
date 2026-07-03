@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0003",
+  "label": "Q4 2025 gross margin",
+  "raw_text": "Gross margin improved to 63.0%",
+  "canonical_value": 0.63,
+  "unit": "percent",
+  "currency": null,
+  "entity": "Northstar Analytics GmbH",
+  "time_scope": "Q4 2025",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": "finance_pack",
+  "status": "pending",
+  "source_doc_id": "northstar-master-q4-2025",
+  "source_page": 1
+}

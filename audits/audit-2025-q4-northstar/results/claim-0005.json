@@ -1,0 +1,47 @@
+{
+  "claim": {
+    "claim_id": "audit-2025-q4-northstar/claim-0005",
+    "label": "Employee headcount",
+    "raw_text": "The organisation ended the quarter with 84 employees.",
+    "canonical_value": 84.0,
+    "unit": "count",
+    "currency": null,
+    "entity": "Northstar Analytics GmbH",
+    "time_scope": "2025-12-31",
+    "tolerance_rule": {
+      "kind": "exact"
+    },
+    "expected_evidence_type": "operations_review",
+    "status": "pending",
+    "source_doc_id": "northstar-master-q4-2025",
+    "source_page": 1
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0005/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0005",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "Employees | 84 | 81 | Active employees at period end",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 84.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.98
+    }
+  ],
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0005",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0005/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The Q4 2025 Operations Review, sourced from People Operations, reports 84 active employees at period end (31 Dec 2025), matching the claim exactly.",
+    "suggested_action": null,
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0005-20260703T084621Z"
+  }
+}

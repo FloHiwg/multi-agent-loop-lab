@@ -1,0 +1,62 @@
+{
+  "claim": {
+    "claim_id": "audit-2025-q4-northstar/claim-0002",
+    "label": "Q4 2025 adjusted EBITDA",
+    "raw_text": "adjusted EBITDA reached EUR 0.74 million",
+    "canonical_value": 740000.0,
+    "unit": "currency",
+    "currency": "EUR",
+    "entity": "Northstar Analytics GmbH",
+    "time_scope": "Q4 2025",
+    "tolerance_rule": {
+      "kind": "exact"
+    },
+    "expected_evidence_type": "finance_pack",
+    "status": "pending",
+    "source_doc_id": "northstar-master-q4-2025",
+    "source_page": 1
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0002/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0002",
+      "doc_id": "northstar-finance-q4-2025",
+      "page": 1,
+      "span_text": "Adjusted EBITDA\n0.7400\n0.5100\n0.6400",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 740000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.98
+    },
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0002/evidence-002",
+      "claim_id": "audit-2025-q4-northstar/claim-0002",
+      "doc_id": "northstar-finance-q4-2025",
+      "page": 1,
+      "span_text": "Revenue and adjusted EBITDA reconcile to the December management ledger.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "EUR",
+      "role": "other",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.7
+    }
+  ],
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0002",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0002/evidence-001",
+      "audit-2025-q4-northstar/claim-0002/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.98,
+    "rationale": "The Q4 2025 Finance Pack income statement reports Q4 2025 actual Adjusted EBITDA of EUR 0.7400 million, exactly matching the claimed EUR 0.74 million, and is corroborated by the control note reconciling to the December management ledger.",
+    "suggested_action": null,
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0002-20260703T084515Z"
+  }
+}

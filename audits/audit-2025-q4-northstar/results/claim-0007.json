@@ -1,0 +1,77 @@
+{
+  "claim": {
+    "claim_id": "audit-2025-q4-northstar/claim-0007",
+    "label": "Net revenue retention",
+    "raw_text": "net revenue retention was 108.0%",
+    "canonical_value": 1.08,
+    "unit": "percent",
+    "currency": null,
+    "entity": "Northstar Analytics GmbH",
+    "time_scope": "Trailing 12 months",
+    "tolerance_rule": {
+      "kind": "exact"
+    },
+    "expected_evidence_type": "customer_appendix",
+    "status": "pending",
+    "source_doc_id": "northstar-master-q4-2025",
+    "source_page": 1
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0007/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0007",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "Net revenue retention | 106.0% | 104.0% | Trailing 12-month cohort basis",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 1.06,
+      "unit": "percent",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0007/evidence-002",
+      "claim_id": "audit-2025-q4-northstar/claim-0007",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "Customer counts and retention are sourced from the revenue operations snapshot dated 5 January 2026.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": null,
+      "role": "other",
+      "effective_date": "2026-01-05",
+      "extractor_confidence": 0.7
+    },
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0007/evidence-003",
+      "claim_id": "audit-2025-q4-northstar/claim-0007",
+      "doc_id": "northstar-customer-appendix-q4-2025",
+      "page": null,
+      "span_text": "A7: Status | B7: Final management reporting",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": null,
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.3
+    }
+  ],
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0007",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0007/evidence-001",
+      "audit-2025-q4-northstar/claim-0007/evidence-002",
+      "audit-2025-q4-northstar/claim-0007/evidence-003"
+    ],
+    "delta": 0.02,
+    "confidence": 0.9,
+    "rationale": "The Q4 2025 Operations Review reports trailing 12-month net revenue retention as 106.0% (up from 104.0% in Q3 2025), not 108.0% as stated in the master claim; the customer appendix contains no separate NRR figure to corroborate either value.",
+    "suggested_action": "Confirm with revenue operations which figure (106.0% per the ops review snapshot vs. 108.0% in the master doc) is correct and correct the master document if the ops figure is authoritative.",
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0007-20260703T084706Z"
+  }
+}

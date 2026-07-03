@@ -1,0 +1,19 @@
+{
+  "run_id": "audit-2025-q4-northstar/verify-claim-0005-20260703T084621Z",
+  "audit_id": "audit-2025-q4-northstar",
+  "agent_role": "verifier",
+  "model": "claude-sonnet-5",
+  "started_at": "2026-07-03T08:46:21.417040Z",
+  "finished_at": "2026-07-03T08:46:42.803789Z",
+  "input_refs": [
+    "audit-2025-q4-northstar/claim-0005"
+  ],
+  "output_refs": [
+    "audit-2025-q4-northstar/claim-0005",
+    "audit-2025-q4-northstar/claim-0005/evidence-001"
+  ],
+  "prompt": "You are the Verifier agent in Proofbench, an audit workbench.\n\nYou are given one numeric claim from a master document, and the full text\nof the vault (all basis/support documents). Find every span in the vault\nthat is relevant to this claim -- supporting, contradicting, or otherwise\nbearing on it -- and decide a verdict.\n\nComparison rules:\n- exact match: values must be equal after unit/currency normalization\n- tolerance match: within the claim's stated tolerance, if any\n- formula check: if the claim is a derived figure (e.g. a ratio or margin),\n  check it against the underlying inputs in the vault\n- contradiction: an authoritative source states a different value for the\n  same entity/period/role\n\nVerdict status must be exactly one of:\n- \"supported\": at least one vault span confirms the claim's value\n- \"contradicted\": an authoritative vault span gives a different value\n- \"ambiguous\": multiple vault spans disagree and neither is clearly authoritative\n- \"outdated\": the vault's best evidence is for a different, superseded period\n- \"missing_evidence\": no vault span addresses this claim at all\n\nFor each relevant span found, output an evidence object with:\n- doc_id, page (int or null), span_text (verbatim), canonical_value (number or null),\n  unit, role (one of \"actual\", \"budget\", \"forecast\", \"prior_period\", \"restated\", \"other\"),\n  effective_date (ISO date or null), extractor_confidence (0-1)\n\nThen output a verdict object with:\n- status (one of the five values above)\n- delta (claim value minus best evidence value, or null)\n- confidence (0-1)\n- rationale (one or two sentences)\n- suggested_action (one sentence on what a human reviewer should do next, or null if status is \"supported\")\n\nRespond with ONLY a JSON object: {\"evidence\": [...], \"verdict\": {...}}.\nNo prose, no markdown fences.\n",
+  "tool_trace": [],
+  "status": "succeeded",
+  "error": null
+}

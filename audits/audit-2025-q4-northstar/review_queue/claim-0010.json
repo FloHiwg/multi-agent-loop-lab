@@ -1,0 +1,48 @@
+{
+  "claim": {
+    "claim_id": "audit-2025-q4-northstar/claim-0010",
+    "label": "Gross logo churn",
+    "raw_text": "Gross logo churn was 3.1% for Q4.",
+    "canonical_value": 0.031,
+    "unit": "percent",
+    "currency": null,
+    "entity": "Northstar Analytics GmbH",
+    "time_scope": "Q4 2025",
+    "tolerance_rule": {
+      "kind": "exact"
+    },
+    "expected_evidence_type": "customer_appendix",
+    "status": "pending",
+    "source_doc_id": "northstar-master-q4-2025",
+    "source_page": 1
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0010/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0010",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "No quarterly gross logo churn metric was approved for this review cycle.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "percent",
+      "role": "other",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.9
+    }
+  ],
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0010",
+    "status": "missing_evidence",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0010/evidence-001"
+    ],
+    "delta": null,
+    "confidence": 0.85,
+    "rationale": "The ops review explicitly states no gross logo churn metric was approved for this cycle, and no other vault document (finance pack or customer appendix) reports a churn figure of any kind.",
+    "suggested_action": "Request the underlying customer cohort data needed to compute gross logo churn, or ask the report author to source the 3.1% figure.",
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0010-20260703T084815Z"
+  },
+  "human_decision": null
+}
