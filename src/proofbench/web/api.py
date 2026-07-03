@@ -166,6 +166,23 @@ def vault_detail(audit_id: str) -> dict:
         conn.close()
 
 
+@app.get("/api/audits/{audit_id}/docs/{doc_id}/facts")
+def doc_facts(audit_id: str, doc_id: str) -> list[dict]:
+    """The raw entity/attribute/value facts extracted for this document --
+    the same table search_facts queries, browsable directly."""
+    path = db_path(audit_id)
+    if not path.exists():
+        return []
+    conn = sqlite3.connect(path)
+    try:
+        rows = conn.execute(
+            "SELECT entity, attribute, value, location FROM facts WHERE doc_id = ? ORDER BY id", (doc_id,)
+        ).fetchall()
+        return [{"entity": r[0], "attribute": r[1], "value": r[2], "location": r[3]} for r in rows]
+    finally:
+        conn.close()
+
+
 def _find_document(config: AuditConfig, doc_id: str) -> DocumentRef:
     for doc in config.documents:
         if doc.doc_id == doc_id:

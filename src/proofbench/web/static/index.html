@@ -116,9 +116,10 @@
 
   <section id="view-vault" class="view">
     <table>
-      <thead><tr><th>Document</th><th>Kind</th><th>Tag</th><th>Format</th><th>Spans</th><th>Facts</th></tr></thead>
+      <thead><tr><th>Document</th><th>Kind</th><th>Tag</th><th>Format</th><th>Spans</th><th>Facts</th><th></th></tr></thead>
       <tbody id="vault-body"></tbody>
     </table>
+    <div id="facts-panel"></div>
   </section>
 
   <section id="view-document" class="view">
@@ -281,6 +282,7 @@ async function loadVaultView() {
       <td>${doc.format}</td>
       <td>${doc.span_count ?? "–"}</td>
       <td>${doc.fact_count ?? "–"}</td>
+      <td>${doc.fact_count ? `<a href="#" class="back-link" onclick="event.stopPropagation(); showFacts('${doc.doc_id}')">view facts ↓</a>` : ""}</td>
     </tr>
   `).join("");
   body.querySelectorAll("tr.clickable").forEach(tr =>
@@ -291,6 +293,25 @@ async function loadVaultView() {
       loadDocumentView();
     })
   );
+}
+
+async function showFacts(docId) {
+  const facts = await api(`/api/audits/${state.auditId}/docs/${docId}/facts`);
+  const panel = document.getElementById("facts-panel");
+  panel.innerHTML = `
+    <div class="panel">
+      <span class="back-link" onclick="document.getElementById('facts-panel').innerHTML=''">✕ close</span>
+      <h3>Facts — ${docId} (${facts.length})</h3>
+      <table>
+        <thead><tr><th>Entity</th><th>Attribute</th><th>Value</th><th>Location</th></tr></thead>
+        <tbody>
+          ${facts.map(f => `
+            <tr><td>${f.entity}</td><td>${f.attribute}</td><td>${f.value}</td><td class="muted">${f.location}</td></tr>
+          `).join("")}
+        </tbody>
+      </table>
+    </div>
+  `;
 }
 
 async function loadDocumentView() {
