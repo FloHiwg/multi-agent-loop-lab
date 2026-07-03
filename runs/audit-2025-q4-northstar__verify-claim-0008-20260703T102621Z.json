@@ -1,0 +1,99 @@
+{
+  "run_id": "audit-2025-q4-northstar/verify-claim-0008-20260703T102621Z",
+  "audit_id": "audit-2025-q4-northstar",
+  "agent_role": "verifier",
+  "model": "z-ai/glm-5.2",
+  "started_at": "2026-07-03T10:26:21.937804Z",
+  "finished_at": "2026-07-03T10:26:44.520139Z",
+  "input_refs": [
+    "audit-2025-q4-northstar/claim-0008"
+  ],
+  "output_refs": [
+    "audit-2025-q4-northstar/claim-0008",
+    "audit-2025-q4-northstar/claim-0008/evidence-001",
+    "audit-2025-q4-northstar/claim-0008/evidence-002"
+  ],
+  "prompt": "You are the Verifier agent in Proofbench, an audit workbench.\n\nYou are given one numeric claim from a master document. You have read-only\ntools to search the vault (all basis/support documents):\n- list_documents: see what vault documents exist and their locations\n- search_facts: structured search over extracted entity/attribute/value facts\n  (e.g. entity=\"Revenue\", attribute=\"Q4 2025 actual\") -- prefer this for\n  precise numeric lookups\n- search_vault: full-text search over document contents\n- read_span: read the full text of a specific location\n\nUse these tools to find every span relevant to this claim -- supporting,\ncontradicting, or otherwise bearing on it -- before deciding a verdict.\nSearch under a few different phrasings/entities if your first search finds\nnothing; only conclude missing_evidence after making a genuine effort.\n\nComparison rules:\n- exact match: values must be equal after unit/currency normalization\n- tolerance match: within the claim's stated tolerance, if any\n- formula check: if the claim is a derived figure (e.g. a ratio or margin),\n  check it against the underlying inputs in the vault\n- contradiction: an authoritative source states a different value for the\n  same entity/period/role\n\nVerdict status must be exactly one of:\n- \"supported\": at least one vault span confirms the claim's value\n- \"contradicted\": an authoritative vault span gives a different value\n- \"ambiguous\": multiple vault spans disagree and neither is clearly authoritative\n- \"outdated\": the vault's best evidence is for a different, superseded period\n- \"missing_evidence\": no vault span addresses this claim at all\n\nFor each relevant span found, output an evidence object with:\n- doc_id, page (int or null), span_text (verbatim), canonical_value (number or null),\n  unit, role (one of \"actual\", \"budget\", \"forecast\", \"prior_period\", \"restated\", \"other\"),\n  effective_date (ISO date or null), extractor_confidence (0-1)\n\nThen output a verdict object with:\n- status (one of the five values above)\n- delta (claim value minus best evidence value, or null)\n- confidence (0-1)\n- rationale (one or two sentences)\n- suggested_action (one sentence on what a human reviewer should do next, or null if status is \"supported\")\n\nOnce you've searched enough to be confident, respond with ONLY a JSON object\nas your final answer. The top-level value MUST be a JSON *object* with\nexactly two keys, \"evidence\" and \"verdict\" -- for example:\n{\"evidence\": [...], \"verdict\": {...}}\nDo NOT respond with just the evidence array on its own. No prose, no\nmarkdown fences.\n",
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-03T10:26:29.887004+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {
+        "tag": "customer_appendix"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n    \"tag\": \"customer_appendix\",\n    \"format\": \"xlsx\",\n    \"locations\": [\n      \"sheet:Customer Summary\",\n      \"sheet:Segment Detail\"\n    ]\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-03T10:26:30.224692+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "Average annual contract value"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-03T10:26:30.396692+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "average annual contract value"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-03T10:26:35.994290+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-customer-appendix-q4-2025",
+        "location": "sheet:Customer Summary"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\n  \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n  \"location\": \"sheet:Customer Summary\",\n  \"text\": \"A1: Northstar Analytics | Q4 2025 Customer Appendix\\nA3: Document ID\\nB3: northstar-customer-appendix-q4-2025\\nA4: Reporting period\\nB4: Q4 2025\\nA5: As-of date\\nB5: 2025-12-31T00:00:00\\nA6: Issued\\nB6: 2026-01-16T00:00:00\\nA7: Status\\nB7: Final management reporting\\nA9: Segment\\nB9: Customers\\nC9: Annual recurring revenue\\nD9: ACV\\nE9: Period\\nF9: Role\\nA10: Strategic\\nB10: 18\\nC10: 648000\\nD10: 36000\\nE10: 2025-12-31\\nF10: actual\\nA11: Mid-market\\nB11: 52\\nC11: 1040000\\nD11: 20000\\nE11: 2025-12-31\\nF11: actual\\nA12: Growth\\nB12: 56\\nC12: 630400\\nD12: 11257.142857142857\\nE12: 2025-12-31\\nF12: actual\\nA13: Enterprise total\\nB13: 126\\nC13: 2318400\\nD13: 18400\\nE13: 2025-12-31\\nF13: actual\\nA15: Control note\\nA16: Enterprise ACV equals enterprise annual recurring revenue divided by enterprise customers: EUR 2,318,400 / 126 = EUR 18,400.\"\n}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-03T10:26:36.266969+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-customer-appendix-q4-2025",
+        "location": "sheet:Segment Detail"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\n  \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n  \"location\": \"sheet:Segment Detail\",\n  \"text\": \"A1: Enterprise Segment Detail\\nA4: Segment\\nB4: Customers\\nC4: ARR\\nD4: ACV\\nE4: As of\\nF4: Role\\nA5: Strategic\\nB5: 18\\nC5: 648000\\nD5: 36000\\nE5: 2025-12-31\\nF5: actual\\nA6: Mid-market\\nB6: 52\\nC6: 1040000\\nD6: 20000\\nE6: 2025-12-31\\nF6: actual\\nA7: Growth\\nB7: 56\\nC7: 630400\\nD7: 11257.142857142857\\nE7: 2025-12-31\\nF7: actual\"\n}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "cost_usd": 0.062766,
+  "status": "succeeded",
+  "error": null
+}

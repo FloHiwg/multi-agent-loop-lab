@@ -29,7 +29,7 @@
       "unit": "count",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.98
+      "extractor_confidence": 0.95
     }
   ],
   "verdict": {
@@ -40,8 +40,8 @@
     ],
     "delta": 0.0,
     "confidence": 0.98,
-    "rationale": "The operations review for Q4 2025 lists Employees at 84, defined as active employees at period end, which exactly matches the claim's value of 84 for the quarter ending 2025-12-31.",
+    "rationale": "The operations review reports 84 active employees for Q4 2025 (period end 2025-12-31), exactly matching the claim's value of 84. The same row shows Q3 2025 at 81, confirming the Q4 column aligns with the claim's period.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0005-20260703T101631Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0005-20260703T102604Z"
   }
 }

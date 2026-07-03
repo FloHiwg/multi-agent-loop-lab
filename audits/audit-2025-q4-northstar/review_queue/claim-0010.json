@@ -28,7 +28,7 @@
       "canonical_value": null,
       "unit": "percent",
       "role": "other",
-      "effective_date": "2025-12-31",
+      "effective_date": "2026-01-16",
       "extractor_confidence": 0.95
     },
     {
@@ -36,14 +36,14 @@
       "claim_id": "audit-2025-q4-northstar/claim-0010",
       "doc_id": "northstar-customer-appendix-q4-2025",
       "page": null,
-      "span_text": "Enterprise customers Q4 2025 = 126; Q3 2025 = 119 (from ops review). Customer appendix provides period-end customer counts only; no churn, loss, or gross logo churn figure is disclosed.",
+      "span_text": "Enterprise total | 126 | 2318400 | 18400 | 2025-12-31 | actual",
       "bbox": null,
       "char_offsets": null,
-      "canonical_value": null,
-      "unit": "percent",
+      "canonical_value": 126.0,
+      "unit": "customers",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.7
+      "extractor_confidence": 0.95
     }
   ],
   "verdict": {
@@ -54,10 +54,10 @@
       "audit-2025-q4-northstar/claim-0010/evidence-002"
     ],
     "delta": null,
-    "confidence": 0.85,
-    "rationale": "The Q4 2025 operations review explicitly states that no quarterly gross logo churn metric was approved for this review cycle, and the customer appendix discloses only period-end customer counts (not lost-logo data needed to derive gross churn), so no vault span confirms or contradicts the claimed 3.1%.",
-    "suggested_action": "Human reviewer should obtain the underlying logo add/loss detail for Q3\u2192Q4 2025 (or the source computation behind 3.1%) since the vault neither reports nor approves this metric.",
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0010-20260703T101644Z"
+    "confidence": 0.9,
+    "rationale": "No vault span provides a gross logo churn value for Q4 2025; the operations review explicitly states no quarterly gross logo churn metric was approved for this cycle, and the customer appendix contains only customer counts and ARR/ACV with no churn figure.",
+    "suggested_action": "Request the underlying churn calculation or cohort data from revenue operations; the 3.1% figure cannot be substantiated from current vault evidence.",
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0010-20260703T102649Z"
   },
   "human_decision": null
 }

@@ -40,8 +40,8 @@
     ],
     "delta": 0.02,
     "confidence": 0.9,
-    "rationale": "The operations review reports Q4 2025 net revenue retention of 106.0% on a trailing 12-month cohort basis, which is 2 percentage points below the master document's claimed 108.0%.",
-    "suggested_action": "Reconcile the master document's 108.0% figure against the operations review's 106.0%; determine whether the master value is a typo, a different methodology, or drawn from a superseded source.",
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0007-20260703T101633Z"
+    "rationale": "The operations review reports Q4 2025 net revenue retention of 106.0% on a trailing 12-month cohort basis, matching the claim's time scope, which contradicts the claim's 108.0%. The customer appendix (expected evidence type) contains no NRR figure; the ops document is the authoritative source.",
+    "suggested_action": "Confirm whether the master document's 108.0% was a typo and should read 106.0%, or locate the source that justifies the higher figure before publication.",
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0007-20260703T102617Z"
   }
 }

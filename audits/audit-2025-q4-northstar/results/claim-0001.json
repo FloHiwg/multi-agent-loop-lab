@@ -39,9 +39,9 @@
       "audit-2025-q4-northstar/claim-0001/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.95,
-    "rationale": "The Q4 2025 finance pack lists Revenue actual at 4.2800 million EUR, matching the claim's EUR 4.28 million exactly after unit normalization.",
+    "confidence": 0.97,
+    "rationale": "The Q4 2025 finance pack reports Q4 2025 actual Revenue as EUR 4.2800 million, which exactly matches the claim's canonical value of EUR 4,280,000.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0001-20260703T101619Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0001-20260703T102535Z"
   }
 }
