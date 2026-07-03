@@ -13,6 +13,7 @@ import sqlite3
 
 from claude_agent_sdk import McpSdkServerConfig, SdkMcpTool, create_sdk_mcp_server, tool
 
+from proofbench.graph import entity_profile_data, list_entities_data
 from proofbench.index_db import db_path
 
 _RESULT_CAP = 20
@@ -198,14 +199,69 @@ def _read_span_tool(audit_id: str, kind: str) -> SdkMcpTool:
     return read_span
 
 
+def _list_entities_tool(audit_id: str, kind: str) -> SdkMcpTool:
+    @tool(
+        "list_entities",
+        "List every canonical entity (row label) in the facts graph and which documents "
+        "mention it. Call this first to learn the corpus's actual vocabulary instead of "
+        "guessing entity names -- then use entity_profile or search_facts with an exact name.",
+        {"type": "object", "properties": {}, "required": []},
+    )
+    async def list_entities(args: dict) -> dict:
+        conn = _connect(audit_id)
+        try:
+            return _tool_result(list_entities_data(conn, kind))
+        finally:
+            conn.close()
+
+    return list_entities
+
+
+def _entity_profile_tool(audit_id: str, kind: str) -> SdkMcpTool:
+    @tool(
+        "entity_profile",
+        "Everything the facts graph knows about one entity: every value across all "
+        "documents and periods (with normalized period/role and the exact location for "
+        "read_span), plus mined arithmetic relationships (which rows sum to it / derive "
+        "from it, and on which columns that holds). The name is resolved fuzzily -- "
+        "'cash' finds 'Cash and cash equivalents'. One call here typically replaces "
+        "several search_facts/search_vault calls.",
+        {
+            "type": "object",
+            "properties": {"name": {"type": "string", "description": "Entity name or fragment"}},
+            "required": ["name"],
+        },
+    )
+    async def entity_profile(args: dict) -> dict:
+        conn = _connect(audit_id)
+        try:
+            profile = entity_profile_data(conn, kind, args["name"])
+            if profile is None:
+                return _tool_result(
+                    {"entity": None, "note": f"no entity matching {args['name']!r} -- try list_entities"}
+                )
+            return _tool_result(profile)
+        finally:
+            conn.close()
+
+    return entity_profile
+
+
 def build_server(
-    audit_id: str, kind: str, server_name: str, *, use_aliases: bool = False
+    audit_id: str,
+    kind: str,
+    server_name: str,
+    *,
+    use_aliases: bool = False,
+    include_graph_tools: bool = False,
 ) -> McpSdkServerConfig:
     """Build an in-process MCP server exposing search/read tools scoped to one
     document kind ("master" or "vault") of one audit's index.
 
     use_aliases makes search_facts also match LLM-generated entity aliases
-    (see catalog.py) -- an eval-harness variant, not (yet) the default.
+    (see catalog.py); include_graph_tools adds the pull-based graph tools
+    (list_entities, entity_profile -- see graph.py). Both are eval-harness
+    variants, not (yet) the default.
     """
     tools = [
         _list_documents_tool(audit_id, kind),
@@ -213,13 +269,20 @@ def build_server(
         _search_facts_tool(audit_id, kind, use_aliases),
         _read_span_tool(audit_id, kind),
     ]
+    if include_graph_tools:
+        tools.append(_list_entities_tool(audit_id, kind))
+        tools.append(_entity_profile_tool(audit_id, kind))
     return create_sdk_mcp_server(server_name, tools=tools)
 
 
-def allowed_tool_names(server_name: str) -> list[str]:
-    return [
+def allowed_tool_names(server_name: str, *, graph_tools: bool = False) -> list[str]:
+    names = [
         f"mcp__{server_name}__list_documents",
         f"mcp__{server_name}__search_vault",
         f"mcp__{server_name}__search_facts",
         f"mcp__{server_name}__read_span",
     ]
+    if graph_tools:
+        names.append(f"mcp__{server_name}__list_entities")
+        names.append(f"mcp__{server_name}__entity_profile")
+    return names

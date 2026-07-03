@@ -41,6 +41,7 @@ from proofbench.index_db import db_path
 from proofbench.llm import resolve_model
 from proofbench.models import Claim
 from proofbench.verification import (
+    GRAPH_TOOLS_PROMPT,
     SYSTEM_PROMPT,
     VerifyClaimError,
     _load_claims,
@@ -56,10 +57,17 @@ class Variant:
     name: str
     inject_catalog: bool = False
     use_aliases: bool = False
+    graph_tools: bool = False
 
 
 VARIANTS: dict[str, Variant] = {
     "baseline": Variant("baseline"),
+    # pull-based: the agent asks the graph for vocabulary/values when it
+    # needs them (list_entities, entity_profile) -- the direction chosen
+    # over prompt injection
+    "graph": Variant("graph", graph_tools=True),
+    # push-based (kept for comparison): catalog injected into the prompt,
+    # optionally with LLM-generated search aliases
     "catalog": Variant("catalog", inject_catalog=True),
     "catalog_aliases": Variant("catalog_aliases", inject_catalog=True, use_aliases=True),
 }
@@ -128,6 +136,7 @@ async def _eval_claim(
                 model=model,
                 system_prompt=system_prompt,
                 use_aliases=variant.use_aliases,
+                graph_tools=variant.graph_tools,
             )
         except VerifyClaimError as e:
             record["error"] = str(e)
@@ -231,6 +240,8 @@ async def run_eval_async(
         system_prompt = SYSTEM_PROMPT
         if variant.inject_catalog:
             system_prompt += catalog_prompt_section(audit_id)
+        if variant.graph_tools:
+            system_prompt += GRAPH_TOOLS_PROMPT
 
         semaphore = asyncio.Semaphore(max_concurrency)
         records = await asyncio.gather(

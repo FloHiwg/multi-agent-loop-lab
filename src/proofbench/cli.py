@@ -121,7 +121,7 @@ def enrich(audit_id: str) -> None:
 def eval_cmd(
     audit_id: str,
     variants: str = typer.Option(
-        "baseline,catalog,catalog_aliases",
+        "baseline,graph",
         help="Comma-separated variant names to run (see eval.py VARIANTS).",
     ),
     max_concurrency: int = typer.Option(2, help="Max claims verified at once per variant."),

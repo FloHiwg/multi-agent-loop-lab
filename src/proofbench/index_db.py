@@ -27,6 +27,7 @@ import json
 import sqlite3
 from pathlib import Path
 
+from proofbench.graph import build_graph
 from proofbench.ingest import INDEX_PARSED_DIR, load_audit_config
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -48,7 +49,25 @@ CREATE TABLE facts (
     location TEXT NOT NULL,
     entity TEXT NOT NULL,
     attribute TEXT NOT NULL,
-    value TEXT NOT NULL
+    value TEXT NOT NULL,
+    entity_id INTEGER,
+    period TEXT,
+    role TEXT
+);
+
+CREATE TABLE entities (
+    entity_id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    norm TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE edges (
+    id INTEGER PRIMARY KEY,
+    kind TEXT NOT NULL,
+    doc_id TEXT NOT NULL,
+    target_entity_id INTEGER NOT NULL,
+    input_entity_ids_json TEXT NOT NULL,
+    detail_json TEXT NOT NULL
 );
 
 CREATE TABLE fact_aliases (
@@ -98,6 +117,9 @@ def build_index(audit_id: str) -> Path:
                 _index_pdf(conn, doc.doc_id, parsed)
             elif doc.format.value == "xlsx":
                 _index_xlsx(conn, doc.doc_id, parsed)
+        # graph layer over the freshly-inserted facts: canonical entities,
+        # period/role normalization, mined arithmetic edges (see graph.py)
+        build_graph(conn)
         conn.commit()
     finally:
         conn.close()

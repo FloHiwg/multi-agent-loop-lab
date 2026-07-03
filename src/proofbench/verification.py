@@ -94,6 +94,21 @@ markdown fences.
 """
 
 
+GRAPH_TOOLS_PROMPT = """\
+
+You additionally have graph tools over the facts index -- prefer them first:
+- entity_profile: everything known about one entity in a single call -- every
+  value across all documents and periods, plus mined arithmetic relationships
+  (which rows sum to it, on which columns). The name resolves fuzzily
+  ('cash' finds 'Cash and cash equivalents'), so try it with the claim's own
+  wording before guessing search terms.
+- list_entities: every canonical entity name and its documents -- use it when
+  entity_profile finds nothing, to see what vocabulary actually exists.
+Fall back to search_vault/search_facts/read_span for narrative text and for
+reading the verbatim span you cite as evidence.
+"""
+
+
 class VerifyClaimError(ValueError):
     """Raised when the agent's final reply doesn't parse into a valid
     verdict. Carries the AgentReply's tool_trace/final_text so the Manager
@@ -117,18 +132,23 @@ async def verify_claim_async(
     model: str | None = None,
     system_prompt: str | None = None,
     use_aliases: bool = False,
+    graph_tools: bool = False,
 ) -> tuple[list[EvidenceCandidate], Verdict, AgentReply]:
-    # system_prompt/use_aliases exist for the eval harness (eval.py), which
-    # runs prompt/retrieval variants against gold.yaml -- production callers
-    # leave both at their defaults.
-    server = build_server(audit_id, "vault", SERVER_NAME, use_aliases=use_aliases)
+    # system_prompt/use_aliases/graph_tools exist for the eval harness
+    # (eval.py), which runs prompt/retrieval variants against gold.yaml --
+    # production callers leave them at their defaults.
+    server = build_server(
+        audit_id, "vault", SERVER_NAME, use_aliases=use_aliases, include_graph_tools=graph_tools
+    )
+    if system_prompt is None:
+        system_prompt = SYSTEM_PROMPT + (GRAPH_TOOLS_PROMPT if graph_tools else "")
     user_prompt = f"CLAIM:\n{claim.model_dump_json(indent=2)}"
     reply = await run_agent(
-        system_prompt or SYSTEM_PROMPT,
+        system_prompt,
         user_prompt,
         model=model,
         mcp_servers={SERVER_NAME: server},
-        allowed_tools=allowed_tool_names(SERVER_NAME),
+        allowed_tools=allowed_tool_names(SERVER_NAME, graph_tools=graph_tools),
     )
     raw = extract_json(reply.text)
     if not isinstance(raw, dict) or "evidence" not in raw or "verdict" not in raw:

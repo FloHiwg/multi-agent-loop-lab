@@ -410,6 +410,51 @@ dismissing as noise. When it happens, the Manager isolates it as one
 writes to a fixed path, so reruns are idempotent) rather than needing the
 whole run redone.
 
+## Graph layer (`src/proofbench/graph.py`)
+
+**The direction decision.** After the catalog/alias experiments, the
+chosen path is deepening the retrieval architecture itself rather than
+prompt injection: first a real graph over the facts index (this section),
+then RLM-style recursive verification on top of it (see "What's still
+ahead"). The unifying stance is **pull-based context**: the agent asks
+for what it needs through tools, coding-agent style, instead of having
+digests pushed into its prompt. This supersedes the catalog-injection
+idea (the `catalog`/`catalog_aliases` eval variants remain in the
+registry for comparison, but they're the road not taken).
+
+**What it builds, all deterministically at `proofbench index` time** (no
+LLM calls -- buildable and testable for free):
+
+- **Entity resolution** (`entities` table): one canonical node per
+  normalized name (whitespace-collapsed, casefolded), merged across
+  documents, with every fact linked via `facts.entity_id`. The
+  principled version of what LLM aliases approximated.
+- **Period/role normalization** (`facts.period`, `facts.role`):
+  attribute strings parse into comparable forms -- "Q4 2025 actual" →
+  ("2025-Q4", "actual"), "31 Dec 2025" → ("2025-12-31", None) -- so
+  "same entity, same period, different value" (the cross-document
+  contradiction case) becomes a query.
+- **Arithmetic edge mining** (`edges` table): within each table, a row
+  whose values equal the sum/difference of earlier rows gets a typed
+  edge (`aggregates`/`derived_from`), checked per column. Guard against
+  coincidence: the relation must hold on ≥2 columns when the target has
+  ≥2 numeric columns -- but not on *all* columns, since e.g. a segment
+  table's count and ARR columns aggregate while its ACV (ratio) column
+  correctly doesn't. On Northstar this mines exactly the four real
+  relationships (Gross profit, Adjusted EBITDA, Cash and cash
+  equivalents, Enterprise total) with zero false positives, including
+  the signed-value subtlety that "Gross profit = Revenue + Cost of
+  revenue" because costs are parenthesized negatives.
+
+**Agent-facing tools** (tools.py, behind `include_graph_tools`, exercised
+via the `graph` eval variant before becoming default):
+- `list_entities` -- the corpus's actual vocabulary and where it lives.
+- `entity_profile` -- one call returns every value for an entity across
+  all documents and periods plus its mined edges, with fuzzy,
+  kind-scoped name resolution ("cash" → "Cash and cash equivalents").
+  This single call replaces the multi-call search dance that made
+  verification expensive (claim-0004's 6 calls, claim-0010's 13).
+
 ## Eval harness (`src/proofbench/eval.py`, `src/proofbench/catalog.py`)
 
 **Why it exists.** Verification runs are both expensive (real LLM spend
@@ -464,6 +509,20 @@ via `proofbench eval`.
 
 ## What's still ahead
 
+- **RLM phase: recursive verification over the graph** (scoped, next
+  after the graph variant proves out). The Verifier becomes a recursive
+  reader: decompose a claim into sub-questions (find the value / check
+  the derivation / scan for contradicting sources), answer each with a
+  narrow, cheap sub-agent call whose tools are scoped to that
+  sub-question, compose the verdict at the top. Design constraints
+  already decided: depth 1 to start, per-recursion budget enforced by
+  the same Manager machinery, and the graph tools as the substrate
+  (`entity_profile` is what makes a sub-question answerable in one
+  call). This is deliberately sequenced after the graph layer because a
+  recursive reader over flat FTS would spend its recursion budget on
+  vocabulary guessing. It matters most once vaults outgrow the 3-doc
+  fixture -- and it's the paid-run-heavy phase, so it waits for the
+  graph eval results to set a baseline.
 - **Retrieval quality at scale.** The tool-based search (`spans_fts` +
   `facts`) has only been exercised against a 3-document vault; whether the
   facts-graph heuristics (header detection, nearest-header-above for XLSX)
