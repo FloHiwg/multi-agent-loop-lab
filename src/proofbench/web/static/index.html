@@ -86,6 +86,9 @@
   .job-card.expanded .job-card-body { display: block; }
   .job-card-body .final-answer { background: #f6f8fa; border-radius: 4px; padding: 8px 10px; font-family: "SF Mono", Consolas, monospace; font-size: 12px; white-space: pre-wrap; word-break: break-word; margin-top: 8px; }
   .expand-caret { font-size: 10px; color: var(--muted); }
+  .history-tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+  .history-tab { border: none; background: none; padding: 8px 14px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
+  .history-tab.active { color: var(--teal); border-bottom-color: var(--teal); }
 </style>
 </head>
 <body>
@@ -148,16 +151,13 @@
   </section>
 
   <section id="view-history" class="view">
-    <div class="doc-toolbar">
-      <label class="muted">Orchestration run:</label>
-      <select id="history-select"></select>
-    </div>
+    <div class="history-tabs" id="history-tabs"></div>
     <div id="history-content"></div>
   </section>
 </main>
 
 <script>
-const state = { auditId: null, view: "audit", doc: { docId: null, page: 1, pagesMeta: [] }, historyRunId: null, historyExpanded: new Set() };
+const state = { auditId: null, view: "audit", doc: { docId: null, page: 1, pagesMeta: [] }, historyRunId: null, historyRole: null, historyExpanded: new Set() };
 
 async function api(path) {
   const res = await fetch(path);
@@ -515,25 +515,53 @@ async function refresh() {
   }
 }
 
+const HISTORY_ROLE_LABELS = { claim_extractor: "Claim Extractor", verifier: "Verifier" };
+
+function historyRoleOf(runId) {
+  // manager run_ids look like "<audit_id>/manage-<agent_role>-<timestamp>"
+  const m = runId.match(/manage-(.+)-\d{8}T\d{6}Z$/);
+  return m ? m[1] : "unknown";
+}
+
 async function loadHistoryView() {
   if (!state.auditId) return;
   const runs = await api(`/api/runs?audit_id=${state.auditId}`);
-  const managerRuns = runs.filter(r => r.agent_role === "manager");
-  const select = document.getElementById("history-select");
+  const managerRuns = runs.filter(r => r.agent_role === "manager"); // API returns these newest-first
+  const tabsEl = document.getElementById("history-tabs");
   const content = document.getElementById("history-content");
 
   if (managerRuns.length === 0) {
-    select.innerHTML = "";
+    tabsEl.innerHTML = "";
     content.innerHTML = `<div class="muted">No orchestration runs yet -- run \`proofbench extract\` or \`proofbench verify\`.</div>`;
     return;
   }
-  if (!state.historyRunId || !managerRuns.some(r => r.run_id === state.historyRunId)) {
-    state.historyRunId = managerRuns[0].run_id;
-  }
-  select.innerHTML = managerRuns.map(r =>
-    `<option value="${r.run_id}" ${r.run_id === state.historyRunId ? "selected" : ""}>${r.run_id.split('/').pop()} (${fmtTime(r.started_at)})</option>`
-  ).join("");
 
+  // One tab per agent role that has run at least once; each tab shows
+  // that role's most recent orchestration run.
+  const latestByRole = {};
+  for (const r of managerRuns) {
+    const role = historyRoleOf(r.run_id);
+    if (!(role in latestByRole)) latestByRole[role] = r;
+  }
+  const roles = Object.keys(latestByRole);
+  if (!state.historyRole || !roles.includes(state.historyRole)) {
+    state.historyRole = roles[0];
+  }
+
+  tabsEl.innerHTML = roles.map(role => `
+    <button class="history-tab ${role === state.historyRole ? "active" : ""}" data-role="${role}">
+      ${HISTORY_ROLE_LABELS[role] || role}
+    </button>
+  `).join("");
+  tabsEl.querySelectorAll(".history-tab").forEach(btn =>
+    btn.addEventListener("click", () => {
+      state.historyRole = btn.dataset.role;
+      state.historyExpanded.clear();
+      loadHistoryView();
+    })
+  );
+
+  state.historyRunId = latestByRole[state.historyRole].run_id;
   const data = await api(`/api/history/${encodeURIComponent(state.historyRunId)}`);
   renderHistory(data, content);
 }
@@ -630,6 +658,7 @@ document.getElementById("audit-select").addEventListener("change", e => {
   state.auditId = e.target.value;
   state.doc.docId = null;
   state.historyRunId = null;
+  state.historyRole = null;
   refresh();
 });
 document.getElementById("doc-select").addEventListener("change", e => {
@@ -642,11 +671,6 @@ document.getElementById("doc-prev").addEventListener("click", () => {
 });
 document.getElementById("doc-next").addEventListener("click", () => {
   if (state.doc.page < state.doc.pagesMeta.length) { state.doc.page += 1; loadDocumentView(); }
-});
-document.getElementById("history-select").addEventListener("change", e => {
-  state.historyRunId = e.target.value;
-  state.historyExpanded.clear();
-  loadHistoryView();
 });
 
 refresh();
