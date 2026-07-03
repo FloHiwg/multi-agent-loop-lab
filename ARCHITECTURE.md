@@ -25,6 +25,11 @@ index/search/<audit-id>.db              -- rebuildable, gitignored
         ├──▶ Claim Extractor (tools scoped kind=master) ──▶ claims/
         │
         └──▶ Verifier (tools scoped kind=vault) ──▶ results/ + review_queue/
+                                                          │
+                                              runs/*.json (RunManifest, incl. tool_trace)
+                                                          │
+                                                          ▼
+                                          proofbench serve -- read-only workbench UI
 ```
 
 Everything above the `ingest` line is durable input (raw documents, config).
@@ -48,6 +53,10 @@ proofbench/
     llm.py                     # Claude Agent SDK wrapper (model, credentials, tool loop)
     extraction.py               # Claim Extractor agent
     verification.py            # Vault Retriever + Verifier agent
+    manager.py                 # bounded concurrency, failure isolation, cost budget
+    runlog.py                  # shared RunManifest writer
+    web/api.py                 # read-only FastAPI backend for the workbench UI
+    web/static/index.html      # workbench frontend (vanilla JS, no build step)
     cli.py                     # `proofbench` command entry points
   schemas/                     # JSON Schema, exported from models.py
   audits/<audit-id>/
@@ -203,9 +212,46 @@ proofbench init <audit-id>       # parse registered documents into index/parsed/
 proofbench index <audit-id>      # build index/search/<audit-id>.db from index/parsed/
 proofbench extract <audit-id> [--max-budget-usd X]
 proofbench verify <audit-id> [--max-concurrency N] [--max-budget-usd X]
+proofbench serve [--host H] [--port P]     # workbench UI at http://127.0.0.1:8420
 ```
 
-Run order: `new` (first time only) → `init` → `index` → `extract` → `verify`.
+Run order: `new` (first time only) → `init` → `index` → `extract` → `verify`, with
+`serve` runnable any time (including concurrently, in another terminal, while
+`extract`/`verify` are running) to watch progress.
+
+## Workbench UI (`src/proofbench/web/`)
+
+`proofbench serve` starts a FastAPI app (`web/api.py`) that only ever reads
+the existing on-disk state -- `audits/`, `runs/`, `index/search/<id>.db` --
+and serves a single-page vanilla-JS frontend (`web/static/index.html`, no
+build step, matches the "local, inspectable" stance). There is no separate
+database, cache, or websocket layer: "live" progress is the frontend
+re-polling every 3 seconds while a `proofbench verify` run in another
+terminal writes new files.
+
+Three views, matching CONCEPT.md §7 plus the Agent Run panel from the
+original concept discussion:
+
+- **Audit** — coverage counts by verdict status, the claim list, and a
+  claim detail panel (evidence spans, verdict, rationale, and a link
+  straight to the exact run that produced it).
+- **Vault** — registered documents with live span/fact counts from the
+  SQLite index, so it's visible whether `proofbench index` actually
+  extracted anything from each document.
+- **Agent Runs** — every `RunManifest`, newest first, with status/model/
+  cost/tool-call-count; clicking one shows the full `tool_trace` (every
+  `search_vault`/`search_facts`/`read_span`/`list_documents` call the
+  agent made, with real input/output, in order) plus the system prompt.
+  This is what makes the tool-based retrieval from the previous session
+  actually inspectable instead of a black box.
+
+**Effective claim status is computed by the API, not stored on the
+claim.** `Claim.status` (in `models.py`) is set once at extraction time
+and never updated -- keeping `claims/` as the Claim Extractor's exclusive
+write surface. The API instead joins `claims/` against `results/` (has a
+verdict → that status), `review_queue/` (needs review), and
+`runs/*__failed-*.json`'s `input_refs` (failed) to compute `effective_status`
+per claim. This avoids a second writer touching files another agent owns.
 
 ## Status vs. CONCEPT.md build order
 
@@ -214,6 +260,7 @@ Run order: `new` (first time only) → `init` → `index` → `extract` → `ver
 | 1. Schemas | done |
 | 2. Ingest | done (PDF + XLSX; OCR deferred) |
 | 3. Extract + verify loop | done -- tool-based agentic search over an FTS5 + facts-graph index (not a full-corpus-dump prompt), bounded-concurrency Manager with per-claim failure isolation and a cost budget, validated end-to-end against the Northstar fixture, matches `gold.yaml` exactly |
+| 4. Workbench UI | done -- read-only FastAPI + vanilla-JS frontend over the existing files, including full tool-call traces per run |
 | 4. Workbench UI | not started |
 | 5. Tolerance/formula rules | not started (schema already in place; enforcement logic isn't) |
 
@@ -301,5 +348,9 @@ idempotent) rather than needing the whole run redone.
   hold up on messier real-world tables is untested. Watch for silently
   wrong entity/attribute pairing on tables that don't match the "clean
   header row" shape the fixture has.
-- **Workbench UI**, **tolerance/formula rule enforcement** (schema exists,
-  nothing evaluates a `FormulaCheck` yet).
+- **Tolerance/formula rule enforcement** (schema exists, nothing evaluates
+  a `FormulaCheck` yet).
+- **Human review actions aren't wired up.** The workbench UI shows
+  `human_decision` from `review_queue/*.json` but there's no accept/
+  reject/escalate action yet -- CONCEPT.md's Claim review view has actions,
+  this only has display.
