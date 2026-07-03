@@ -8,3 +8,6 @@ __pycache__/
 
 # index/ is derived, rebuildable state (see ARCHITECTURE.md) -- never commit it
 index/
+
+# secrets
+.env
