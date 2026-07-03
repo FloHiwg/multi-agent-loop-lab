@@ -127,6 +127,9 @@ def eval_cmd(
     max_concurrency: int = typer.Option(2, help="Max claims verified at once per variant."),
     max_budget_usd: float | None = typer.Option(None, help="Soft cap on total experiment cost, across all variants."),
     experiment_id: str | None = typer.Option(None, help="Name for runs/experiments/<id>/; defaults to a timestamp."),
+    claims: str | None = typer.Option(
+        None, help="Comma-separated claim suffixes (e.g. 'claim-0004,claim-0007') to run a cheap subset smoke test."
+    ),
 ) -> None:
     """Run Verifier variants against gold.yaml and compare cost vs accuracy.
 
@@ -136,12 +139,14 @@ def eval_cmd(
     from proofbench.eval import run_eval
 
     variant_names = [v.strip() for v in variants.split(",") if v.strip()]
+    claim_suffixes = [c.strip() for c in claims.split(",") if c.strip()] if claims else None
     report = run_eval(
         audit_id,
         variant_names,
         max_concurrency=max_concurrency,
         max_budget_usd=max_budget_usd,
         experiment_id=experiment_id,
+        claim_suffixes=claim_suffixes,
     )
 
     typer.echo(f"experiment {report['experiment_id']} (model {report['model']}) -- total cost ${report['total_cost_usd']:.4f}\n")

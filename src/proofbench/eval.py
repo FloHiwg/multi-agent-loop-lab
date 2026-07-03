@@ -190,6 +190,7 @@ async def run_eval_async(
     max_budget_usd: float | None = None,
     experiment_id: str | None = None,
     model: str | None = None,
+    claim_suffixes: list[str] | None = None,
 ) -> dict:
     if not db_path(audit_id).exists():
         raise FileNotFoundError(f"{db_path(audit_id)} not found -- run `proofbench index {audit_id}` first")
@@ -200,6 +201,15 @@ async def run_eval_async(
 
     gold = load_gold(audit_id)
     claims = _load_claims(audit_id)
+    # claim_suffixes subsets the run (e.g. ["claim-0004"]) for cheap smoke
+    # tests -- accuracy over a subset is directional only, not comparable
+    # to full-batch numbers.
+    if claim_suffixes is not None:
+        wanted = set(claim_suffixes)
+        claims = [c for c in claims if c.claim_id.split("/")[-1] in wanted]
+        missing = wanted - {c.claim_id.split("/")[-1] for c in claims}
+        if missing:
+            raise ValueError(f"no such claims: {sorted(missing)}")
     resolved_model = resolve_model(model)
     experiment_id = experiment_id or f"exp-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
     experiment_dir = EXPERIMENTS_DIR / experiment_id
@@ -284,6 +294,7 @@ def run_eval(
     max_budget_usd: float | None = None,
     experiment_id: str | None = None,
     model: str | None = None,
+    claim_suffixes: list[str] | None = None,
 ) -> dict:
     return asyncio.run(
         run_eval_async(
@@ -293,5 +304,6 @@ def run_eval(
             max_budget_usd=max_budget_usd,
             experiment_id=experiment_id,
             model=model,
+            claim_suffixes=claim_suffixes,
         )
     )
