@@ -1,5 +1,62 @@
 {
   "$defs": {
+    "DocumentFormat": {
+      "enum": [
+        "pdf",
+        "xlsx"
+      ],
+      "title": "DocumentFormat",
+      "type": "string"
+    },
+    "DocumentKind": {
+      "enum": [
+        "master",
+        "vault"
+      ],
+      "title": "DocumentKind",
+      "type": "string"
+    },
+    "DocumentRef": {
+      "description": "One entry in an audit's document registry, pointing at a file on disk.",
+      "properties": {
+        "doc_id": {
+          "title": "Doc Id",
+          "type": "string"
+        },
+        "path": {
+          "description": "Path relative to the repo root",
+          "title": "Path",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/DocumentKind"
+        },
+        "format": {
+          "$ref": "#/$defs/DocumentFormat"
+        },
+        "tag": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Evidence class, e.g. 'finance_pack' -- matches evidence_priority",
+          "title": "Tag"
+        }
+      },
+      "required": [
+        "doc_id",
+        "path",
+        "kind",
+        "format"
+      ],
+      "title": "DocumentRef",
+      "type": "object"
+    },
     "ExactMatch": {
       "properties": {
         "kind": {
@@ -100,6 +157,14 @@
         "type": "string"
       },
       "title": "Evidence Priority",
+      "type": "array"
+    },
+    "documents": {
+      "description": "Registry of master + vault documents this audit draws on",
+      "items": {
+        "$ref": "#/$defs/DocumentRef"
+      },
+      "title": "Documents",
       "type": "array"
     },
     "created_at": {
