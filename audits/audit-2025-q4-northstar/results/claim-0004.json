@@ -22,11 +22,11 @@
       "claim_id": "audit-2025-q4-northstar/claim-0004",
       "doc_id": "northstar-finance-q4-2025",
       "page": 1,
-      "span_text": "Cash and cash equivalents 2.1000",
+      "span_text": "Cash and cash equivalents\n2.1000\n1.8100",
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 2100000.0,
-      "unit": "EUR",
+      "unit": "currency",
       "role": "actual",
       "effective_date": "2025-12-31",
       "extractor_confidence": 0.98
@@ -39,9 +39,9 @@
       "audit-2025-q4-northstar/claim-0004/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.97,
-    "rationale": "The Q4 2025 Finance Pack liquidity table reports cash and cash equivalents of EUR 2.1000 million as of 31 Dec 2025, matching the claim exactly.",
+    "confidence": 0.98,
+    "rationale": "The Q4 2025 Finance Pack reports Cash and cash equivalents of EUR 2.1000 million as of 31 Dec 2025, exactly matching the claimed quarter-end cash of EUR 2.10 million.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0004-20260703T090023Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0004-20260703T093434Z"
   }
 }

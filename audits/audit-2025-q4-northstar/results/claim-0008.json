@@ -2,7 +2,7 @@
   "claim": {
     "claim_id": "audit-2025-q4-northstar/claim-0008",
     "label": "Average annual contract value",
-    "raw_text": "Average annual contract value was EUR 18.4 thousand",
+    "raw_text": "Average annual contract value was EUR 18.4 thousand.",
     "canonical_value": 18400.0,
     "unit": "currency",
     "currency": "EUR",
@@ -22,14 +22,14 @@
       "claim_id": "audit-2025-q4-northstar/claim-0008",
       "doc_id": "northstar-customer-appendix-q4-2025",
       "page": null,
-      "span_text": "Enterprise total | 126 | 2318400 | 18400 | 2025-12-31 | actual",
+      "span_text": "A13: Enterprise total | B13: 126 | C13: 2318400 | D13: 18400 | E13: 2025-12-31 | F13: actual",
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 18400.0,
-      "unit": "EUR",
+      "unit": "currency",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.97
+      "extractor_confidence": 0.98
     },
     {
       "evidence_id": "audit-2025-q4-northstar/claim-0008/evidence-002",
@@ -40,10 +40,10 @@
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 18400.0,
-      "unit": "EUR",
+      "unit": "currency",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.98
+      "extractor_confidence": 0.99
     }
   ],
   "verdict": {
@@ -54,9 +54,9 @@
       "audit-2025-q4-northstar/claim-0008/evidence-002"
     ],
     "delta": 0.0,
-    "confidence": 0.97,
-    "rationale": "The customer appendix's Enterprise total row and its control note both confirm ACV of EUR 2,318,400 / 126 customers = EUR 18,400, matching the claim exactly.",
+    "confidence": 0.99,
+    "rationale": "The Q4 2025 Customer Appendix reports Enterprise total ACV of EUR 18,400 as of 2025-12-31, with a control note confirming the formula (EUR 2,318,400 ARR / 126 customers), exactly matching the claim's EUR 18.4 thousand.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0008-20260703T090110Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0008-20260703T093459Z"
   }
 }

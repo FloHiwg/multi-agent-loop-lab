@@ -26,37 +26,22 @@
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 740000.0,
-      "unit": "EUR",
+      "unit": "currency",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.98
-    },
-    {
-      "evidence_id": "audit-2025-q4-northstar/claim-0002/evidence-002",
-      "claim_id": "audit-2025-q4-northstar/claim-0002",
-      "doc_id": "northstar-finance-q4-2025",
-      "page": 1,
-      "span_text": "Revenue and adjusted EBITDA reconcile to the December management ledger.",
-      "bbox": null,
-      "char_offsets": null,
-      "canonical_value": null,
-      "unit": "EUR",
-      "role": "other",
-      "effective_date": "2025-12-31",
-      "extractor_confidence": 0.7
+      "extractor_confidence": 0.99
     }
   ],
   "verdict": {
     "claim_id": "audit-2025-q4-northstar/claim-0002",
     "status": "supported",
     "matched_evidence_ids": [
-      "audit-2025-q4-northstar/claim-0002/evidence-001",
-      "audit-2025-q4-northstar/claim-0002/evidence-002"
+      "audit-2025-q4-northstar/claim-0002/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.97,
-    "rationale": "The Q4 2025 finance pack income statement reports Adjusted EBITDA of EUR 0.7400 million (EUR 740,000) for the Q4 2025 actual period, exactly matching the claim.",
+    "confidence": 0.99,
+    "rationale": "The Q4 2025 Finance Pack income statement reports Adjusted EBITDA of EUR 0.7400 million for Q4 2025 actual, exactly matching the claim's EUR 0.74 million; a control note confirms reconciliation to the December management ledger.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0002-20260703T085955Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0002-20260703T093421Z"
   }
 }

@@ -1,7 +1,7 @@
 {
   "claim_id": "audit-2025-q4-northstar/claim-0010",
   "label": "Gross logo churn",
-  "raw_text": "Gross logo churn was 3.1% for Q4",
+  "raw_text": "Gross logo churn was 3.1% for Q4.",
   "canonical_value": 0.031,
   "unit": "percent",
   "currency": null,

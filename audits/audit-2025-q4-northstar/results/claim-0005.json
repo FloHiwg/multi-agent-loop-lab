@@ -1,8 +1,8 @@
 {
   "claim": {
     "claim_id": "audit-2025-q4-northstar/claim-0005",
-    "label": "Employee headcount",
-    "raw_text": "The organisation ended the quarter with 84 employees",
+    "label": "Employee count",
+    "raw_text": "The organisation ended the quarter with 84 employees.",
     "canonical_value": 84.0,
     "unit": "count",
     "currency": null,
@@ -22,14 +22,14 @@
       "claim_id": "audit-2025-q4-northstar/claim-0005",
       "doc_id": "northstar-ops-q4-2025",
       "page": 1,
-      "span_text": "Employees | 84 | 81 | Active employees at period end",
+      "span_text": "Employees\n84\n81\nActive employees at period end",
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 84.0,
       "unit": "count",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.97
+      "extractor_confidence": 0.98
     }
   ],
   "verdict": {
@@ -39,9 +39,9 @@
       "audit-2025-q4-northstar/claim-0005/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.95,
-    "rationale": "The Q4 2025 Operations Review reports 84 active employees at period end (31 Dec 2025), matching the claim exactly, with headcount explicitly attributed to People Operations.",
+    "confidence": 0.98,
+    "rationale": "The Q4 2025 Operations Review explicitly reports 84 employees at period end (Q4 2025), matching the claim's value exactly. The metric definition confirms these are active employees at period end as of 31 Dec 2025.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0005-20260703T090036Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0005-20260703T093439Z"
   }
 }

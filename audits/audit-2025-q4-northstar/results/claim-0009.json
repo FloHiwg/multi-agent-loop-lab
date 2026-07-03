@@ -1,13 +1,13 @@
 {
   "claim": {
     "claim_id": "audit-2025-q4-northstar/claim-0009",
-    "label": "Support ticket QoQ change",
-    "raw_text": "Customer support tickets declined 12.0% quarter over quarter",
+    "label": "Support ticket change QoQ",
+    "raw_text": "Customer support tickets declined 12.0% quarter over quarter.",
     "canonical_value": -0.12,
     "unit": "percent_change",
     "currency": null,
     "entity": "Northstar Analytics GmbH",
-    "time_scope": "Q4 2025 vs Q3 2025",
+    "time_scope": "Q4 vs Q3 2025",
     "tolerance_rule": {
       "kind": "exact"
     },
@@ -22,6 +22,34 @@
       "claim_id": "audit-2025-q4-northstar/claim-0009",
       "doc_id": "northstar-ops-q4-2025",
       "page": 1,
+      "span_text": "Tickets opened\n1,100\n1,250\n-150",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 1100.0,
+      "unit": "tickets",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0009/evidence-002",
+      "claim_id": "audit-2025-q4-northstar/claim-0009",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "Tickets opened\n1,100\n1,250\n-150",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 1250.0,
+      "unit": "tickets",
+      "role": "prior_period",
+      "effective_date": "2025-09-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0009/evidence-003",
+      "claim_id": "audit-2025-q4-northstar/claim-0009",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
       "span_text": "The quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%.",
       "bbox": null,
       "char_offsets": null,
@@ -30,20 +58,6 @@
       "role": "actual",
       "effective_date": "2025-12-31",
       "extractor_confidence": 0.99
-    },
-    {
-      "evidence_id": "audit-2025-q4-northstar/claim-0009/evidence-002",
-      "claim_id": "audit-2025-q4-northstar/claim-0009",
-      "doc_id": "northstar-ops-q4-2025",
-      "page": 1,
-      "span_text": "Tickets opened 1,100 1,250 -150",
-      "bbox": null,
-      "char_offsets": null,
-      "canonical_value": -0.12,
-      "unit": "percent_change",
-      "role": "actual",
-      "effective_date": "2025-12-31",
-      "extractor_confidence": 0.95
     }
   ],
   "verdict": {
@@ -51,12 +65,13 @@
     "status": "supported",
     "matched_evidence_ids": [
       "audit-2025-q4-northstar/claim-0009/evidence-001",
-      "audit-2025-q4-northstar/claim-0009/evidence-002"
+      "audit-2025-q4-northstar/claim-0009/evidence-002",
+      "audit-2025-q4-northstar/claim-0009/evidence-003"
     ],
     "delta": 0.0,
-    "confidence": 0.98,
-    "rationale": "The ops review explicitly computes and states the QoQ decline in tickets opened as -12.0%, matching the claim exactly and consistent with the underlying raw counts (1,100 vs 1,250).",
+    "confidence": 0.99,
+    "rationale": "The Q4 2025 Operations Review explicitly computes the QoQ change in tickets opened as (1,100 - 1,250) / 1,250 = -12.0%, matching the claim exactly.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0009-20260703T090122Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0009-20260703T093506Z"
   }
 }
