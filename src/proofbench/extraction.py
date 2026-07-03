@@ -60,15 +60,14 @@ objects as your final answer. No prose, no markdown fences.
 """
 
 
-async def _process_extraction(audit_id: str, model: str, claims_out: list[Claim]) -> float | None:
+async def _process_extraction(run_id: str, audit_id: str, model: str, claims_out: list[Claim]) -> float | None:
     """The extraction job: run the agent, write claims + its own succeeded
-    RunManifest, append results into claims_out, return cost_usd. Raises on
-    failure -- the Manager catches that and records it.
+    RunManifest (under the run_id the Manager assigned it), append results
+    into claims_out, return cost_usd. Raises on failure -- the Manager
+    catches that and records it.
     """
     config = load_audit_config(audit_id)
     server = build_server(audit_id, "master", SERVER_NAME)
-
-    run_id = f"{audit_id}/extract-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
     started_at = datetime.now(timezone.utc)
 
     reply = await run_agent(
@@ -123,7 +122,7 @@ async def extract_claims_async(
         audit_id=audit_id,
         agent_role=AgentRole.CLAIM_EXTRACTOR,
         model=model,
-        run_fn=lambda: _process_extraction(audit_id, model, claims),
+        run_fn=lambda run_id: _process_extraction(run_id, audit_id, model, claims),
     )
     report = await run_jobs([job], max_concurrency=1, max_budget_usd=max_budget_usd)
 

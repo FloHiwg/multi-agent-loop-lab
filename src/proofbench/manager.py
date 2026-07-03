@@ -19,6 +19,13 @@ judges evidence or decides verdicts. Concretely, that means:
 Each job is responsible for its own success-path writes (results,
 review cards, its own succeeded RunManifest) -- the Manager only knows
 enough to schedule it and to record a generic failure if it raises.
+
+The Manager also writes exactly one RunManifest for itself
+(`agent_role=AgentRole.MANAGER`) per `run_jobs()` call, once every job has
+finished: the concurrency/budget it was given, and the outcome (and
+run_id, for linking) of every job it scheduled. Without this, there was no
+single record of what the orchestrator actually decided -- only many
+individual job manifests a person would have to cross-reference by hand.
 """
 
 from __future__ import annotations
@@ -40,8 +47,10 @@ class Job:
     audit_id: str
     agent_role: AgentRole
     model: str
-    run_fn: Callable[[], Awaitable[float | None]]
-    """Does its own success-path writes and returns the job's cost_usd (or None if unknown)."""
+    run_fn: Callable[[str], Awaitable[float | None]]
+    """Takes the run_id the Manager assigned this job, does its own
+    success-path writes (using that run_id), and returns the job's
+    cost_usd (or None if unknown)."""
 
 
 @dataclass
@@ -52,37 +61,40 @@ class ManagerReport:
     total_cost_usd: float = 0.0
 
 
+def _job_run_id(job: Job) -> str:
+    # job_id may already be "<audit_id>/claim-000X" (verification) or a
+    # bare id like "master" (extraction) -- take just the last segment so
+    # run_ids don't end up with the audit_id duplicated in them.
+    job_suffix = job.job_id.rsplit("/", 1)[-1]
+    return f"{job.audit_id}/{job.agent_role.value}-{job_suffix}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
+
+
 async def run_jobs(
     jobs: list[Job],
     *,
     max_concurrency: int = DEFAULT_MAX_CONCURRENCY,
     max_budget_usd: float | None = None,
 ) -> ManagerReport:
+    if not jobs:
+        return ManagerReport()
+
     report = ManagerReport()
     lock = asyncio.Lock()
     semaphore = asyncio.Semaphore(max_concurrency)
+    job_outcomes: list[dict] = []
+    manager_started_at = datetime.now(timezone.utc)
 
     async def run_one(job: Job) -> None:
-        # job_id may already be "<audit_id>/claim-000X" (verification) or a
-        # bare id like "master" (extraction) -- take just the last segment
-        # so run_ids don't end up with the audit_id duplicated in them.
-        job_suffix = job.job_id.rsplit("/", 1)[-1]
+        run_id = _job_run_id(job)
 
-        # The budget check must happen *after* acquiring the semaphore, not
-        # before: asyncio.gather starts every job's coroutine immediately,
-        # so if the check ran first, all of them would race to check the
-        # budget at cost=0 before any sibling had a chance to update it --
-        # the cap would never actually trigger under concurrency > 1.
-        # Checking post-semaphore means a job only checks once it's
-        # actually its turn to run, by which point earlier jobs (up to
-        # max_concurrency of them) have finished and reported their cost.
         async with semaphore:
             async with lock:
                 if max_budget_usd is not None and report.total_cost_usd >= max_budget_usd:
                     report.skipped_budget.append(job.job_id)
+                    job_outcomes.append({"job_id": job.job_id, "run_id": run_id, "status": "skipped_budget", "cost_usd": None})
                     write_run_manifest(
                         RunManifest(
-                            run_id=f"{job.audit_id}/skipped-{job_suffix}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}",
+                            run_id=run_id,
                             audit_id=job.audit_id,
                             agent_role=job.agent_role,
                             model=job.model,
@@ -97,11 +109,14 @@ async def run_jobs(
 
             started_at = datetime.now(timezone.utc)
             try:
-                cost_usd = await job.run_fn()
+                cost_usd = await job.run_fn(run_id)
             except Exception as e:
+                async with lock:
+                    report.failed[job.job_id] = str(e)
+                    job_outcomes.append({"job_id": job.job_id, "run_id": run_id, "status": "failed", "cost_usd": None})
                 write_run_manifest(
                     RunManifest(
-                        run_id=f"{job.audit_id}/failed-{job_suffix}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}",
+                        run_id=run_id,
                         audit_id=job.audit_id,
                         agent_role=job.agent_role,
                         model=job.model,
@@ -112,13 +127,38 @@ async def run_jobs(
                         error=str(e),
                     )
                 )
-                report.failed[job.job_id] = str(e)
                 return
 
             async with lock:
                 if cost_usd is not None:
                     report.total_cost_usd += cost_usd
                 report.succeeded.append(job.job_id)
+                job_outcomes.append({"job_id": job.job_id, "run_id": run_id, "status": "succeeded", "cost_usd": cost_usd})
 
     await asyncio.gather(*(run_one(job) for job in jobs))
+
+    # job_outcomes fills in as jobs complete, in whatever order that
+    # happens to be under concurrency -- reorder to match the original job
+    # list so the Manager's own record reads in a stable, predictable order.
+    outcome_by_job_id = {o["job_id"]: o for o in job_outcomes}
+    ordered_outcomes = [outcome_by_job_id[job.job_id] for job in jobs if job.job_id in outcome_by_job_id]
+
+    write_run_manifest(
+        RunManifest(
+            run_id=f"{jobs[0].audit_id}/manage-{jobs[0].agent_role.value}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}",
+            audit_id=jobs[0].audit_id,
+            agent_role=AgentRole.MANAGER,
+            model=jobs[0].model,
+            started_at=manager_started_at,
+            finished_at=datetime.now(timezone.utc),
+            input_refs=[job.job_id for job in jobs],
+            output_refs=list(report.succeeded),
+            cost_usd=report.total_cost_usd,
+            max_concurrency=max_concurrency,
+            max_budget_usd=max_budget_usd,
+            job_outcomes=ordered_outcomes,
+            status="succeeded",
+        )
+    )
+
     return report

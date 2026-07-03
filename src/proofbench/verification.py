@@ -137,12 +137,12 @@ async def verify_claim_async(
     return evidence, verdict, reply
 
 
-async def _process_claim(claim: Claim, audit_id: str, model: str) -> float | None:
+async def _process_claim(run_id: str, claim: Claim, audit_id: str, model: str) -> float | None:
     """One claim's full job: verify, write result/review card, write its own
-    succeeded RunManifest, return cost_usd. Raises on failure -- the Manager
-    catches that and records it, this function doesn't need to.
+    succeeded RunManifest (under the run_id the Manager assigned it),
+    return cost_usd. Raises on failure -- the Manager catches that and
+    records it, this function doesn't need to.
     """
-    run_id = f"{audit_id}/verify-{claim.claim_id.split('/')[-1]}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
     started_at = datetime.now(timezone.utc)
 
     evidence, verdict, reply = await verify_claim_async(claim, audit_id, run_id, model=model)
@@ -184,7 +184,7 @@ async def verify_audit_async(
             audit_id=audit_id,
             agent_role=AgentRole.VERIFIER,
             model=model,
-            run_fn=lambda c=claim: _process_claim(c, audit_id, model),
+            run_fn=lambda run_id, c=claim: _process_claim(run_id, c, audit_id, model),
         )
         for claim in claims
     ]
