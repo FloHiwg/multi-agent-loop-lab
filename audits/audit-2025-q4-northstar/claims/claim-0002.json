@@ -1,7 +1,7 @@
 {
   "claim_id": "audit-2025-q4-northstar/claim-0002",
   "label": "Q4 2025 adjusted EBITDA",
-  "raw_text": "adjusted EBITDA reached EUR 0.74 million",
+  "raw_text": "adjusted EBITDA reached EUR 0.74 million.",
   "canonical_value": 740000.0,
   "unit": "currency",
   "currency": "EUR",

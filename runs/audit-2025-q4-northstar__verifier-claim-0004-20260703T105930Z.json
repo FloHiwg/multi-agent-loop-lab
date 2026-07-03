@@ -1,10 +1,10 @@
 {
-  "run_id": "audit-2025-q4-northstar/verify-claim-0004-20260703T102552Z",
+  "run_id": "audit-2025-q4-northstar/verifier-claim-0004-20260703T105930Z",
   "audit_id": "audit-2025-q4-northstar",
   "agent_role": "verifier",
   "model": "z-ai/glm-5.2",
-  "started_at": "2026-07-03T10:25:52.745778Z",
-  "finished_at": "2026-07-03T10:26:07.128636Z",
+  "started_at": "2026-07-03T10:59:42.462837Z",
+  "finished_at": "2026-07-03T10:59:53.041334Z",
   "input_refs": [
     "audit-2025-q4-northstar/claim-0004"
   ],
@@ -16,65 +16,45 @@
   "tool_trace": [
     {
       "seq": 1,
-      "at": "2026-07-03T10:25:55.378271+00:00",
-      "tool": "mcp__proofbench_vault__search_facts",
-      "input": {
-        "entity": "cash",
-        "attribute": "quarter-end"
-      },
+      "at": "2026-07-03T10:59:45.177361+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {},
       "output": [
         {
           "type": "text",
-          "text": "[]"
+          "text": "[\n  {\n    \"doc_id\": \"northstar-finance-q4-2025\",\n    \"tag\": \"finance_pack\",\n    \"format\": \"pdf\",\n    \"locations\": [\n      \"page:1\",\n      \"page:1/table:1/row:REPORTING PERIOD\",\n      \"page:1/table:1/row:ISSUED\",\n      \"page:1/table:2/row:Revenue\",\n      \"page:1/table:2/row:Cost of revenue\",\n      \"page:1/table:2/row:Gross profit\",\n      \"page:1/table:2/row:Operating expenses\",\n      \"page:1/table:2/row:Adjusted EBITDA\",\n      \"page:1/table:3/row:Operating bank accounts\",\n      \"page:1/table:3/row:Money market deposits\",\n      \"page:1/table:3/row:Cash and cash equivalents\"\n    ]\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"tag\": \"operations_review\",\n    \"format\": \"pdf\",\n    \"locations\": [\n      \"page:1\",\n      \"page:1/table:1/row:REPORTING PERIOD\",\n      \"page:1/table:1/row:ISSUED\",\n      \"page:1/table:2/row:Employees\",\n      \"page:1/table:2/row:Enterprise customers\",\n      \"page:1/table:2/row:Net revenue retention\",\n      \"page:1/table:3/row:Tickets opened\",\n      \"page:1/table:3/row:Tickets resolved\",\n      \"page:1/table:3/row:Median first response\"\n    ]\n  },\n  {\n    \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n    \"tag\": \"customer_appendix\",\n    \"format\": \"xlsx\",\n    \"locations\": [\n      \"sheet:Customer Summary\",\n      \"sheet:Segment Detail\"\n    ]\n  }\n]"
         }
       ],
       "is_error": null
     },
     {
       "seq": 2,
-      "at": "2026-07-03T10:25:55.578313+00:00",
+      "at": "2026-07-03T10:59:45.534748+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "cash"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-finance-q4-2025\",\n    \"location\": \"page:1/table:3/row:Cash and cash equivalents\",\n    \"entity\": \"Cash and cash equivalents\",\n    \"attribute\": \"31 Dec 2025\",\n    \"value\": \"2.1000\"\n  },\n  {\n    \"doc_id\": \"northstar-finance-q4-2025\",\n    \"location\": \"page:1/table:3/row:Cash and cash equivalents\",\n    \"entity\": \"Cash and cash equivalents\",\n    \"attribute\": \"30 Sep 2025\",\n    \"value\": \"1.8100\"\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-03T10:59:45.726669+00:00",
       "tool": "mcp__proofbench_vault__search_vault",
       "input": {
-        "query": "quarter-end cash",
-        "tag": "finance_pack"
+        "query": "quarter-end cash"
       },
       "output": "search error: no such column: end",
       "is_error": true
     },
     {
-      "seq": 3,
-      "at": "2026-07-03T10:25:57.712004+00:00",
-      "tool": "mcp__proofbench_vault__search_vault",
-      "input": {
-        "query": "cash",
-        "tag": "finance_pack"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "[\n  {\n    \"doc_id\": \"northstar-finance-q4-2025\",\n    \"location\": \"page:1\",\n    \"snippet\": \"...0.3800\\n0.4000\\n[Cash] and [cash] equivalents\\n2.1000\\n1.8100...\"\n  },\n  {\n    \"doc_id\": \"northstar-finance-q4-2025\",\n    \"location\": \"page:1/table:3/row:Cash and cash equivalents\",\n    \"snippet\": \"[Cash] and [cash] equivalents | 2.1000 | 1.8100\"\n  }\n]"
-        }
-      ],
-      "is_error": null
-    },
-    {
       "seq": 4,
-      "at": "2026-07-03T10:25:57.846029+00:00",
-      "tool": "mcp__proofbench_vault__list_documents",
-      "input": {
-        "tag": "finance_pack"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "[\n  {\n    \"doc_id\": \"northstar-finance-q4-2025\",\n    \"tag\": \"finance_pack\",\n    \"format\": \"pdf\",\n    \"locations\": [\n      \"page:1\",\n      \"page:1/table:1/row:REPORTING PERIOD\",\n      \"page:1/table:1/row:ISSUED\",\n      \"page:1/table:2/row:Revenue\",\n      \"page:1/table:2/row:Cost of revenue\",\n      \"page:1/table:2/row:Gross profit\",\n      \"page:1/table:2/row:Operating expenses\",\n      \"page:1/table:2/row:Adjusted EBITDA\",\n      \"page:1/table:3/row:Operating bank accounts\",\n      \"page:1/table:3/row:Money market deposits\",\n      \"page:1/table:3/row:Cash and cash equivalents\"\n    ]\n  }\n]"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 5,
-      "at": "2026-07-03T10:25:59.712526+00:00",
+      "at": "2026-07-03T10:59:47.590802+00:00",
       "tool": "mcp__proofbench_vault__read_span",
       "input": {
         "doc_id": "northstar-finance-q4-2025",
@@ -87,25 +67,12 @@
         }
       ],
       "is_error": null
-    },
-    {
-      "seq": 6,
-      "at": "2026-07-03T10:26:00.287817+00:00",
-      "tool": "mcp__proofbench_vault__read_span",
-      "input": {
-        "doc_id": "northstar-finance-q4-2025",
-        "location": "page:1/table:1/row:REPORTING PERIOD"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-finance-q4-2025\",\n  \"location\": \"page:1/table:1/row:REPORTING PERIOD\",\n  \"text\": \"REPORTING PERIOD | Q4 2025\"\n}"
-        }
-      ],
-      "is_error": null
     }
   ],
-  "cost_usd": 0.07184,
+  "cost_usd": 0.057787000000000005,
   "status": "succeeded",
-  "error": null
+  "error": null,
+  "max_concurrency": null,
+  "max_budget_usd": null,
+  "job_outcomes": null
 }

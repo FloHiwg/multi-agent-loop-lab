@@ -1,7 +1,7 @@
 {
   "claim_id": "audit-2025-q4-northstar/claim-0004",
-  "label": "Quarter-end cash",
-  "raw_text": "quarter-end cash stood at EUR 2.10 million",
+  "label": "Q4 2025 quarter-end cash",
+  "raw_text": "quarter-end cash stood at EUR 2.10 million.",
   "canonical_value": 2100000.0,
   "unit": "currency",
   "currency": "EUR",

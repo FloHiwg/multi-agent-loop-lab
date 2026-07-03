@@ -1,0 +1,20 @@
+{
+  "run_id": "audit-2025-q4-northstar/verifier-claim-0003-20260703T105930Z",
+  "audit_id": "audit-2025-q4-northstar",
+  "agent_role": "verifier",
+  "model": "z-ai/glm-5.2",
+  "started_at": "2026-07-03T10:59:30.901364Z",
+  "finished_at": "2026-07-03T10:59:54.118317Z",
+  "input_refs": [
+    "audit-2025-q4-northstar/claim-0003"
+  ],
+  "output_refs": [],
+  "prompt": null,
+  "tool_trace": [],
+  "cost_usd": null,
+  "status": "failed",
+  "error": "expected a JSON object with 'evidence' and 'verdict' keys, got list: \"[{'doc_id': 'northstar-finance-q4-2025', 'page': 1, 'span_text': 'Gross margin is calculated as (Revenue - Cost of revenue) / Revenue. Using Q4 actuals: (EUR 4.2800m - EUR 1.5836m) / EUR 4.2800m = 63.\"",
+  "max_concurrency": null,
+  "max_budget_usd": null,
+  "job_outcomes": null
+}

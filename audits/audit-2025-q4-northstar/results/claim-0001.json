@@ -2,7 +2,7 @@
   "claim": {
     "claim_id": "audit-2025-q4-northstar/claim-0001",
     "label": "Q4 2025 revenue",
-    "raw_text": "Revenue was EUR 4.28 million",
+    "raw_text": "Revenue was EUR 4.28 million and adjusted EBITDA reached EUR 0.74 million.",
     "canonical_value": 4280000.0,
     "unit": "currency",
     "currency": "EUR",
@@ -26,10 +26,10 @@
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 4280000.0,
-      "unit": "currency",
+      "unit": "EUR million",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.95
+      "extractor_confidence": 0.98
     }
   ],
   "verdict": {
@@ -39,9 +39,9 @@
       "audit-2025-q4-northstar/claim-0001/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.97,
-    "rationale": "The Q4 2025 finance pack reports Q4 2025 actual Revenue as EUR 4.2800 million, which exactly matches the claim's canonical value of EUR 4,280,000.",
+    "confidence": 0.99,
+    "rationale": "The Q4 2025 Finance Pack income statement reports Revenue of EUR 4.2800 million for the Q4 2025 actual column, exactly matching the claim's EUR 4.28 million (4,280,000). The document is labeled EUR million and the reporting period is Q4 2025.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0001-20260703T102535Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verifier-claim-0001-20260703T105930Z"
   }
 }

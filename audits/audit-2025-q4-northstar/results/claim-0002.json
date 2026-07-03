@@ -2,7 +2,7 @@
   "claim": {
     "claim_id": "audit-2025-q4-northstar/claim-0002",
     "label": "Q4 2025 adjusted EBITDA",
-    "raw_text": "adjusted EBITDA reached EUR 0.74 million",
+    "raw_text": "adjusted EBITDA reached EUR 0.74 million.",
     "canonical_value": 740000.0,
     "unit": "currency",
     "currency": "EUR",
@@ -29,7 +29,7 @@
       "unit": "currency",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.95
+      "extractor_confidence": 0.98
     }
   ],
   "verdict": {
@@ -40,8 +40,8 @@
     ],
     "delta": 0.0,
     "confidence": 0.98,
-    "rationale": "The Q4 2025 Finance Pack income statement lists Adjusted EBITDA for 'Q4 2025 actual' as EUR 0.7400 million (EUR 740,000), exactly matching the claim. The adjacent columns (0.5100 Q3 2025 actual, 0.6400 Q4 budget) confirm 0.7400 is the Q4 2025 actual figure.",
+    "rationale": "The finance pack reports Adjusted EBITDA for Q4 2025 actual as 0.7400 (EUR millions), which exactly matches the claim's EUR 0.74 million (740,000).",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0002-20260703T102535Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verifier-claim-0002-20260703T105930Z"
   }
 }

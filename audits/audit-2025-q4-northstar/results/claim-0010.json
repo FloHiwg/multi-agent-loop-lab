@@ -1,7 +1,7 @@
 {
   "claim": {
     "claim_id": "audit-2025-q4-northstar/claim-0010",
-    "label": "Gross logo churn",
+    "label": "Q4 2025 gross logo churn",
     "raw_text": "Gross logo churn was 3.1% for Q4.",
     "canonical_value": 0.031,
     "unit": "percent",
@@ -22,7 +22,7 @@
       "claim_id": "audit-2025-q4-northstar/claim-0010",
       "doc_id": "northstar-ops-q4-2025",
       "page": 1,
-      "span_text": "No quarterly gross logo churn metric was approved for this review cycle.",
+      "span_text": "Metric governance\nPeople counts are maintained by People Operations. Customer counts and retention are sourced from the revenue\noperations snapshot dated 5 January 2026. No quarterly gross logo churn metric was approved for this review\ncycle.",
       "bbox": null,
       "char_offsets": null,
       "canonical_value": null,
@@ -36,14 +36,14 @@
       "claim_id": "audit-2025-q4-northstar/claim-0010",
       "doc_id": "northstar-customer-appendix-q4-2025",
       "page": null,
-      "span_text": "Enterprise total | 126 | 2318400 | 18400 | 2025-12-31 | actual",
+      "span_text": "A13: Enterprise total B13: 126 C13: 2318400 D13: 18400 E13: 2025-12-31 F13: actual",
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 126.0,
       "unit": "customers",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.95
+      "extractor_confidence": 0.9
     }
   ],
   "verdict": {
@@ -55,8 +55,8 @@
     ],
     "delta": null,
     "confidence": 0.9,
-    "rationale": "No vault span provides a gross logo churn value for Q4 2025; the operations review explicitly states no quarterly gross logo churn metric was approved for this cycle, and the customer appendix contains only customer counts and ARR/ACV with no churn figure.",
-    "suggested_action": "Request the underlying churn calculation or cohort data from revenue operations; the 3.1% figure cannot be substantiated from current vault evidence.",
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0010-20260703T102649Z"
+    "rationale": "The operations review explicitly states that no quarterly gross logo churn metric was approved for the Q4 2025 review cycle, and the customer appendix provides only period-end customer counts (no churned-logo counts), so no vault span confirms or refutes the claimed 3.1% figure.",
+    "suggested_action": "Request the gross logo churn calculation (churned logos / starting logos) from revenue operations, since the metric was not approved for management reporting and cannot be derived from the customer appendix alone.",
+    "produced_by_run_id": "audit-2025-q4-northstar/verifier-claim-0010-20260703T105930Z"
   }
 }

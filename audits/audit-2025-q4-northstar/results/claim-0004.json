@@ -1,8 +1,8 @@
 {
   "claim": {
     "claim_id": "audit-2025-q4-northstar/claim-0004",
-    "label": "Quarter-end cash",
-    "raw_text": "quarter-end cash stood at EUR 2.10 million",
+    "label": "Q4 2025 quarter-end cash",
+    "raw_text": "quarter-end cash stood at EUR 2.10 million.",
     "canonical_value": 2100000.0,
     "unit": "currency",
     "currency": "EUR",
@@ -29,7 +29,7 @@
       "unit": "currency",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.95
+      "extractor_confidence": 0.98
     }
   ],
   "verdict": {
@@ -39,9 +39,9 @@
       "audit-2025-q4-northstar/claim-0004/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.95,
-    "rationale": "The Q4 2025 finance pack reports Cash and cash equivalents of 2.1000 (EUR millions) for the Q4 2025 reporting period, matching the claim's EUR 2.10 million exactly.",
+    "confidence": 0.98,
+    "rationale": "The Q4 2025 finance pack reports Cash and cash equivalents of 2.1000 (EUR million) as of 31 Dec 2025, exactly matching the claim's EUR 2.10 million quarter-end cash figure.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0004-20260703T102552Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verifier-claim-0004-20260703T105930Z"
   }
 }
