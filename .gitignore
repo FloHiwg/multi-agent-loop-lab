@@ -1,5 +1,6 @@
 .idea/
 .venv/
+.claude/
 node_modules
 tmp/
 __pycache__/
