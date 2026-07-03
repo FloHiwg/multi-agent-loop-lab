@@ -201,8 +201,8 @@ proofbench schemas export        # regenerate schemas/*.schema.json from models.
 proofbench new <audit-id>        # scaffold an empty audit folder
 proofbench init <audit-id>       # parse registered documents into index/parsed/
 proofbench index <audit-id>      # build index/search/<audit-id>.db from index/parsed/
-proofbench extract <audit-id>    # Claim Extractor -> audits/<id>/claims/
-proofbench verify <audit-id>     # Verifier -> audits/<id>/results/ + review_queue/
+proofbench extract <audit-id> [--max-budget-usd X]
+proofbench verify <audit-id> [--max-concurrency N] [--max-budget-usd X]
 ```
 
 Run order: `new` (first time only) → `init` → `index` → `extract` → `verify`.
@@ -213,7 +213,7 @@ Run order: `new` (first time only) → `init` → `index` → `extract` → `ver
 |---|---|
 | 1. Schemas | done |
 | 2. Ingest | done (PDF + XLSX; OCR deferred) |
-| 3. Extract + verify loop | done -- tool-based agentic search over an FTS5 + facts-graph index (not a full-corpus-dump prompt), validated end-to-end against the Northstar fixture, matches `gold.yaml` exactly |
+| 3. Extract + verify loop | done -- tool-based agentic search over an FTS5 + facts-graph index (not a full-corpus-dump prompt), bounded-concurrency Manager with per-claim failure isolation and a cost budget, validated end-to-end against the Northstar fixture, matches `gold.yaml` exactly |
 | 4. Workbench UI | not started |
 | 5. Tolerance/formula rules | not started (schema already in place; enforcement logic isn't) |
 
@@ -248,14 +248,53 @@ deliberately not built. An `ambiguous` verdict goes straight to
 the reasoning (this is the intended showcase of the human-in-the-loop
 handoff, not a placeholder to fill in later).
 
+## Manager layer (`src/proofbench/manager.py`)
+
+Per CONCEPT.md §6, the Manager's job is scheduling, budgets, and failure
+isolation -- it never judges evidence. `run_jobs(jobs, max_concurrency,
+max_budget_usd)` takes a list of `Job`s (each owning its own success-path
+writes: results, review cards, its own succeeded `RunManifest`) and:
+
+- **Runs them with bounded concurrency** (`asyncio.Semaphore`) instead of
+  one sequential Python `for` loop -- `verify_audit` schedules all claims
+  as jobs at once, capped at `max_concurrency` (default 4).
+- **Isolates failures.** If a job's coroutine raises (bad JSON, schema
+  mismatch, whatever), the Manager catches it, writes a `status="failed"`
+  `RunManifest` with the error, and moves on -- one bad claim no longer
+  takes down the whole `verify` run. Before this, extraction had no
+  failure `RunManifest` at all; a raised exception just crashed with no
+  audit trail.
+- **Enforces a soft cost budget.** Each job's actual reported cost (from
+  `ResultMessage.total_cost_usd`, not an estimate -- see `AgentReply` in
+  `llm.py`) accumulates into a running total; once it reaches
+  `max_budget_usd`, no new jobs start (`status="skipped_budget"`
+  `RunManifest`s for the rest). Real bug found and fixed while validating
+  this: the budget check has to happen *after* acquiring the concurrency
+  semaphore, not before -- `asyncio.gather` starts every job's coroutine
+  immediately, so a pre-semaphore check races all of them against a
+  cost=0 total before any sibling has reported in, and the cap never
+  actually triggers. Verified concretely with `--max-concurrency 1
+  --max-budget-usd 0.15`: stopped after 3 claims once cumulative cost
+  crossed the cap, 7 correctly recorded as skipped.
+
+Extraction is also routed through `run_jobs` (as a single job) for the
+same failure-isolation and manifest-on-failure behavior, even though
+concurrency doesn't apply to it (one document, one job).
+
+**Observed failure mode, not fully eliminated:** the Verifier's final
+reply is sometimes a bare JSON array (just the evidence list) instead of
+the required `{"evidence": [...], "verdict": {...}}` object -- a
+tool-use formatting slip, not a data-quality problem (the actual evidence
+found was usually correct). Tightened the system prompt and added an
+explicit shape check with a clear error message (`verify_claim_async` in
+verification.py) rather than the raw `AttributeError` this used to
+surface as; this reduced but didn't eliminate the rate. When it happens,
+the Manager isolates it as one `failed` claim -- rerunning `verify`
+picks that claim back up (each job writes to a fixed path, so reruns are
+idempotent) rather than needing the whole run redone.
+
 ## What's still ahead
 
-- **Manager / orchestration layer.** Today, `extraction.py` and
-  `verification.py` just run Python `for` loops with no concurrency, no
-  budget cap, and no per-claim failure isolation -- one bad LLM reply
-  raises and kills the whole `verify` run. CONCEPT.md's Manager role
-  (schedule jobs, enforce budgets, orchestration only) doesn't exist as a
-  distinct thing yet.
 - **Retrieval quality at scale.** The tool-based search (`spans_fts` +
   `facts`) has only been exercised against a 3-document vault; whether the
   facts-graph heuristics (header detection, nearest-header-above for XLSX)
