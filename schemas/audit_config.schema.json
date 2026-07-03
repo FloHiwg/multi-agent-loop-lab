@@ -1,0 +1,118 @@
+{
+  "$defs": {
+    "ExactMatch": {
+      "properties": {
+        "kind": {
+          "const": "exact",
+          "default": "exact",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "title": "ExactMatch",
+      "type": "object"
+    },
+    "FormulaCheck": {
+      "properties": {
+        "kind": {
+          "const": "formula",
+          "default": "formula",
+          "title": "Kind",
+          "type": "string"
+        },
+        "formula": {
+          "description": "Expression referencing other claim_ids, e.g. 'a + b - c'",
+          "title": "Formula",
+          "type": "string"
+        },
+        "tolerance_pct": {
+          "default": 0.0,
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Tolerance Pct",
+          "type": "number"
+        }
+      },
+      "required": [
+        "formula"
+      ],
+      "title": "FormulaCheck",
+      "type": "object"
+    },
+    "PercentTolerance": {
+      "properties": {
+        "kind": {
+          "const": "percent_tolerance",
+          "default": "percent_tolerance",
+          "title": "Kind",
+          "type": "string"
+        },
+        "tolerance_pct": {
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "title": "Tolerance Pct",
+          "type": "number"
+        }
+      },
+      "required": [
+        "tolerance_pct"
+      ],
+      "title": "PercentTolerance",
+      "type": "object"
+    }
+  },
+  "description": "audit.yaml -- the manifest for a single audit case.",
+  "properties": {
+    "audit_id": {
+      "title": "Audit Id",
+      "type": "string"
+    },
+    "master_doc_id": {
+      "description": "doc_id of the master document under audits/<id>/master/",
+      "title": "Master Doc Id",
+      "type": "string"
+    },
+    "default_tolerance_rule": {
+      "discriminator": {
+        "mapping": {
+          "exact": "#/$defs/ExactMatch",
+          "formula": "#/$defs/FormulaCheck",
+          "percent_tolerance": "#/$defs/PercentTolerance"
+        },
+        "propertyName": "kind"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExactMatch"
+        },
+        {
+          "$ref": "#/$defs/PercentTolerance"
+        },
+        {
+          "$ref": "#/$defs/FormulaCheck"
+        }
+      ],
+      "title": "Default Tolerance Rule"
+    },
+    "evidence_priority": {
+      "description": "Ordered document classes/tags preferred as evidence when sources conflict",
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Priority",
+      "type": "array"
+    },
+    "created_at": {
+      "format": "date-time",
+      "title": "Created At",
+      "type": "string"
+    }
+  },
+  "required": [
+    "audit_id",
+    "master_doc_id",
+    "created_at"
+  ],
+  "title": "AuditConfig",
+  "type": "object"
+}

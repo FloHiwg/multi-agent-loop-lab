@@ -1,0 +1,10 @@
+audit_id: audit-2025-q4-northstar
+master_doc_id: northstar-master-q4-2025
+default_tolerance_rule:
+  kind: exact
+evidence_priority:
+  - finance_pack
+  - operations_review
+  - customer_appendix
+created_at: 2026-01-16T09:00:00+01:00
+

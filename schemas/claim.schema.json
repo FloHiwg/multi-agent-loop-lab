@@ -1,0 +1,196 @@
+{
+  "$defs": {
+    "ExactMatch": {
+      "properties": {
+        "kind": {
+          "const": "exact",
+          "default": "exact",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "title": "ExactMatch",
+      "type": "object"
+    },
+    "FormulaCheck": {
+      "properties": {
+        "kind": {
+          "const": "formula",
+          "default": "formula",
+          "title": "Kind",
+          "type": "string"
+        },
+        "formula": {
+          "description": "Expression referencing other claim_ids, e.g. 'a + b - c'",
+          "title": "Formula",
+          "type": "string"
+        },
+        "tolerance_pct": {
+          "default": 0.0,
+          "maximum": 100,
+          "minimum": 0,
+          "title": "Tolerance Pct",
+          "type": "number"
+        }
+      },
+      "required": [
+        "formula"
+      ],
+      "title": "FormulaCheck",
+      "type": "object"
+    },
+    "PercentTolerance": {
+      "properties": {
+        "kind": {
+          "const": "percent_tolerance",
+          "default": "percent_tolerance",
+          "title": "Kind",
+          "type": "string"
+        },
+        "tolerance_pct": {
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "title": "Tolerance Pct",
+          "type": "number"
+        }
+      },
+      "required": [
+        "tolerance_pct"
+      ],
+      "title": "PercentTolerance",
+      "type": "object"
+    },
+    "VerdictStatus": {
+      "description": "The five (plus pending) states a claim can be in.",
+      "enum": [
+        "pending",
+        "supported",
+        "contradicted",
+        "ambiguous",
+        "outdated",
+        "missing_evidence"
+      ],
+      "title": "VerdictStatus",
+      "type": "string"
+    }
+  },
+  "description": "An atomic, verifiable numeric assertion extracted from a master document.",
+  "properties": {
+    "claim_id": {
+      "description": "Stable identifier, e.g. 'audit-2026-07-acme/claim-0001'",
+      "title": "Claim Id",
+      "type": "string"
+    },
+    "label": {
+      "description": "Human-readable name, e.g. 'FY2025 revenue'",
+      "title": "Label",
+      "type": "string"
+    },
+    "raw_text": {
+      "description": "Verbatim span from the master document",
+      "title": "Raw Text",
+      "type": "string"
+    },
+    "canonical_value": {
+      "description": "Normalized numeric value",
+      "title": "Canonical Value",
+      "type": "number"
+    },
+    "unit": {
+      "description": "e.g. 'currency', 'percent', 'count', 'ratio'",
+      "title": "Unit",
+      "type": "string"
+    },
+    "currency": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "ISO 4217 code, if applicable",
+      "title": "Currency"
+    },
+    "entity": {
+      "description": "Which company / subsidiary / party this claim is about",
+      "title": "Entity",
+      "type": "string"
+    },
+    "time_scope": {
+      "description": "Period or as-of date, e.g. 'FY2025' or '2026-03-31'",
+      "title": "Time Scope",
+      "type": "string"
+    },
+    "tolerance_rule": {
+      "discriminator": {
+        "mapping": {
+          "exact": "#/$defs/ExactMatch",
+          "formula": "#/$defs/FormulaCheck",
+          "percent_tolerance": "#/$defs/PercentTolerance"
+        },
+        "propertyName": "kind"
+      },
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ExactMatch"
+        },
+        {
+          "$ref": "#/$defs/PercentTolerance"
+        },
+        {
+          "$ref": "#/$defs/FormulaCheck"
+        }
+      ],
+      "title": "Tolerance Rule"
+    },
+    "expected_evidence_type": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Which vault document class should support this, e.g. 'annual_report'",
+      "title": "Expected Evidence Type"
+    },
+    "status": {
+      "$ref": "#/$defs/VerdictStatus",
+      "default": "pending"
+    },
+    "source_doc_id": {
+      "description": "doc_id of the master document this claim was extracted from",
+      "title": "Source Doc Id",
+      "type": "string"
+    },
+    "source_page": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Page"
+    }
+  },
+  "required": [
+    "claim_id",
+    "label",
+    "raw_text",
+    "canonical_value",
+    "unit",
+    "entity",
+    "time_scope",
+    "source_doc_id"
+  ],
+  "title": "Claim",
+  "type": "object"
+}

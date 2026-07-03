@@ -1,0 +1,174 @@
+{
+  "$defs": {
+    "BoundingBox": {
+      "properties": {
+        "x0": {
+          "title": "X0",
+          "type": "number"
+        },
+        "y0": {
+          "title": "Y0",
+          "type": "number"
+        },
+        "x1": {
+          "title": "X1",
+          "type": "number"
+        },
+        "y1": {
+          "title": "Y1",
+          "type": "number"
+        }
+      },
+      "required": [
+        "x0",
+        "y0",
+        "x1",
+        "y1"
+      ],
+      "title": "BoundingBox",
+      "type": "object"
+    },
+    "CharOffsets": {
+      "properties": {
+        "start": {
+          "title": "Start",
+          "type": "integer"
+        },
+        "end": {
+          "title": "End",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "start",
+        "end"
+      ],
+      "title": "CharOffsets",
+      "type": "object"
+    },
+    "EvidenceRole": {
+      "description": "What a number *is* in its source document.\n\nGuards against the dominant failure mode: a correctly-read number bound\nto the wrong role, entity, or period.",
+      "enum": [
+        "actual",
+        "budget",
+        "forecast",
+        "prior_period",
+        "restated",
+        "other"
+      ],
+      "title": "EvidenceRole",
+      "type": "string"
+    }
+  },
+  "description": "A located span in a vault document that may support or contradict a claim.",
+  "properties": {
+    "evidence_id": {
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "claim_id": {
+      "description": "The claim this candidate was retrieved for",
+      "title": "Claim Id",
+      "type": "string"
+    },
+    "doc_id": {
+      "title": "Doc Id",
+      "type": "string"
+    },
+    "page": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Page"
+    },
+    "span_text": {
+      "description": "Verbatim source text",
+      "title": "Span Text",
+      "type": "string"
+    },
+    "bbox": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/BoundingBox"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "char_offsets": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CharOffsets"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "canonical_value": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Canonical Value"
+    },
+    "unit": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Unit"
+    },
+    "role": {
+      "$ref": "#/$defs/EvidenceRole",
+      "default": "other"
+    },
+    "effective_date": {
+      "anyOf": [
+        {
+          "format": "date",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Effective Date"
+    },
+    "extractor_confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Extractor Confidence",
+      "type": "number"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "claim_id",
+    "doc_id",
+    "span_text",
+    "extractor_confidence"
+  ],
+  "title": "EvidenceCandidate",
+  "type": "object"
+}

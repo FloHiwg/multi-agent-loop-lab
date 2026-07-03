@@ -1,0 +1,114 @@
+fixture_version: 1.0.0
+audit_id: audit-2025-q4-northstar
+description: Synthetic OfficeQA-style claim-evidence fixture for Northstar Analytics GmbH.
+claims:
+  - claim_id: audit-2025-q4-northstar/claim-0001
+    claim_text: Revenue was EUR 4.28 million.
+    canonical_value: 4280000
+    unit: currency
+    currency: EUR
+    expected_status: supported
+    source_doc: northstar-finance-q4-2025
+    source_page: 1
+    source_span: Revenue | 4.2800 | 3.9500 | 4.2000
+    tolerance_rule: {kind: exact}
+    notes: Direct lookup; values in the finance table are EUR millions.
+  - claim_id: audit-2025-q4-northstar/claim-0002
+    claim_text: Adjusted EBITDA reached EUR 0.74 million.
+    canonical_value: 740000
+    unit: currency
+    currency: EUR
+    expected_status: supported
+    source_doc: northstar-finance-q4-2025
+    source_page: 1
+    source_span: Adjusted EBITDA | 0.7400 | 0.5100 | 0.6400
+    tolerance_rule: {kind: exact}
+    notes: Direct lookup; values in the finance table are EUR millions.
+  - claim_id: audit-2025-q4-northstar/claim-0003
+    claim_text: Gross margin improved to 63.0%.
+    canonical_value: 0.63
+    unit: percent
+    currency: null
+    expected_status: supported
+    source_doc: northstar-finance-q4-2025
+    source_page: 1
+    source_span: "(EUR 4.2800m - EUR 1.5836m) / EUR 4.2800m = 63.0%."
+    tolerance_rule: {kind: percent_tolerance, tolerance_pct: 0.1}
+    notes: Formula check from revenue and cost of revenue; surfaced verdict remains supported per current schema.
+  - claim_id: audit-2025-q4-northstar/claim-0004
+    claim_text: Quarter-end cash stood at EUR 2.10 million.
+    canonical_value: 2100000
+    unit: currency
+    currency: EUR
+    expected_status: supported
+    source_doc: northstar-finance-q4-2025
+    source_page: 1
+    source_span: Cash and cash equivalents | 2.1000 | 1.8100
+    tolerance_rule: {kind: exact}
+    notes: Direct lookup as of 31 December 2025.
+  - claim_id: audit-2025-q4-northstar/claim-0005
+    claim_text: The organisation ended the quarter with 84 employees.
+    canonical_value: 84
+    unit: count
+    currency: null
+    expected_status: supported
+    source_doc: northstar-ops-q4-2025
+    source_page: 1
+    source_span: Employees | 84 | 81 | Active employees at period end
+    tolerance_rule: {kind: exact}
+    notes: Direct lookup.
+  - claim_id: audit-2025-q4-northstar/claim-0006
+    claim_text: Enterprise customers totalled 126.
+    canonical_value: 126
+    unit: count
+    currency: null
+    expected_status: supported
+    source_doc: northstar-ops-q4-2025
+    source_page: 1
+    source_span: Enterprise customers | 126 | 119 | Customers with enterprise plan at period end
+    tolerance_rule: {kind: exact}
+    notes: Table lookup; independently repeated in the customer appendix.
+  - claim_id: audit-2025-q4-northstar/claim-0007
+    claim_text: Net revenue retention was 108.0%.
+    canonical_value: 1.08
+    unit: percent
+    currency: null
+    expected_status: contradicted
+    source_doc: northstar-ops-q4-2025
+    source_page: 1
+    source_span: Net revenue retention | 106.0% | 104.0% | Trailing 12-month cohort basis
+    tolerance_rule: {kind: exact}
+    notes: Intentionally contradicted; the approved operations snapshot reports 106.0%, not 108.0%.
+  - claim_id: audit-2025-q4-northstar/claim-0008
+    claim_text: Average annual contract value was EUR 18.4 thousand.
+    canonical_value: 18400
+    unit: currency
+    currency: EUR
+    expected_status: supported
+    source_doc: northstar-customer-appendix-q4-2025
+    source_page: null
+    source_span: "Customer Summary!B13:D13: 126 | EUR 2,318,400 | EUR 18,400"
+    tolerance_rule: {kind: exact}
+    notes: Formula check; ACV is ARR divided by enterprise customers.
+  - claim_id: audit-2025-q4-northstar/claim-0009
+    claim_text: Customer support tickets declined 12.0% quarter over quarter.
+    canonical_value: -0.12
+    unit: percent_change
+    currency: null
+    expected_status: supported
+    source_doc: northstar-ops-q4-2025
+    source_page: 1
+    source_span: "The quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%."
+    tolerance_rule: {kind: percent_tolerance, tolerance_pct: 0.1}
+    notes: Formula check from Q4 and Q3 ticket counts.
+  - claim_id: audit-2025-q4-northstar/claim-0010
+    claim_text: Gross logo churn was 3.1% for Q4.
+    canonical_value: 0.031
+    unit: percent
+    currency: null
+    expected_status: missing_evidence
+    source_doc: null
+    source_page: null
+    source_span: null
+    tolerance_rule: {kind: exact}
+    notes: Intentionally unsupported; the operations review explicitly says no approved quarterly churn metric exists.

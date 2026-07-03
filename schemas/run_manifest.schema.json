@@ -1,0 +1,113 @@
+{
+  "$defs": {
+    "AgentRole": {
+      "enum": [
+        "manager",
+        "claim_extractor",
+        "vault_retriever",
+        "verifier",
+        "repair"
+      ],
+      "title": "AgentRole",
+      "type": "string"
+    }
+  },
+  "description": "One append-only record of an agent run, for replay and audit.",
+  "properties": {
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "audit_id": {
+      "title": "Audit Id",
+      "type": "string"
+    },
+    "agent_role": {
+      "$ref": "#/$defs/AgentRole"
+    },
+    "started_at": {
+      "format": "date-time",
+      "title": "Started At",
+      "type": "string"
+    },
+    "finished_at": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Finished At"
+    },
+    "input_refs": {
+      "description": "claim_ids / doc_ids consumed",
+      "items": {
+        "type": "string"
+      },
+      "title": "Input Refs",
+      "type": "array"
+    },
+    "output_refs": {
+      "description": "claim_ids / evidence_ids / verdict ids produced",
+      "items": {
+        "type": "string"
+      },
+      "title": "Output Refs",
+      "type": "array"
+    },
+    "prompt": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Prompt"
+    },
+    "tool_trace": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Tool Trace",
+      "type": "array"
+    },
+    "status": {
+      "default": "running",
+      "enum": [
+        "running",
+        "succeeded",
+        "failed"
+      ],
+      "title": "Status",
+      "type": "string"
+    },
+    "error": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Error"
+    }
+  },
+  "required": [
+    "run_id",
+    "audit_id",
+    "agent_role",
+    "started_at"
+  ],
+  "title": "RunManifest",
+  "type": "object"
+}

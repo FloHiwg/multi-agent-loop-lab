@@ -1,0 +1,83 @@
+{
+  "$defs": {
+    "VerdictStatus": {
+      "description": "The five (plus pending) states a claim can be in.",
+      "enum": [
+        "pending",
+        "supported",
+        "contradicted",
+        "ambiguous",
+        "outdated",
+        "missing_evidence"
+      ],
+      "title": "VerdictStatus",
+      "type": "string"
+    }
+  },
+  "description": "The Verifier's output for a single claim.",
+  "properties": {
+    "claim_id": {
+      "title": "Claim Id",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/VerdictStatus"
+    },
+    "matched_evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Matched Evidence Ids",
+      "type": "array"
+    },
+    "delta": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "canonical_value difference vs. best evidence, if any",
+      "title": "Delta"
+    },
+    "confidence": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "rationale": {
+      "description": "Short explanation of why this verdict was reached",
+      "title": "Rationale",
+      "type": "string"
+    },
+    "suggested_action": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Suggested Action"
+    },
+    "produced_by_run_id": {
+      "title": "Produced By Run Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "claim_id",
+    "status",
+    "confidence",
+    "rationale",
+    "produced_by_run_id"
+  ],
+  "title": "Verdict",
+  "type": "object"
+}
