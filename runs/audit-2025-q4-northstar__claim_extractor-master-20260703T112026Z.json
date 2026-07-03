@@ -1,10 +1,10 @@
 {
-  "run_id": "audit-2025-q4-northstar/claim_extractor-master-20260703T105856Z",
+  "run_id": "audit-2025-q4-northstar/claim_extractor-master-20260703T112026Z",
   "audit_id": "audit-2025-q4-northstar",
   "agent_role": "claim_extractor",
   "model": "z-ai/glm-5.2",
-  "started_at": "2026-07-03T10:58:56.688602Z",
-  "finished_at": "2026-07-03T10:59:23.976401Z",
+  "started_at": "2026-07-03T11:20:26.615475Z",
+  "finished_at": "2026-07-03T11:20:49.615668Z",
   "input_refs": [
     "northstar-master-q4-2025"
   ],
@@ -24,7 +24,7 @@
   "tool_trace": [
     {
       "seq": 1,
-      "at": "2026-07-03T10:58:59.965146+00:00",
+      "at": "2026-07-03T11:20:28.458719+00:00",
       "tool": "mcp__proofbench_master__list_documents",
       "input": {},
       "output": [
@@ -37,7 +37,7 @@
     },
     {
       "seq": 2,
-      "at": "2026-07-03T10:59:01.968710+00:00",
+      "at": "2026-07-03T11:20:29.965690+00:00",
       "tool": "mcp__proofbench_master__read_span",
       "input": {
         "doc_id": "northstar-master-q4-2025",
@@ -53,7 +53,7 @@
     },
     {
       "seq": 3,
-      "at": "2026-07-03T10:59:04.538448+00:00",
+      "at": "2026-07-03T11:20:36.154210+00:00",
       "tool": "mcp__proofbench_master__read_span",
       "input": {
         "doc_id": "northstar-master-q4-2025",
@@ -69,23 +69,7 @@
     },
     {
       "seq": 4,
-      "at": "2026-07-03T10:59:05.040152+00:00",
-      "tool": "mcp__proofbench_master__read_span",
-      "input": {
-        "doc_id": "northstar-master-q4-2025",
-        "location": "page:1/table:1/row:ISSUED"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-master-q4-2025\",\n  \"location\": \"page:1/table:1/row:ISSUED\",\n  \"text\": \"ISSUED | 16 January 2026\"\n}"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 5,
-      "at": "2026-07-03T10:59:05.602707+00:00",
+      "at": "2026-07-03T11:20:36.467563+00:00",
       "tool": "mcp__proofbench_master__read_span",
       "input": {
         "doc_id": "northstar-master-q4-2025",
@@ -98,153 +82,10 @@
         }
       ],
       "is_error": null
-    },
-    {
-      "seq": 6,
-      "at": "2026-07-03T10:59:06.272567+00:00",
-      "tool": "mcp__proofbench_master__read_span",
-      "input": {
-        "doc_id": "northstar-master-q4-2025",
-        "location": "page:1/table:2/row:Adjusted EBITDA"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-master-q4-2025\",\n  \"location\": \"page:1/table:2/row:Adjusted EBITDA\",\n  \"text\": \"Adjusted EBITDA | EUR 0.74m | Quarter\"\n}"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 7,
-      "at": "2026-07-03T10:59:06.839209+00:00",
-      "tool": "mcp__proofbench_master__read_span",
-      "input": {
-        "doc_id": "northstar-master-q4-2025",
-        "location": "page:1/table:2/row:Gross margin"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-master-q4-2025\",\n  \"location\": \"page:1/table:2/row:Gross margin\",\n  \"text\": \"Gross margin | 63.0% | Quarter\"\n}"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 8,
-      "at": "2026-07-03T10:59:07.313230+00:00",
-      "tool": "mcp__proofbench_master__read_span",
-      "input": {
-        "doc_id": "northstar-master-q4-2025",
-        "location": "page:1/table:2/row:Cash"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-master-q4-2025\",\n  \"location\": \"page:1/table:2/row:Cash\",\n  \"text\": \"Cash | EUR 2.10m | As of 31 Dec\"\n}"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 9,
-      "at": "2026-07-03T10:59:07.772710+00:00",
-      "tool": "mcp__proofbench_master__read_span",
-      "input": {
-        "doc_id": "northstar-master-q4-2025",
-        "location": "page:1/table:2/row:Employees"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-master-q4-2025\",\n  \"location\": \"page:1/table:2/row:Employees\",\n  \"text\": \"Employees | 84 | As of 31 Dec\"\n}"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 10,
-      "at": "2026-07-03T10:59:08.333307+00:00",
-      "tool": "mcp__proofbench_master__read_span",
-      "input": {
-        "doc_id": "northstar-master-q4-2025",
-        "location": "page:1/table:2/row:Enterprise customers"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-master-q4-2025\",\n  \"location\": \"page:1/table:2/row:Enterprise customers\",\n  \"text\": \"Enterprise customers | 126 | As of 31 Dec\"\n}"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 11,
-      "at": "2026-07-03T10:59:08.822460+00:00",
-      "tool": "mcp__proofbench_master__read_span",
-      "input": {
-        "doc_id": "northstar-master-q4-2025",
-        "location": "page:1/table:2/row:Net revenue retention"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-master-q4-2025\",\n  \"location\": \"page:1/table:2/row:Net revenue retention\",\n  \"text\": \"Net revenue retention | 108.0% | Trailing 12 months\"\n}"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 12,
-      "at": "2026-07-03T10:59:09.290997+00:00",
-      "tool": "mcp__proofbench_master__read_span",
-      "input": {
-        "doc_id": "northstar-master-q4-2025",
-        "location": "page:1/table:2/row:Average annual contract value"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-master-q4-2025\",\n  \"location\": \"page:1/table:2/row:Average annual contract value\",\n  \"text\": \"Average annual contract value | EUR 18.4k | As of 31 Dec\"\n}"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 13,
-      "at": "2026-07-03T10:59:09.854954+00:00",
-      "tool": "mcp__proofbench_master__read_span",
-      "input": {
-        "doc_id": "northstar-master-q4-2025",
-        "location": "page:1/table:2/row:Support ticket change"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-master-q4-2025\",\n  \"location\": \"page:1/table:2/row:Support ticket change\",\n  \"text\": \"Support ticket change | -12.0% QoQ | Q4 vs Q3\"\n}"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 14,
-      "at": "2026-07-03T10:59:10.184867+00:00",
-      "tool": "mcp__proofbench_master__read_span",
-      "input": {
-        "doc_id": "northstar-master-q4-2025",
-        "location": "page:1/table:2/row:Gross logo churn"
-      },
-      "output": [
-        {
-          "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-master-q4-2025\",\n  \"location\": \"page:1/table:2/row:Gross logo churn\",\n  \"text\": \"Gross logo churn | 3.1% | Quarter\"\n}"
-        }
-      ],
-      "is_error": null
     }
   ],
-  "cost_usd": 0.093011,
+  "final_text": "[\n  {\n    \"label\": \"Q4 2025 revenue\",\n    \"raw_text\": \"Revenue was EUR 4.28 million and adjusted EBITDA reached EUR 0.74 million.\",\n    \"canonical_value\": 4280000,\n    \"unit\": \"currency\",\n    \"currency\": \"EUR\",\n    \"entity\": \"Northstar Analytics GmbH\",\n    \"time_scope\": \"Q4 2025\",\n    \"expected_evidence_type\": \"finance_pack\",\n    \"source_page\": 1\n  },\n  {\n    \"label\": \"Q4 2025 adjusted EBITDA\",\n    \"raw_text\": \"adjusted EBITDA reached EUR 0.74 million.\",\n    \"canonical_value\": 740000,\n    \"unit\": \"currency\",\n    \"currency\": \"EUR\",\n    \"entity\": \"Northstar Analytics GmbH\",\n    \"time_scope\": \"Q4 2025\",\n    \"expected_evidence_type\": \"finance_pack\",\n    \"source_page\": 1\n  },\n  {\n    \"label\": \"Q4 2025 gross margin\",\n    \"raw_text\": \"Gross margin improved to 63.0%, while quarter-end cash stood at EUR 2.10 million.\",\n    \"canonical_value\": 0.63,\n    \"unit\": \"percent\",\n    \"currency\": null,\n    \"entity\": \"Northstar Analytics GmbH\",\n    \"time_scope\": \"Q4 2025\",\n    \"expected_evidence_type\": \"finance_pack\",\n    \"source_page\": 1\n  },\n  {\n    \"label\": \"Quarter-end cash\",\n    \"raw_text\": \"quarter-end cash stood at EUR 2.10 million.\",\n    \"canonical_value\": 2100000,\n    \"unit\": \"currency\",\n    \"currency\": \"EUR\",\n    \"entity\": \"Northstar Analytics GmbH\",\n    \"time_scope\": \"2025-12-31\",\n    \"expected_evidence_type\": \"finance_pack\",\n    \"source_page\": 1\n  },\n  {\n    \"label\": \"Employee count\",\n    \"raw_text\": \"The organisation ended the quarter with 84 employees.\",\n    \"canonical_value\": 84,\n    \"unit\": \"count\",\n    \"currency\": null,\n    \"entity\": \"Northstar Analytics GmbH\",\n    \"time_scope\": \"2025-12-31\",\n    \"expected_evidence_type\": \"operations_review\",\n    \"source_page\": 1\n  },\n  {\n    \"label\": \"Enterprise customers\",\n    \"raw_text\": \"Enterprise customers totalled 126 and net revenue retention was 108.0%.\",\n    \"canonical_value\": 126,\n    \"unit\": \"count\",\n    \"currency\": null,\n    \"entity\": \"Northstar Analytics GmbH\",\n    \"time_scope\": \"2025-12-31\",\n    \"expected_evidence_type\": \"customer_appendix\",\n    \"source_page\": 1\n  },\n  {\n    \"label\": \"Net revenue retention\",\n    \"raw_text\": \"net revenue retention was 108.0%.\",\n    \"canonical_value\": 1.08,\n    \"unit\": \"percent\",\n    \"currency\": null,\n    \"entity\": \"Northstar Analytics GmbH\",\n    \"time_scope\": \"Trailing 12 months\",\n    \"expected_evidence_type\": \"customer_appendix\",\n    \"source_page\": 1\n  },\n  {\n    \"label\": \"Average annual contract value\",\n    \"raw_text\": \"Average annual contract value was EUR 18.4 thousand.\",\n    \"canonical_value\": 18400,\n    \"unit\": \"currency\",\n    \"currency\": \"EUR\",\n    \"entity\": \"Northstar Analytics GmbH\",\n    \"time_scope\": \"2025-12-31\",\n    \"expected_evidence_type\": \"customer_appendix\",\n    \"source_page\": 1\n  },\n  {\n    \"label\": \"Support ticket change QoQ\",\n    \"raw_text\": \"Customer support tickets declined 12.0% quarter over quarter.\",\n    \"canonical_value\": -0.12,\n    \"unit\": \"percent_change\",\n    \"currency\": null,\n    \"entity\": \"Northstar Analytics GmbH\",\n    \"time_scope\": \"Q4 2025 vs Q3 2025\",\n    \"expected_evidence_type\": \"operations_review\",\n    \"source_page\": 1\n  },\n  {\n    \"label\": \"Gross logo churn\",\n    \"raw_text\": \"Gross logo churn was 3.1% for Q4.\",\n    \"canonical_value\": 0.031,\n    \"unit\": \"percent\",\n    \"currency\": null,\n    \"entity\": \"Northstar Analytics GmbH\",\n    \"time_scope\": \"Q4 2025\",\n    \"expected_evidence_type\": \"customer_appendix\",\n    \"source_page\": 1\n  }\n]",
+  "cost_usd": 0.103791,
   "status": "succeeded",
   "error": null,
   "max_concurrency": null,

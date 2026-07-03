@@ -29,7 +29,7 @@
       "unit": "currency",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.99
+      "extractor_confidence": 0.98
     },
     {
       "evidence_id": "audit-2025-q4-northstar/claim-0008/evidence-002",
@@ -42,7 +42,7 @@
       "canonical_value": 18400.0,
       "unit": "currency",
       "role": "actual",
-      "effective_date": "2025-12-31",
+      "effective_date": "2026-01-16",
       "extractor_confidence": 0.95
     }
   ],
@@ -55,8 +55,8 @@
     ],
     "delta": 0.0,
     "confidence": 0.99,
-    "rationale": "The customer appendix shows Enterprise total ACV of EUR 18,400 (ARR EUR 2,318,400 / 126 customers), matching the claim's EUR 18.4 thousand exactly.",
+    "rationale": "The customer appendix's Enterprise total row reports ACV of EUR 18,400 (126 customers, EUR 2,318,400 ARR), with a control note confirming the division, matching the claim's EUR 18.4 thousand exactly.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verifier-claim-0008-20260703T105930Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verifier-claim-0008-20260703T112057Z"
   }
 }

@@ -1,10 +1,10 @@
 {
-  "run_id": "audit-2025-q4-northstar/verifier-claim-0008-20260703T105930Z",
+  "run_id": "audit-2025-q4-northstar/verifier-claim-0008-20260703T112057Z",
   "audit_id": "audit-2025-q4-northstar",
   "agent_role": "verifier",
   "model": "z-ai/glm-5.2",
-  "started_at": "2026-07-03T10:59:57.207564Z",
-  "finished_at": "2026-07-03T11:00:10.655664Z",
+  "started_at": "2026-07-03T11:21:22.776658Z",
+  "finished_at": "2026-07-03T11:21:34.092815Z",
   "input_refs": [
     "audit-2025-q4-northstar/claim-0008"
   ],
@@ -17,22 +17,22 @@
   "tool_trace": [
     {
       "seq": 1,
-      "at": "2026-07-03T10:59:59.584935+00:00",
-      "tool": "mcp__proofbench_vault__search_vault",
+      "at": "2026-07-03T11:21:25.269834+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
       "input": {
-        "query": "average annual contract value"
+        "tag": "customer_appendix"
       },
       "output": [
         {
           "type": "text",
-          "text": "[]"
+          "text": "[\n  {\n    \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n    \"tag\": \"customer_appendix\",\n    \"format\": \"xlsx\",\n    \"locations\": [\n      \"sheet:Customer Summary\",\n      \"sheet:Segment Detail\"\n    ]\n  }\n]"
         }
       ],
       "is_error": null
     },
     {
       "seq": 2,
-      "at": "2026-07-03T10:59:59.942262+00:00",
+      "at": "2026-07-03T11:21:25.524309+00:00",
       "tool": "mcp__proofbench_vault__search_facts",
       "input": {
         "entity": "Average annual contract value"
@@ -47,24 +47,10 @@
     },
     {
       "seq": 3,
-      "at": "2026-07-03T10:59:59.977775+00:00",
-      "tool": "mcp__proofbench_vault__list_documents",
-      "input": {},
-      "output": [
-        {
-          "type": "text",
-          "text": "[\n  {\n    \"doc_id\": \"northstar-finance-q4-2025\",\n    \"tag\": \"finance_pack\",\n    \"format\": \"pdf\",\n    \"locations\": [\n      \"page:1\",\n      \"page:1/table:1/row:REPORTING PERIOD\",\n      \"page:1/table:1/row:ISSUED\",\n      \"page:1/table:2/row:Revenue\",\n      \"page:1/table:2/row:Cost of revenue\",\n      \"page:1/table:2/row:Gross profit\",\n      \"page:1/table:2/row:Operating expenses\",\n      \"page:1/table:2/row:Adjusted EBITDA\",\n      \"page:1/table:3/row:Operating bank accounts\",\n      \"page:1/table:3/row:Money market deposits\",\n      \"page:1/table:3/row:Cash and cash equivalents\"\n    ]\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"tag\": \"operations_review\",\n    \"format\": \"pdf\",\n    \"locations\": [\n      \"page:1\",\n      \"page:1/table:1/row:REPORTING PERIOD\",\n      \"page:1/table:1/row:ISSUED\",\n      \"page:1/table:2/row:Employees\",\n      \"page:1/table:2/row:Enterprise customers\",\n      \"page:1/table:2/row:Net revenue retention\",\n      \"page:1/table:3/row:Tickets opened\",\n      \"page:1/table:3/row:Tickets resolved\",\n      \"page:1/table:3/row:Median first response\"\n    ]\n  },\n  {\n    \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n    \"tag\": \"customer_appendix\",\n    \"format\": \"xlsx\",\n    \"locations\": [\n      \"sheet:Customer Summary\",\n      \"sheet:Segment Detail\"\n    ]\n  }\n]"
-        }
-      ],
-      "is_error": null
-    },
-    {
-      "seq": 4,
-      "at": "2026-07-03T11:00:02.349984+00:00",
+      "at": "2026-07-03T11:21:25.653128+00:00",
       "tool": "mcp__proofbench_vault__search_vault",
       "input": {
-        "query": "contract value",
-        "tag": "customer_appendix"
+        "query": "average annual contract value"
       },
       "output": [
         {
@@ -75,8 +61,8 @@
       "is_error": null
     },
     {
-      "seq": 5,
-      "at": "2026-07-03T11:00:02.914014+00:00",
+      "seq": 4,
+      "at": "2026-07-03T11:21:27.202862+00:00",
       "tool": "mcp__proofbench_vault__read_span",
       "input": {
         "doc_id": "northstar-customer-appendix-q4-2025",
@@ -91,23 +77,38 @@
       "is_error": null
     },
     {
-      "seq": 6,
-      "at": "2026-07-03T11:00:03.341440+00:00",
-      "tool": "mcp__proofbench_vault__read_span",
+      "seq": 5,
+      "at": "2026-07-03T11:21:27.491549+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
       "input": {
-        "doc_id": "northstar-customer-appendix-q4-2025",
-        "location": "sheet:Segment Detail"
+        "entity": "contract value"
       },
       "output": [
         {
           "type": "text",
-          "text": "{\n  \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n  \"location\": \"sheet:Segment Detail\",\n  \"text\": \"A1: Enterprise Segment Detail\\nA4: Segment\\nB4: Customers\\nC4: ARR\\nD4: ACV\\nE4: As of\\nF4: Role\\nA5: Strategic\\nB5: 18\\nC5: 648000\\nD5: 36000\\nE5: 2025-12-31\\nF5: actual\\nA6: Mid-market\\nB6: 52\\nC6: 1040000\\nD6: 20000\\nE6: 2025-12-31\\nF6: actual\\nA7: Growth\\nB7: 56\\nC7: 630400\\nD7: 11257.142857142857\\nE7: 2025-12-31\\nF7: actual\"\n}"
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-03T11:21:27.627981+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "contract"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
         }
       ],
       "is_error": null
     }
   ],
-  "cost_usd": 0.0553365,
+  "final_text": "{\"evidence\":[{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"page\":null,\"span_text\":\"A13: Enterprise total | B13: 126 | C13: 2318400 | D13: 18400 | E13: 2025-12-31 | F13: actual\",\"canonical_value\":18400,\"unit\":\"currency\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.98},{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"page\":null,\"span_text\":\"A16: Enterprise ACV equals enterprise annual recurring revenue divided by enterprise customers: EUR 2,318,400 / 126 = EUR 18,400.\",\"canonical_value\":18400,\"unit\":\"currency\",\"role\":\"actual\",\"effective_date\":\"2026-01-16\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0,\"confidence\":0.99,\"rationale\":\"The customer appendix's Enterprise total row reports ACV of EUR 18,400 (126 customers, EUR 2,318,400 ARR), with a control note confirming the division, matching the claim's EUR 18.4 thousand exactly.\",\"suggested_action\":null}}",
+  "cost_usd": 0.060901,
   "status": "succeeded",
   "error": null,
   "max_concurrency": null,

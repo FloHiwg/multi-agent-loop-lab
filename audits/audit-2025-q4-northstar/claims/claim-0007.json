@@ -6,7 +6,7 @@
   "unit": "percent",
   "currency": null,
   "entity": "Northstar Analytics GmbH",
-  "time_scope": "trailing 12 months",
+  "time_scope": "Trailing 12 months",
   "tolerance_rule": {
     "kind": "exact"
   },

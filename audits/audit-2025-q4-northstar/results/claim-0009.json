@@ -25,10 +25,10 @@
       "span_text": "Tickets opened\n1,100\n1,250\n-150",
       "bbox": null,
       "char_offsets": null,
-      "canonical_value": -150.0,
+      "canonical_value": 1100.0,
       "unit": "tickets",
       "role": "actual",
-      "effective_date": "2026-01-16",
+      "effective_date": "2025-12-31",
       "extractor_confidence": 0.95
     },
     {
@@ -42,7 +42,7 @@
       "canonical_value": -0.12,
       "unit": "percent_change",
       "role": "actual",
-      "effective_date": "2026-01-16",
+      "effective_date": "2025-12-31",
       "extractor_confidence": 0.98
     }
   ],
@@ -54,9 +54,9 @@
       "audit-2025-q4-northstar/claim-0009/evidence-002"
     ],
     "delta": 0.0,
-    "confidence": 0.98,
-    "rationale": "The Q4 2025 Operations Review explicitly states tickets opened went from 1,250 in Q3 2025 to 1,100 in Q4 2025, a quarter-over-quarter change of -12.0%, matching the claim exactly.",
+    "confidence": 0.99,
+    "rationale": "The Q4 2025 Operations Review states tickets opened were 1,100 in Q4 2025 vs 1,250 in Q3 2025, with an explicit QoQ change of (1,100-1,250)/1,250 = -12.0%, exactly matching the claim.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verifier-claim-0009-20260703T105930Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verifier-claim-0009-20260703T112057Z"
   }
 }

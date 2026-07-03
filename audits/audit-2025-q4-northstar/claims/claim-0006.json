@@ -1,6 +1,6 @@
 {
   "claim_id": "audit-2025-q4-northstar/claim-0006",
-  "label": "Q4 2025 enterprise customers",
+  "label": "Enterprise customers",
   "raw_text": "Enterprise customers totalled 126 and net revenue retention was 108.0%.",
   "canonical_value": 126.0,
   "unit": "count",

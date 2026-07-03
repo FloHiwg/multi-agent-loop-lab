@@ -1,0 +1,21 @@
+{
+  "run_id": "audit-2025-q4-northstar/verifier-claim-0007-20260703T112057Z",
+  "audit_id": "audit-2025-q4-northstar",
+  "agent_role": "verifier",
+  "model": "z-ai/glm-5.2",
+  "started_at": "2026-07-03T11:21:18.367147Z",
+  "finished_at": "2026-07-03T11:21:35.596243Z",
+  "input_refs": [
+    "audit-2025-q4-northstar/claim-0007"
+  ],
+  "output_refs": [],
+  "prompt": null,
+  "tool_trace": [],
+  "final_text": null,
+  "cost_usd": null,
+  "status": "failed",
+  "error": "expected a JSON object with 'evidence' and 'verdict' keys, got list: \"[{'doc_id': 'northstar-ops-q4-2025', 'page': 1, 'span_text': 'Net revenue retention | 106.0% | 104.0% | Trailing 12-month cohort basis', 'canonical_value': 1.06, 'unit': 'percent', 'role': 'actual', '\"",
+  "max_concurrency": null,
+  "max_budget_usd": null,
+  "job_outcomes": null
+}

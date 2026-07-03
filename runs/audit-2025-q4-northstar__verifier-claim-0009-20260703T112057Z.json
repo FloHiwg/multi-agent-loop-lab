@@ -1,0 +1,74 @@
+{
+  "run_id": "audit-2025-q4-northstar/verifier-claim-0009-20260703T112057Z",
+  "audit_id": "audit-2025-q4-northstar",
+  "agent_role": "verifier",
+  "model": "z-ai/glm-5.2",
+  "started_at": "2026-07-03T11:21:28.758465Z",
+  "finished_at": "2026-07-03T11:21:42.427405Z",
+  "input_refs": [
+    "audit-2025-q4-northstar/claim-0009"
+  ],
+  "output_refs": [
+    "audit-2025-q4-northstar/claim-0009",
+    "audit-2025-q4-northstar/claim-0009/evidence-001",
+    "audit-2025-q4-northstar/claim-0009/evidence-002"
+  ],
+  "prompt": "You are the Verifier agent in Proofbench, an audit workbench.\n\nYou are given one numeric claim from a master document. You have read-only\ntools to search the vault (all basis/support documents):\n- list_documents: see what vault documents exist and their locations\n- search_facts: structured search over extracted entity/attribute/value facts\n  (e.g. entity=\"Revenue\", attribute=\"Q4 2025 actual\") -- prefer this for\n  precise numeric lookups\n- search_vault: full-text search over document contents\n- read_span: read the full text of a specific location\n\nUse these tools to find every span relevant to this claim -- supporting,\ncontradicting, or otherwise bearing on it -- before deciding a verdict.\nSearch under a few different phrasings/entities if your first search finds\nnothing; only conclude missing_evidence after making a genuine effort.\n\nComparison rules:\n- exact match: values must be equal after unit/currency normalization\n- tolerance match: within the claim's stated tolerance, if any\n- formula check: if the claim is a derived figure (e.g. a ratio or margin),\n  check it against the underlying inputs in the vault\n- contradiction: an authoritative source states a different value for the\n  same entity/period/role\n\nVerdict status must be exactly one of:\n- \"supported\": at least one vault span confirms the claim's value\n- \"contradicted\": an authoritative vault span gives a different value\n- \"ambiguous\": multiple vault spans disagree and neither is clearly authoritative\n- \"outdated\": the vault's best evidence is for a different, superseded period\n- \"missing_evidence\": no vault span addresses this claim at all\n\nFor each relevant span found, output an evidence object with:\n- doc_id, page (int or null), span_text (verbatim), canonical_value (number or null),\n  unit, role (one of \"actual\", \"budget\", \"forecast\", \"prior_period\", \"restated\", \"other\"),\n  effective_date (ISO date or null), extractor_confidence (0-1)\n\nThen output a verdict object with:\n- status (one of the five values above)\n- delta (claim value minus best evidence value, or null)\n- confidence (0-1)\n- rationale (one or two sentences)\n- suggested_action (one sentence on what a human reviewer should do next, or null if status is \"supported\")\n\nOnce you've searched enough to be confident, respond with ONLY a JSON object\nas your final answer. The top-level value MUST be a JSON *object* with\nexactly two keys, \"evidence\" and \"verdict\" -- for example:\n{\"evidence\": [...], \"verdict\": {...}}\nDo NOT respond with just the evidence array on its own. No prose, no\nmarkdown fences.\n",
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-03T11:21:31.057506+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "support tickets",
+        "tag": "operations_review"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1\",\n    \"snippet\": \"...basis\\n[Support] operations\\nMetric\\nQ4 2025\\nQ3 2025\\nChange\\n[Tickets] opened\\n1...\"\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-03T11:21:31.266203+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "tickets",
+        "attribute": "Q4 2025"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:3/row:Tickets opened\",\n    \"entity\": \"Tickets opened\",\n    \"attribute\": \"Q4 2025\",\n    \"value\": \"1,100\"\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:3/row:Tickets resolved\",\n    \"entity\": \"Tickets resolved\",\n    \"attribute\": \"Q4 2025\",\n    \"value\": \"1,087\"\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-03T11:21:35.431048+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-ops-q4-2025",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\n  \"doc_id\": \"northstar-ops-q4-2025\",\n  \"location\": \"page:1\",\n  \"text\": \"Northstar Analytics GmbH | Confidential | Synthetic evaluation fixture\\nPage 1\\nNORTHSTAR ANALYTICS\\nQ4 2025 Operations Review\\nPeople, customer and support metrics\\nDOCUMENT ID\\nnorthstar-ops-q4-2025\\nREPORTING PERIOD\\nQ4 2025\\nISSUED\\n16 January 2026\\nPeople and customer base\\nMetric\\nQ4 2025\\nQ3 2025\\nDefinition\\nEmployees\\n84\\n81\\nActive employees at period end\\nEnterprise customers\\n126\\n119\\nCustomers with enterprise plan at period end\\nNet revenue retention\\n106.0%\\n104.0%\\nTrailing 12-month cohort basis\\nSupport operations\\nMetric\\nQ4 2025\\nQ3 2025\\nChange\\nTickets opened\\n1,100\\n1,250\\n-150\\nTickets resolved\\n1,087\\n1,228\\n-141\\nMedian first response\\n2.4 h\\n2.8 h\\n-0.4 h\\nTicket volume calculation\\nThe quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%.\\nMetric governance\\nPeople counts are maintained by People Operations. Customer counts and retention are sourced from the revenue\\noperations snapshot dated 5 January 2026. No quarterly gross logo churn metric was approved for this review\\ncycle.\\n\"\n}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"northstar-ops-q4-2025\",\"page\":1,\"span_text\":\"Tickets opened\\n1,100\\n1,250\\n-150\",\"canonical_value\":1100,\"unit\":\"tickets\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.95},{\"doc_id\":\"northstar-ops-q4-2025\",\"page\":1,\"span_text\":\"The quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%.\",\"canonical_value\":-0.12,\"unit\":\"percent_change\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.98}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.99,\"rationale\":\"The Q4 2025 Operations Review states tickets opened were 1,100 in Q4 2025 vs 1,250 in Q3 2025, with an explicit QoQ change of (1,100-1,250)/1,250 = -12.0%, exactly matching the claim.\",\"suggested_action\":null}}",
+  "cost_usd": 0.061509999999999995,
+  "status": "succeeded",
+  "error": null,
+  "max_concurrency": null,
+  "max_budget_usd": null,
+  "job_outcomes": null
+}

@@ -1,10 +1,10 @@
 {
-  "run_id": "audit-2025-q4-northstar/manage-verifier-20260703T110040Z",
+  "run_id": "audit-2025-q4-northstar/manage-verifier-20260703T112158Z",
   "audit_id": "audit-2025-q4-northstar",
   "agent_role": "manager",
   "model": "z-ai/glm-5.2",
-  "started_at": "2026-07-03T10:59:30.899544Z",
-  "finished_at": "2026-07-03T11:00:40.924844Z",
+  "started_at": "2026-07-03T11:20:57.949085Z",
+  "finished_at": "2026-07-03T11:21:58.261621Z",
   "input_refs": [
     "audit-2025-q4-northstar/claim-0001",
     "audit-2025-q4-northstar/claim-0002",
@@ -20,16 +20,17 @@
   "output_refs": [
     "audit-2025-q4-northstar/claim-0002",
     "audit-2025-q4-northstar/claim-0001",
-    "audit-2025-q4-northstar/claim-0004",
     "audit-2025-q4-northstar/claim-0005",
+    "audit-2025-q4-northstar/claim-0004",
+    "audit-2025-q4-northstar/claim-0006",
     "audit-2025-q4-northstar/claim-0008",
-    "audit-2025-q4-northstar/claim-0007",
     "audit-2025-q4-northstar/claim-0009",
     "audit-2025-q4-northstar/claim-0010"
   ],
   "prompt": null,
   "tool_trace": [],
-  "cost_usd": 0.6526965,
+  "final_text": null,
+  "cost_usd": 0.558987,
   "status": "succeeded",
   "error": null,
   "max_concurrency": 3,
@@ -37,63 +38,63 @@
   "job_outcomes": [
     {
       "job_id": "audit-2025-q4-northstar/claim-0001",
-      "run_id": "audit-2025-q4-northstar/verifier-claim-0001-20260703T105930Z",
+      "run_id": "audit-2025-q4-northstar/verifier-claim-0001-20260703T112057Z",
       "status": "succeeded",
-      "cost_usd": 0.074526
+      "cost_usd": 0.078381
     },
     {
       "job_id": "audit-2025-q4-northstar/claim-0002",
-      "run_id": "audit-2025-q4-northstar/verifier-claim-0002-20260703T105930Z",
+      "run_id": "audit-2025-q4-northstar/verifier-claim-0002-20260703T112057Z",
       "status": "succeeded",
-      "cost_usd": 0.05774
+      "cost_usd": 0.056025000000000005
     },
     {
       "job_id": "audit-2025-q4-northstar/claim-0003",
-      "run_id": "audit-2025-q4-northstar/verifier-claim-0003-20260703T105930Z",
+      "run_id": "audit-2025-q4-northstar/verifier-claim-0003-20260703T112057Z",
       "status": "failed",
       "cost_usd": null
     },
     {
       "job_id": "audit-2025-q4-northstar/claim-0004",
-      "run_id": "audit-2025-q4-northstar/verifier-claim-0004-20260703T105930Z",
+      "run_id": "audit-2025-q4-northstar/verifier-claim-0004-20260703T112057Z",
       "status": "succeeded",
-      "cost_usd": 0.057787000000000005
+      "cost_usd": 0.072142
     },
     {
       "job_id": "audit-2025-q4-northstar/claim-0005",
-      "run_id": "audit-2025-q4-northstar/verifier-claim-0005-20260703T105930Z",
+      "run_id": "audit-2025-q4-northstar/verifier-claim-0005-20260703T112057Z",
       "status": "succeeded",
-      "cost_usd": 0.15573199999999998
+      "cost_usd": 0.056419
     },
     {
       "job_id": "audit-2025-q4-northstar/claim-0006",
-      "run_id": "audit-2025-q4-northstar/verifier-claim-0006-20260703T105930Z",
+      "run_id": "audit-2025-q4-northstar/verifier-claim-0006-20260703T112057Z",
+      "status": "succeeded",
+      "cost_usd": 0.068593
+    },
+    {
+      "job_id": "audit-2025-q4-northstar/claim-0007",
+      "run_id": "audit-2025-q4-northstar/verifier-claim-0007-20260703T112057Z",
       "status": "failed",
       "cost_usd": null
     },
     {
-      "job_id": "audit-2025-q4-northstar/claim-0007",
-      "run_id": "audit-2025-q4-northstar/verifier-claim-0007-20260703T105930Z",
-      "status": "succeeded",
-      "cost_usd": 0.09443700000000001
-    },
-    {
       "job_id": "audit-2025-q4-northstar/claim-0008",
-      "run_id": "audit-2025-q4-northstar/verifier-claim-0008-20260703T105930Z",
+      "run_id": "audit-2025-q4-northstar/verifier-claim-0008-20260703T112057Z",
       "status": "succeeded",
-      "cost_usd": 0.0553365
+      "cost_usd": 0.060901
     },
     {
       "job_id": "audit-2025-q4-northstar/claim-0009",
-      "run_id": "audit-2025-q4-northstar/verifier-claim-0009-20260703T105930Z",
+      "run_id": "audit-2025-q4-northstar/verifier-claim-0009-20260703T112057Z",
       "status": "succeeded",
-      "cost_usd": 0.053718
+      "cost_usd": 0.061509999999999995
     },
     {
       "job_id": "audit-2025-q4-northstar/claim-0010",
-      "run_id": "audit-2025-q4-northstar/verifier-claim-0010-20260703T105930Z",
+      "run_id": "audit-2025-q4-northstar/verifier-claim-0010-20260703T112057Z",
       "status": "succeeded",
-      "cost_usd": 0.10342000000000001
+      "cost_usd": 0.10501600000000001
     }
   ]
 }

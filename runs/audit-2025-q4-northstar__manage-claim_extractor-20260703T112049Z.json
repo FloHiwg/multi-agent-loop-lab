@@ -1,10 +1,10 @@
 {
-  "run_id": "audit-2025-q4-northstar/manage-claim_extractor-20260703T105923Z",
+  "run_id": "audit-2025-q4-northstar/manage-claim_extractor-20260703T112049Z",
   "audit_id": "audit-2025-q4-northstar",
   "agent_role": "manager",
   "model": "z-ai/glm-5.2",
-  "started_at": "2026-07-03T10:58:56.687836Z",
-  "finished_at": "2026-07-03T10:59:23.979009Z",
+  "started_at": "2026-07-03T11:20:26.614687Z",
+  "finished_at": "2026-07-03T11:20:49.618336Z",
   "input_refs": [
     "master"
   ],
@@ -13,7 +13,8 @@
   ],
   "prompt": null,
   "tool_trace": [],
-  "cost_usd": 0.093011,
+  "final_text": null,
+  "cost_usd": 0.103791,
   "status": "succeeded",
   "error": null,
   "max_concurrency": 1,
@@ -21,9 +22,9 @@
   "job_outcomes": [
     {
       "job_id": "master",
-      "run_id": "audit-2025-q4-northstar/claim_extractor-master-20260703T105856Z",
+      "run_id": "audit-2025-q4-northstar/claim_extractor-master-20260703T112026Z",
       "status": "succeeded",
-      "cost_usd": 0.093011
+      "cost_usd": 0.103791
     }
   ]
 }
