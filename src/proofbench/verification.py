@@ -10,6 +10,10 @@ needs different judgment than the compare-and-decide step.
 
 The Verifier never decides alone in the product sense -- everything short
 of `supported` lands in review_queue/ for a human.
+
+Claims are verified through manager.run_jobs (bounded concurrency, soft
+cost budget, per-claim failure isolation) rather than a plain sequential
+loop -- see manager.py.
 """
 
 from __future__ import annotations
@@ -22,6 +26,7 @@ from pathlib import Path
 from proofbench.index_db import db_path
 from proofbench.jsonutil import extract_json
 from proofbench.llm import resolve_model, run_agent
+from proofbench.manager import Job, ManagerReport, run_jobs
 from proofbench.models import (
     AgentRole,
     Claim,
@@ -30,6 +35,7 @@ from proofbench.models import (
     Verdict,
     VerdictStatus,
 )
+from proofbench.runlog import write_run_manifest
 from proofbench.tools import allowed_tool_names, build_server
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -80,14 +86,17 @@ Then output a verdict object with:
 - suggested_action (one sentence on what a human reviewer should do next, or null if status is "supported")
 
 Once you've searched enough to be confident, respond with ONLY a JSON object
-as your final answer: {"evidence": [...], "verdict": {...}}.
-No prose, no markdown fences.
+as your final answer. The top-level value MUST be a JSON *object* with
+exactly two keys, "evidence" and "verdict" -- for example:
+{"evidence": [...], "verdict": {...}}
+Do NOT respond with just the evidence array on its own. No prose, no
+markdown fences.
 """
 
 
 async def verify_claim_async(
     claim: Claim, audit_id: str, run_id: str, *, model: str | None = None
-) -> tuple[list[EvidenceCandidate], Verdict]:
+) -> tuple[list[EvidenceCandidate], Verdict, float | None]:
     server = build_server(audit_id, "vault", SERVER_NAME)
     user_prompt = f"CLAIM:\n{claim.model_dump_json(indent=2)}"
     reply = await run_agent(
@@ -97,7 +106,12 @@ async def verify_claim_async(
         mcp_servers={SERVER_NAME: server},
         allowed_tools=allowed_tool_names(SERVER_NAME),
     )
-    raw = extract_json(reply)
+    raw = extract_json(reply.text)
+    if not isinstance(raw, dict) or "evidence" not in raw or "verdict" not in raw:
+        raise ValueError(
+            f"expected a JSON object with 'evidence' and 'verdict' keys, "
+            f"got {type(raw).__name__}: {str(raw)[:200]!r}"
+        )
 
     evidence: list[EvidenceCandidate] = []
     for i, raw_ev in enumerate(raw.get("evidence", []), start=1):
@@ -120,25 +134,21 @@ async def verify_claim_async(
         suggested_action=raw_verdict.get("suggested_action"),
         produced_by_run_id=run_id,
     )
-    return evidence, verdict
+    return evidence, verdict, reply.cost_usd
 
 
-async def verify_audit_async(audit_id: str) -> list[Verdict]:
-    if not db_path(audit_id).exists():
-        raise FileNotFoundError(f"{db_path(audit_id)} not found -- run `proofbench index {audit_id}` first")
+async def _process_claim(claim: Claim, audit_id: str, model: str) -> float | None:
+    """One claim's full job: verify, write result/review card, write its own
+    succeeded RunManifest, return cost_usd. Raises on failure -- the Manager
+    catches that and records it, this function doesn't need to.
+    """
+    run_id = f"{audit_id}/verify-{claim.claim_id.split('/')[-1]}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
+    started_at = datetime.now(timezone.utc)
 
-    claims = _load_claims(audit_id)
-    model = resolve_model()
+    evidence, verdict, cost_usd = await verify_claim_async(claim, audit_id, run_id, model=model)
 
-    verdicts: list[Verdict] = []
-    for claim in claims:
-        run_id = f"{audit_id}/verify-{claim.claim_id.split('/')[-1]}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
-        started_at = datetime.now(timezone.utc)
-
-        evidence, verdict = await verify_claim_async(claim, audit_id, run_id, model=model)
-        verdicts.append(verdict)
-
-        manifest = RunManifest(
+    write_run_manifest(
+        RunManifest(
             run_id=run_id,
             audit_id=audit_id,
             agent_role=AgentRole.VERIFIER,
@@ -148,18 +158,40 @@ async def verify_audit_async(audit_id: str) -> list[Verdict]:
             input_refs=[claim.claim_id],
             output_refs=[verdict.claim_id] + [e.evidence_id for e in evidence],
             prompt=SYSTEM_PROMPT,
+            cost_usd=cost_usd,
             status="succeeded",
         )
-        _write_run_manifest(manifest)
-        _write_result(audit_id, claim, evidence, verdict)
-        if verdict.status != VerdictStatus.SUPPORTED:
-            _write_review_card(audit_id, claim, evidence, verdict)
+    )
+    _write_result(audit_id, claim, evidence, verdict)
+    if verdict.status != VerdictStatus.SUPPORTED:
+        _write_review_card(audit_id, claim, evidence, verdict)
+    return cost_usd
 
-    return verdicts
+
+async def verify_audit_async(
+    audit_id: str, *, max_concurrency: int = 4, max_budget_usd: float | None = None
+) -> ManagerReport:
+    if not db_path(audit_id).exists():
+        raise FileNotFoundError(f"{db_path(audit_id)} not found -- run `proofbench index {audit_id}` first")
+
+    claims = _load_claims(audit_id)
+    model = resolve_model()
+
+    jobs = [
+        Job(
+            job_id=claim.claim_id,
+            audit_id=audit_id,
+            agent_role=AgentRole.VERIFIER,
+            model=model,
+            run_fn=lambda c=claim: _process_claim(c, audit_id, model),
+        )
+        for claim in claims
+    ]
+    return await run_jobs(jobs, max_concurrency=max_concurrency, max_budget_usd=max_budget_usd)
 
 
-def verify_audit(audit_id: str) -> list[Verdict]:
-    return asyncio.run(verify_audit_async(audit_id))
+def verify_audit(audit_id: str, *, max_concurrency: int = 4, max_budget_usd: float | None = None) -> ManagerReport:
+    return asyncio.run(verify_audit_async(audit_id, max_concurrency=max_concurrency, max_budget_usd=max_budget_usd))
 
 
 def _load_claims(audit_id: str) -> list[Claim]:
@@ -195,10 +227,3 @@ def _write_review_card(audit_id: str, claim: Claim, evidence: list[EvidenceCandi
         "human_decision": None,
     }
     (review_dir / f"{suffix}.json").write_text(json.dumps(payload, indent=2) + "\n")
-
-
-def _write_run_manifest(manifest: RunManifest) -> None:
-    runs_dir = REPO_ROOT / "runs"
-    runs_dir.mkdir(parents=True, exist_ok=True)
-    suffix = manifest.run_id.replace("/", "__")
-    (runs_dir / f"{suffix}.json").write_text(manifest.model_dump_json(indent=2) + "\n")

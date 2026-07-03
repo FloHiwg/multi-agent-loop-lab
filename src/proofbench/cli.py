@@ -67,18 +67,41 @@ def index(audit_id: str) -> None:
 
 
 @app.command()
-def extract(audit_id: str) -> None:
+def extract(
+    audit_id: str,
+    max_budget_usd: float | None = typer.Option(None, help="Abort before the extraction call if this would be exceeded."),
+) -> None:
     """Run the Claim Extractor over the master document, writing audits/<id>/claims/."""
-    claims = extract_claims(audit_id)
+    claims = extract_claims(audit_id, max_budget_usd=max_budget_usd)
     typer.echo(f"extracted {len(claims)} claims into audits/{audit_id}/claims/")
 
 
 @app.command()
-def verify(audit_id: str) -> None:
+def verify(
+    audit_id: str,
+    max_concurrency: int = typer.Option(4, help="Max claims verified at once."),
+    max_budget_usd: float | None = typer.Option(None, help="Soft cap on total run cost; stops starting new claims once reached."),
+) -> None:
     """Run the Verifier over every extracted claim, writing results/ and review_queue/."""
-    verdicts = verify_audit(audit_id)
-    supported = sum(1 for v in verdicts if v.status == models.VerdictStatus.SUPPORTED)
-    typer.echo(f"verified {len(verdicts)} claims: {supported} supported, {len(verdicts) - supported} need review")
+    report = verify_audit(audit_id, max_concurrency=max_concurrency, max_budget_usd=max_budget_usd)
+
+    results_dir = REPO_ROOT / "audits" / audit_id / "results"
+    supported = 0
+    for claim_id in report.succeeded:
+        suffix = claim_id.split("/")[-1]
+        result = json.loads((results_dir / f"{suffix}.json").read_text())
+        if result["verdict"]["status"] == models.VerdictStatus.SUPPORTED.value:
+            supported += 1
+    need_review = len(report.succeeded) - supported
+
+    typer.echo(
+        f"verified {len(report.succeeded)} claims: {supported} supported, {need_review} need review "
+        f"({len(report.failed)} failed, {len(report.skipped_budget)} skipped by budget) "
+        f"-- total cost ${report.total_cost_usd:.4f}"
+    )
+    if report.failed:
+        for claim_id, error in report.failed.items():
+            typer.echo(f"  FAILED {claim_id}: {error}", err=True)
 
 
 if __name__ == "__main__":
