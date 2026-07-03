@@ -409,4 +409,74 @@ def run_history(manager_run_id: str) -> dict:
     return {"manager": manager, "jobs": jobs}
 
 
+EXPERIMENTS_DIR = RUNS_DIR / "experiments"
+
+
+def _experiment_dir(experiment_id: str) -> Path:
+    path = (EXPERIMENTS_DIR / experiment_id).resolve()
+    if EXPERIMENTS_DIR.resolve() not in path.parents or not (path / "report.json").exists():
+        raise HTTPException(404, f"no such experiment: {experiment_id}")
+    return path
+
+
+@app.get("/api/experiments")
+def list_experiments(audit_id: str | None = None) -> list[dict]:
+    if not EXPERIMENTS_DIR.exists():
+        return []
+    experiments = []
+    for report_path in EXPERIMENTS_DIR.glob("*/report.json"):
+        report = json.loads(report_path.read_text())
+        if audit_id and report.get("audit_id") != audit_id:
+            continue
+        experiments.append(
+            {
+                "experiment_id": report["experiment_id"],
+                "audit_id": report["audit_id"],
+                "model": report["model"],
+                "variants": [s["variant"] for s in report["summaries"]],
+                "total_cost_usd": report["total_cost_usd"],
+            }
+        )
+    experiments.sort(key=lambda e: e["experiment_id"], reverse=True)
+    return experiments
+
+
+@app.get("/api/experiments/{experiment_id}")
+def experiment_detail(experiment_id: str) -> dict:
+    """The full report plus a light per-claim row for every variant --
+    heavy fields (tool_trace, final_text, evidence) stay behind the
+    per-claim endpoint so the comparison view loads fast."""
+    exp_dir = _experiment_dir(experiment_id)
+    report = json.loads((exp_dir / "report.json").read_text())
+
+    claims_by_variant: dict[str, list[dict]] = {}
+    for summary in report["summaries"]:
+        variant = summary["variant"]
+        rows = []
+        for path in sorted((exp_dir / variant).glob("claim-*.json")):
+            record = json.loads(path.read_text())
+            rows.append(
+                {
+                    "claim_id": record["claim_id"],
+                    "expected_status": record["expected_status"],
+                    "status": record["status"],
+                    "correct": record["correct"],
+                    "tool_calls": record["tool_calls"],
+                    "cost_usd": record["cost_usd"],
+                    "error": record["error"],
+                }
+            )
+        claims_by_variant[variant] = rows
+    return {"report": report, "claims_by_variant": claims_by_variant}
+
+
+@app.get("/api/experiments/{experiment_id}/{variant}/{claim_suffix}")
+def experiment_claim(experiment_id: str, variant: str, claim_suffix: str) -> dict:
+    exp_dir = _experiment_dir(experiment_id)
+    path = (exp_dir / variant / f"{claim_suffix}.json").resolve()
+    if exp_dir not in path.parents or not path.exists():
+        raise HTTPException(404, f"no such record: {experiment_id}/{variant}/{claim_suffix}")
+    return json.loads(path.read_text())
+
+
 app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")

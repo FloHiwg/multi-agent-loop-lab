@@ -103,6 +103,7 @@
   <button data-view="document">Document</button>
   <button data-view="runs">Agent Runs</button>
   <button data-view="history">History</button>
+  <button data-view="eval">Eval</button>
 </nav>
 <main>
   <section id="view-audit" class="view active">
@@ -155,10 +156,19 @@
     <div class="history-tabs" id="history-tabs"></div>
     <div id="history-content"></div>
   </section>
+
+  <section id="view-eval" class="view">
+    <div class="doc-toolbar">
+      <select id="eval-select"></select>
+      <span class="muted">experiments live in runs/experiments/ and never touch real audit state</span>
+    </div>
+    <div id="eval-content"></div>
+    <div id="eval-claim-panel"></div>
+  </section>
 </main>
 
 <script>
-const state = { auditId: null, view: "audit", doc: { docId: null, page: 1, pagesMeta: [] }, historyRunId: null, historyRole: null, historyExpanded: new Set() };
+const state = { auditId: null, view: "audit", doc: { docId: null, page: 1, pagesMeta: [] }, historyRunId: null, historyRole: null, historyExpanded: new Set(), evalExpId: null };
 
 async function api(path) {
   const res = await fetch(path);
@@ -530,6 +540,7 @@ async function refresh() {
     if (state.view === "document") await loadDocumentView();
     if (state.view === "runs") await loadRunsView();
     if (state.view === "history") await loadHistoryView();
+    if (state.view === "eval") await loadEvalView();
     indicator.textContent = `updated ${new Date().toLocaleTimeString()}`;
   } catch (e) {
     indicator.textContent = `error: ${e.message}`;
@@ -672,6 +683,122 @@ function toggleHistoryJob(runId) {
   }
 }
 
+async function loadEvalView() {
+  if (!state.auditId) return;
+  const experiments = await api(`/api/experiments?audit_id=${state.auditId}`);
+  const select = document.getElementById("eval-select");
+  const content = document.getElementById("eval-content");
+  if (experiments.length === 0) {
+    select.innerHTML = "";
+    content.innerHTML = `<div class="muted">No experiments yet -- run \`proofbench eval ${state.auditId}\`.</div>`;
+    return;
+  }
+  const prev = state.evalExpId;
+  select.innerHTML = experiments.map(e =>
+    `<option value="${e.experiment_id}">${e.experiment_id} — ${e.variants.join(" vs ")} — ${fmtCost(e.total_cost_usd)}</option>`
+  ).join("");
+  state.evalExpId = prev && experiments.some(e => e.experiment_id === prev) ? prev : experiments[0].experiment_id;
+  select.value = state.evalExpId;
+
+  const detail = await api(`/api/experiments/${encodeURIComponent(state.evalExpId)}`);
+  renderEval(detail, content);
+}
+
+function renderEval(detail, content) {
+  const summaries = detail.report.summaries;
+  const variants = summaries.map(s => s.variant);
+
+  const summaryTable = `
+    <table style="margin-bottom: 16px;">
+      <thead><tr><th>Variant</th><th>Accuracy</th><th>Correct</th><th>Failures</th><th>Avg tools</th><th>Avg cost</th><th>Total cost</th></tr></thead>
+      <tbody>
+        ${summaries.map(s => `
+          <tr>
+            <td><b>${s.variant}</b>${s.skipped ? ` <span class="status skipped_budget">skipped</span>` : ""}</td>
+            <td>${s.accuracy != null ? (s.accuracy * 100).toFixed(0) + "%" : "–"}</td>
+            <td>${s.correct}/${s.n_claims}</td>
+            <td>${s.failures}</td>
+            <td>${s.avg_tool_calls != null ? s.avg_tool_calls.toFixed(1) : "–"}</td>
+            <td>${fmtCost(s.avg_cost_usd)}</td>
+            <td>${fmtCost(s.total_cost_usd)}${s.enrichment_cost_usd != null ? ` <span class="muted">+ ${fmtCost(s.enrichment_cost_usd)} enrichment</span>` : ""}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>`;
+
+  // one row per claim, one column group per variant, so variants read
+  // side-by-side on the same claim
+  const byVC = {};
+  const claimIds = [];
+  for (const v of variants) {
+    for (const row of detail.claims_by_variant[v] || []) {
+      byVC[`${v}|${row.claim_id}`] = row;
+      if (!claimIds.includes(row.claim_id)) claimIds.push(row.claim_id);
+    }
+  }
+
+  const cell = (v, claimId) => {
+    const r = byVC[`${v}|${claimId}`];
+    if (!r) return `<td class="muted">–</td>`;
+    const suffix = claimId.split("/").pop();
+    const badge = r.error
+      ? `<span class="status failed">failed</span>`
+      : `${statusBadge(r.status)} ${r.correct ? "✓" : "✗"}`;
+    const meta = r.tool_calls != null ? `${r.tool_calls} tools · ${fmtCost(r.cost_usd)}` : "";
+    return `<td class="clickable" style="cursor: pointer;" onclick="showEvalClaim('${v}', '${suffix}')">${badge}<div class="muted">${meta}</div></td>`;
+  };
+
+  const matrix = `
+    <table>
+      <thead><tr><th>Claim</th><th>Expected</th>${variants.map(v => `<th>${v}</th>`).join("")}</tr></thead>
+      <tbody>
+        ${claimIds.map(claimId => {
+          const any = variants.map(v => byVC[`${v}|${claimId}`]).find(Boolean);
+          return `<tr>
+            <td>${claimId.split("/").pop()}</td>
+            <td>${any && any.expected_status ? statusBadge(any.expected_status) : "–"}</td>
+            ${variants.map(v => cell(v, claimId)).join("")}
+          </tr>`;
+        }).join("")}
+      </tbody>
+    </table>
+    <div class="muted" style="margin-top: 8px;">Click a cell to see that variant's full tool trace for the claim.</div>`;
+
+  content.innerHTML = summaryTable + matrix;
+}
+
+async function showEvalClaim(variant, claimSuffix) {
+  const r = await api(`/api/experiments/${encodeURIComponent(state.evalExpId)}/${encodeURIComponent(variant)}/${encodeURIComponent(claimSuffix)}`);
+  const panel = document.getElementById("eval-claim-panel");
+
+  const trace = (r.tool_trace || []).map(t => `
+    <div class="trace-entry ${t.is_error ? "error" : ""}">
+      <div class="tool-name">#${t.seq} ${t.tool}</div>
+      <div class="mono">input: ${JSON.stringify(t.input)}</div>
+      <div class="mono">output: ${typeof t.output === "string" ? t.output : JSON.stringify(t.output)}</div>
+    </div>
+  `).join("") || `<div class="muted">No tool calls recorded.</div>`;
+
+  panel.innerHTML = `
+    <div class="panel">
+      <span class="back-link" onclick="document.getElementById('eval-claim-panel').innerHTML=''">✕ close</span>
+      <h3>${r.claim_id.split("/").pop()} — variant: ${r.variant}</h3>
+      <div class="kv">
+        <div>Expected</div><div>${r.expected_status ? statusBadge(r.expected_status) : "–"}</div>
+        <div>Got</div><div>${r.status ? statusBadge(r.status) : "–"} ${r.correct ? "✓ correct" : "✗"}</div>
+        <div>Tool calls</div><div>${r.tool_calls ?? "–"}</div>
+        <div>Cost</div><div>${fmtCost(r.cost_usd)}</div>
+        ${r.verdict ? `<div>Rationale</div><div>${r.verdict.rationale}</div>` : ""}
+        ${r.error ? `<div>Error</div><div class="mono">${r.error}</div>` : ""}
+      </div>
+      <h3>Tool trace</h3>
+      ${trace}
+      ${r.final_text ? `<h3>Final answer</h3><div class="mono">${r.final_text.replace(/</g, "&lt;")}</div>` : ""}
+    </div>
+  `;
+  panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
 document.querySelectorAll("nav button").forEach(b =>
   b.addEventListener("click", () => switchView(b.dataset.view))
 );
@@ -680,7 +807,13 @@ document.getElementById("audit-select").addEventListener("change", e => {
   state.doc.docId = null;
   state.historyRunId = null;
   state.historyRole = null;
+  state.evalExpId = null;
   refresh();
+});
+document.getElementById("eval-select").addEventListener("change", e => {
+  state.evalExpId = e.target.value;
+  document.getElementById("eval-claim-panel").innerHTML = "";
+  loadEvalView();
 });
 document.getElementById("doc-select").addEventListener("change", e => {
   state.doc.docId = e.target.value;
