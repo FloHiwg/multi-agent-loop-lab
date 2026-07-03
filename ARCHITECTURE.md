@@ -244,6 +244,27 @@ original concept discussion:
   agent made, with real input/output, in order) plus the system prompt.
   This is what makes the tool-based retrieval from the previous session
   actually inspectable instead of a black box.
+- **Document** — the master or a vault document rendered page-by-page
+  (PyMuPDF, 150dpi PNG) with color-coded, clickable highlight boxes: on
+  the master doc, one box per claim (colored by verdict status); on a
+  vault doc, one box per evidence span cited against it. Clicking a
+  highlight shows what it is and links to the full claim. This is where
+  claims/evidence become spatially real instead of just JSON.
+
+Bounding boxes for the Document view come from two different sources,
+depending on what's actually locatable on the page:
+- **Table-row evidence** (e.g. `"Revenue | 4.2800 | 3.9500 | 4.2000"`):
+  exact-matched against our own indexed span text to recover the bbox
+  captured at index time (`index_db.py`'s `locations` table, built from
+  PyMuPDF's `find_tables()` row geometry). Reliable because the model's
+  `span_text` is literally copied from what `search_vault`/`read_span`
+  returned, not paraphrased.
+- **Narrative text** (claim `raw_text`, prose evidence): a live
+  `page.search_for()` call at request time. Verified beforehand (not
+  assumed) that claim/evidence text actually matches this way before
+  building anything on top of it.
+- **XLSX documents** have no page/bbox concept and degrade to a message
+  pointing back at the evidence text already shown in the claim panel.
 
 **Effective claim status is computed by the API, not stored on the
 claim.** `Claim.status` (in `models.py`) is set once at extraction time
@@ -260,8 +281,7 @@ per claim. This avoids a second writer touching files another agent owns.
 | 1. Schemas | done |
 | 2. Ingest | done (PDF + XLSX; OCR deferred) |
 | 3. Extract + verify loop | done -- tool-based agentic search over an FTS5 + facts-graph index (not a full-corpus-dump prompt), bounded-concurrency Manager with per-claim failure isolation and a cost budget, validated end-to-end against the Northstar fixture, matches `gold.yaml` exactly |
-| 4. Workbench UI | done -- read-only FastAPI + vanilla-JS frontend over the existing files, including full tool-call traces per run |
-| 4. Workbench UI | not started |
+| 4. Workbench UI | done -- read-only FastAPI + vanilla-JS frontend over the existing files, including full tool-call traces per run and a highlighted Document view with cross-links to sources |
 | 5. Tolerance/formula rules | not started (schema already in place; enforcement logic isn't) |
 
 ## Agent calls (resolved)
@@ -354,3 +374,8 @@ idempotent) rather than needing the whole run redone.
   `human_decision` from `review_queue/*.json` but there's no accept/
   reject/escalate action yet -- CONCEPT.md's Claim review view has actions,
   this only has display.
+- **The Document view re-fetches and re-renders on every 3s poll**, same
+  as every other view. Static content (rendered page image, highlight
+  boxes) doesn't need to reload that often; unlike the Audit/Runs views,
+  where new files genuinely appear mid-run, this is wasted work and can
+  cause a visible flicker while someone's actually looking at a page.
