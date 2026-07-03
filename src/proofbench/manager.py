@@ -114,6 +114,11 @@ async def run_jobs(
                 async with lock:
                     report.failed[job.job_id] = str(e)
                     job_outcomes.append({"job_id": job.job_id, "run_id": run_id, "status": "failed", "cost_usd": None})
+                # Some exceptions (e.g. verification.py's VerifyClaimError)
+                # carry the agent's tool_trace/final_text from before it
+                # failed -- duck-typed here so the Manager stays agnostic
+                # of which agent raised it, while the failure record still
+                # shows what the agent actually did, not just the error.
                 write_run_manifest(
                     RunManifest(
                         run_id=run_id,
@@ -125,6 +130,8 @@ async def run_jobs(
                         input_refs=[job.job_id],
                         status="failed",
                         error=str(e),
+                        tool_trace=getattr(e, "tool_trace", []),
+                        final_text=getattr(e, "final_text", None),
                     )
                 )
                 return

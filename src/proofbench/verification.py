@@ -94,6 +94,20 @@ markdown fences.
 """
 
 
+class VerifyClaimError(ValueError):
+    """Raised when the agent's final reply doesn't parse into a valid
+    verdict. Carries the AgentReply's tool_trace/final_text so the Manager
+    can still record what the agent actually did before failing -- without
+    this, a failed job's RunManifest would show only an error message and
+    lose the entire trace leading up to it.
+    """
+
+    def __init__(self, message: str, reply: AgentReply) -> None:
+        super().__init__(message)
+        self.tool_trace = reply.tool_trace
+        self.final_text = reply.text
+
+
 async def verify_claim_async(
     claim: Claim, audit_id: str, run_id: str, *, model: str | None = None
 ) -> tuple[list[EvidenceCandidate], Verdict, AgentReply]:
@@ -108,9 +122,10 @@ async def verify_claim_async(
     )
     raw = extract_json(reply.text)
     if not isinstance(raw, dict) or "evidence" not in raw or "verdict" not in raw:
-        raise ValueError(
+        raise VerifyClaimError(
             f"expected a JSON object with 'evidence' and 'verdict' keys, "
-            f"got {type(raw).__name__}: {str(raw)[:200]!r}"
+            f"got {type(raw).__name__}: {str(raw)[:200]!r}",
+            reply,
         )
 
     evidence: list[EvidenceCandidate] = []
@@ -160,6 +175,7 @@ async def _process_claim(run_id: str, claim: Claim, audit_id: str, model: str) -
             prompt=SYSTEM_PROMPT,
             cost_usd=reply.cost_usd,
             tool_trace=reply.tool_trace,
+            final_text=reply.text,
             status="succeeded",
         )
     )

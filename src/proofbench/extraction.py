@@ -101,6 +101,7 @@ async def _process_extraction(run_id: str, audit_id: str, model: str, claims_out
             prompt=SYSTEM_PROMPT,
             cost_usd=reply.cost_usd,
             tool_trace=reply.tool_trace,
+            final_text=reply.text,
             status="succeeded",
         )
     )
