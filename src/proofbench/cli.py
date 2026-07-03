@@ -6,16 +6,21 @@ import json
 from pathlib import Path
 
 import typer
+from dotenv import load_dotenv
 
 from proofbench import models
+from proofbench.extraction import extract_claims
 from proofbench.ingest import ingest_audit
+from proofbench.verification import verify_audit
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+SCHEMAS_DIR = REPO_ROOT / "schemas"
+
+load_dotenv(REPO_ROOT / ".env")
 
 app = typer.Typer(add_completion=False, help="Local claim-evidence audit workbench.")
 schemas_app = typer.Typer(help="Manage exported JSON Schema files.")
 app.add_typer(schemas_app, name="schemas")
-
-REPO_ROOT = Path(__file__).resolve().parents[2]
-SCHEMAS_DIR = REPO_ROOT / "schemas"
 
 EXPORTED_MODELS = {
     "claim": models.Claim,
@@ -51,6 +56,21 @@ def init(audit_id: str) -> None:
     written = ingest_audit(audit_id)
     for path in written:
         typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
+
+
+@app.command()
+def extract(audit_id: str) -> None:
+    """Run the Claim Extractor over the master document, writing audits/<id>/claims/."""
+    claims = extract_claims(audit_id)
+    typer.echo(f"extracted {len(claims)} claims into audits/{audit_id}/claims/")
+
+
+@app.command()
+def verify(audit_id: str) -> None:
+    """Run the Verifier over every extracted claim, writing results/ and review_queue/."""
+    verdicts = verify_audit(audit_id)
+    supported = sum(1 for v in verdicts if v.status == models.VerdictStatus.SUPPORTED)
+    typer.echo(f"verified {len(verdicts)} claims: {supported} supported, {len(verdicts) - supported} need review")
 
 
 if __name__ == "__main__":
