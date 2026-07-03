@@ -183,6 +183,26 @@ class RunManifest(BaseModel):
 # ---------------------------------------------------------------------------
 
 
+class DocumentFormat(str, Enum):
+    PDF = "pdf"
+    XLSX = "xlsx"
+
+
+class DocumentKind(str, Enum):
+    MASTER = "master"
+    VAULT = "vault"
+
+
+class DocumentRef(BaseModel):
+    """One entry in an audit's document registry, pointing at a file on disk."""
+
+    doc_id: str
+    path: str = Field(description="Path relative to the repo root")
+    kind: DocumentKind
+    format: DocumentFormat
+    tag: str | None = Field(default=None, description="Evidence class, e.g. 'finance_pack' -- matches evidence_priority")
+
+
 class AuditConfig(BaseModel):
     """audit.yaml -- the manifest for a single audit case."""
 
@@ -192,5 +212,8 @@ class AuditConfig(BaseModel):
     evidence_priority: list[str] = Field(
         default_factory=list,
         description="Ordered document classes/tags preferred as evidence when sources conflict",
+    )
+    documents: list[DocumentRef] = Field(
+        default_factory=list, description="Registry of master + vault documents this audit draws on"
     )
     created_at: datetime

@@ -6,5 +6,26 @@ evidence_priority:
   - finance_pack
   - operations_review
   - customer_appendix
+documents:
+  - doc_id: northstar-master-q4-2025
+    path: audits/audit-2025-q4-northstar/master/master-report.pdf
+    kind: master
+    format: pdf
+    tag: null
+  - doc_id: northstar-finance-q4-2025
+    path: vault/northstar/financials-q4-2025.pdf
+    kind: vault
+    format: pdf
+    tag: finance_pack
+  - doc_id: northstar-ops-q4-2025
+    path: vault/northstar/ops-metrics-q4-2025.pdf
+    kind: vault
+    format: pdf
+    tag: operations_review
+  - doc_id: northstar-customer-appendix-q4-2025
+    path: vault/northstar/board-appendix-q4-2025.xlsx
+    kind: vault
+    format: xlsx
+    tag: customer_appendix
 created_at: 2026-01-16T09:00:00+01:00
 
