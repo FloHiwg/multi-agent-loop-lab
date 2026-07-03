@@ -8,6 +8,7 @@ from pathlib import Path
 import typer
 
 from proofbench import models
+from proofbench.ingest import ingest_audit
 
 app = typer.Typer(add_completion=False, help="Local claim-evidence audit workbench.")
 schemas_app = typer.Typer(help="Manage exported JSON Schema files.")
@@ -36,12 +37,20 @@ def schemas_export() -> None:
 
 
 @app.command()
-def init(audit_id: str) -> None:
-    """Scaffold a new audit folder under audits/<audit-id>/."""
+def new(audit_id: str) -> None:
+    """Scaffold a new, empty audit folder under audits/<audit-id>/."""
     audit_dir = REPO_ROOT / "audits" / audit_id
     for sub in ("master", "claims", "results", "review_queue"):
         (audit_dir / sub).mkdir(parents=True, exist_ok=True)
     typer.echo(f"created {audit_dir.relative_to(REPO_ROOT)}")
+
+
+@app.command()
+def init(audit_id: str) -> None:
+    """Parse this audit's registered documents (master + vault) into index/parsed/."""
+    written = ingest_audit(audit_id)
+    for path in written:
+        typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
 
 
 if __name__ == "__main__":
