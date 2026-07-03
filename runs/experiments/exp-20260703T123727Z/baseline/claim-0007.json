@@ -1,0 +1,149 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0007",
+  "variant": "baseline",
+  "expected_status": "contradicted",
+  "status": "contradicted",
+  "correct": true,
+  "tool_calls": 7,
+  "cost_usd": 0.08876500000000001,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0007",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0007/evidence-001"
+    ],
+    "delta": 0.02,
+    "confidence": 0.92,
+    "rationale": "The operations review reports Q4 2025 net revenue retention of 106.0% on a trailing 12-month cohort basis, matching the claim's time scope, but the claim asserts 108.0% \u2014 a 2 percentage-point discrepancy with no corroborating 108% figure in the customer appendix.",
+    "suggested_action": "Reconcile the 108.0% in the master document against the 106.0% in the operations review; confirm which source is authoritative before publishing.",
+    "produced_by_run_id": "eval/baseline/audit-2025-q4-northstar/claim-0007"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0007/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0007",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "Net revenue retention | 106.0% | 104.0% | Trailing 12-month cohort basis",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 1.06,
+      "unit": "percent",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-03T12:38:19.862044+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "net revenue retention"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Net revenue retention\",\n    \"entity\": \"Net revenue retention\",\n    \"attribute\": \"Q4 2025\",\n    \"value\": \"106.0%\"\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Net revenue retention\",\n    \"entity\": \"Net revenue retention\",\n    \"attribute\": \"Q3 2025\",\n    \"value\": \"104.0%\"\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Net revenue retention\",\n    \"entity\": \"Net revenue retention\",\n    \"attribute\": \"Definition\",\n    \"value\": \"Trailing 12-month cohort basis\"\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-03T12:38:20.009707+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "net revenue retention"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1\",\n    \"snippet\": \"...plan at period end\\n[Net] [revenue] [retention]\\n106.0%\\n104.0%\\nTrailing...\"\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Net revenue retention\",\n    \"snippet\": \"[Net] [revenue] [retention] | 106.0% | 104.0% | Trailing 12-month cohort basis\"\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-03T12:38:22.445462+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {
+        "tag": "customer_appendix"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n    \"tag\": \"customer_appendix\",\n    \"format\": \"xlsx\",\n    \"locations\": [\n      \"sheet:Customer Summary\",\n      \"sheet:Segment Detail\"\n    ]\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-03T12:38:22.640998+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "retention 108",
+        "tag": "customer_appendix"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-03T12:38:25.581223+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "retention",
+        "tag": "customer_appendix"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-03T12:38:25.624872+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "retention"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Net revenue retention\",\n    \"entity\": \"Net revenue retention\",\n    \"attribute\": \"Q4 2025\",\n    \"value\": \"106.0%\"\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Net revenue retention\",\n    \"entity\": \"Net revenue retention\",\n    \"attribute\": \"Q3 2025\",\n    \"value\": \"104.0%\"\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Net revenue retention\",\n    \"entity\": \"Net revenue retention\",\n    \"attribute\": \"Definition\",\n    \"value\": \"Trailing 12-month cohort basis\"\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-03T12:38:32.056719+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-ops-q4-2025",
+        "location": "page:1/table:2/row:Net revenue retention"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\n  \"doc_id\": \"northstar-ops-q4-2025\",\n  \"location\": \"page:1/table:2/row:Net revenue retention\",\n  \"text\": \"Net revenue retention | 106.0% | 104.0% | Trailing 12-month cohort basis\"\n}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"northstar-ops-q4-2025\",\"page\":1,\"span_text\":\"Net revenue retention | 106.0% | 104.0% | Trailing 12-month cohort basis\",\"canonical_value\":1.06,\"unit\":\"percent\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"contradicted\",\"delta\":0.02,\"confidence\":0.92,\"rationale\":\"The operations review reports Q4 2025 net revenue retention of 106.0% on a trailing 12-month cohort basis, matching the claim's time scope, but the claim asserts 108.0% \u2014 a 2 percentage-point discrepancy with no corroborating 108% figure in the customer appendix.\",\"suggested_action\":\"Reconcile the 108.0% in the master document against the 106.0% in the operations review; confirm which source is authoritative before publishing.\"}}"
+}

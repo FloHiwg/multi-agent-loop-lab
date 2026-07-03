@@ -1,0 +1,51 @@
+{
+  "experiment_id": "exp-20260703T123727Z",
+  "audit_id": "audit-2025-q4-northstar",
+  "model": "z-ai/glm-5.2",
+  "max_concurrency": 2,
+  "max_budget_usd": 0.8,
+  "started_variants": [
+    "baseline",
+    "catalog",
+    "catalog_aliases"
+  ],
+  "total_cost_usd": 0.931738,
+  "summaries": [
+    {
+      "variant": "baseline",
+      "n_claims": 10,
+      "correct": 8,
+      "accuracy": 0.8,
+      "failures": 2,
+      "avg_tool_calls": 5.4,
+      "avg_cost_usd": 0.0890162,
+      "total_cost_usd": 0.890162,
+      "enrichment_cost_usd": null,
+      "n_attempted": 10
+    },
+    {
+      "variant": "catalog",
+      "n_claims": 10,
+      "correct": 0,
+      "accuracy": 0.0,
+      "failures": 10,
+      "avg_tool_calls": null,
+      "avg_cost_usd": null,
+      "total_cost_usd": 0.0,
+      "enrichment_cost_usd": null,
+      "n_attempted": 0
+    },
+    {
+      "variant": "catalog_aliases",
+      "n_claims": 10,
+      "correct": 0,
+      "accuracy": 0.0,
+      "failures": 10,
+      "avg_tool_calls": null,
+      "avg_cost_usd": null,
+      "total_cost_usd": 0.0,
+      "enrichment_cost_usd": 0.041575999999999995,
+      "n_attempted": 0
+    }
+  ]
+}

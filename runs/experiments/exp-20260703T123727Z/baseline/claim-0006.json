@@ -1,0 +1,102 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0006",
+  "variant": "baseline",
+  "expected_status": "supported",
+  "status": null,
+  "correct": false,
+  "tool_calls": 6,
+  "cost_usd": 0.083344,
+  "error": "expected a JSON object with 'evidence' and 'verdict' keys, got list: \"[{'doc_id': 'northstar-customer-appendix-q4-2025', 'page': None, 'span_text': 'A13: Enterprise total | B13: 126 | C13: 2318400 | D13: 18400 | E13: 2025-12-31 | F13: actual', 'canonical_value': 126.0, \"",
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-03T12:38:06.798529+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "Enterprise customers"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Enterprise customers\",\n    \"entity\": \"Enterprise customers\",\n    \"attribute\": \"Q4 2025\",\n    \"value\": \"126\"\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Enterprise customers\",\n    \"entity\": \"Enterprise customers\",\n    \"attribute\": \"Q3 2025\",\n    \"value\": \"119\"\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Enterprise customers\",\n    \"entity\": \"Enterprise customers\",\n    \"attribute\": \"Definition\",\n    \"value\": \"Customers with enterprise plan at period end\"\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-03T12:38:07.132318+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "Enterprise",
+        "attribute": "customers"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n    \"location\": \"sheet:Customer Summary!row13\",\n    \"entity\": \"Enterprise total\",\n    \"attribute\": \"Customers\",\n    \"value\": \"126\"\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-03T12:38:07.229055+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "Enterprise customers"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1\",\n    \"snippet\": \"...period end\\n[Enterprise] [customers]\\n126\\n119\\n[Customers] with [enterprise] plan at period...\"\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Enterprise customers\",\n    \"snippet\": \"[Enterprise] [customers] | 126 | 119 | [Customers] with [enterprise] plan at period end\"\n  },\n  {\n    \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n    \"location\": \"sheet:Customer Summary\",\n    \"snippet\": \"...[Enterprise] ACV equals [enterprise] annual recurring revenue divided by [enterprise] [customers]: EUR...\"\n  },\n  {\n    \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n    \"location\": \"sheet:Segment Detail\",\n    \"snippet\": \"A1: [Enterprise] Segment Detail\\nA4: Segment\\nB4: [Customers]\\nC4: ARR\\nD4: ACV...\"\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-03T12:38:09.141784+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-customer-appendix-q4-2025",
+        "location": "sheet:Customer Summary!row13"
+      },
+      "output": "no span found at that doc_id/location",
+      "is_error": true
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-03T12:38:09.500116+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-ops-q4-2025",
+        "location": "page:1/table:2/row:Enterprise customers"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\n  \"doc_id\": \"northstar-ops-q4-2025\",\n  \"location\": \"page:1/table:2/row:Enterprise customers\",\n  \"text\": \"Enterprise customers | 126 | 119 | Customers with enterprise plan at period end\"\n}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-03T12:38:20.410678+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-customer-appendix-q4-2025",
+        "location": "sheet:Customer Summary"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\n  \"doc_id\": \"northstar-customer-appendix-q4-2025\",\n  \"location\": \"sheet:Customer Summary\",\n  \"text\": \"A1: Northstar Analytics | Q4 2025 Customer Appendix\\nA3: Document ID\\nB3: northstar-customer-appendix-q4-2025\\nA4: Reporting period\\nB4: Q4 2025\\nA5: As-of date\\nB5: 2025-12-31T00:00:00\\nA6: Issued\\nB6: 2026-01-16T00:00:00\\nA7: Status\\nB7: Final management reporting\\nA9: Segment\\nB9: Customers\\nC9: Annual recurring revenue\\nD9: ACV\\nE9: Period\\nF9: Role\\nA10: Strategic\\nB10: 18\\nC10: 648000\\nD10: 36000\\nE10: 2025-12-31\\nF10: actual\\nA11: Mid-market\\nB11: 52\\nC11: 1040000\\nD11: 20000\\nE11: 2025-12-31\\nF11: actual\\nA12: Growth\\nB12: 56\\nC12: 630400\\nD12: 11257.142857142857\\nE12: 2025-12-31\\nF12: actual\\nA13: Enterprise total\\nB13: 126\\nC13: 2318400\\nD13: 18400\\nE13: 2025-12-31\\nF13: actual\\nA15: Control note\\nA16: Enterprise ACV equals enterprise annual recurring revenue divided by enterprise customers: EUR 2,318,400 / 126 = EUR 18,400.\"\n}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "Based on two independent vault sources both confirming 126 enterprise customers as of 2025-12-31, the claim is supported.\n\n{\"evidence\":[{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"page\":null,\"span_text\":\"A13: Enterprise total | B13: 126 | C13: 2318400 | D13: 18400 | E13: 2025-12-31 | F13: actual\",\"canonical_value\":126.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.98},{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"page\":null,\"span_text\":\"Control note: Enterprise ACV equals enterprise annual recurring revenue divided by enterprise customers: EUR 2,318,400 / 126 = EUR 18,400.\",\"canonical_value\":126.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.95},{\"doc_id\":\"northstar-ops-q4-2025\",\"page\":1,\"span_text\":\"Enterprise customers | 126 | 119 | Customers with enterprise plan at period end\",\"canonical_value\":126.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.98,\"rationale\":\"The Q4 2025 customer appendix lists Enterprise total = 126 customers (actual, as-of 2025-12-31), corroborated by the operations review's Enterprise customers row of 126; the appendix control note independently confirms the count via the ACV computation (EUR 2,318,400 / 126 = EUR 18,400).\",\"suggested_action\":null}}"
+}

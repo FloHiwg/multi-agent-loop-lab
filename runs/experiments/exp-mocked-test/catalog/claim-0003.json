@@ -1,0 +1,38 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0003",
+  "variant": "catalog",
+  "expected_status": "supported",
+  "status": "missing_evidence",
+  "correct": false,
+  "tool_calls": 2,
+  "cost_usd": 0.01,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0003",
+    "status": "missing_evidence",
+    "matched_evidence_ids": [],
+    "delta": 0.0,
+    "confidence": 0.9,
+    "rationale": "mocked",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/catalog/audit-2025-q4-northstar/claim-0003"
+  },
+  "evidence": [],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "tool": "search_facts",
+      "input": {},
+      "output": null,
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "tool": "search_facts",
+      "input": {},
+      "output": null,
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\": [], \"verdict\": {\"status\": \"missing_evidence\", \"delta\": 0, \"confidence\": 0.9, \"rationale\": \"mocked\", \"suggested_action\": null}}"
+}

@@ -1,0 +1,10 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0006",
+  "variant": "catalog",
+  "expected_status": "supported",
+  "status": null,
+  "correct": false,
+  "tool_calls": null,
+  "cost_usd": null,
+  "error": "skipped: experiment budget exhausted"
+}

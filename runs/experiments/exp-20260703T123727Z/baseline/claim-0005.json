@@ -1,0 +1,104 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0005",
+  "variant": "baseline",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.06784,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0005",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0005/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.98,
+    "rationale": "The Q4 2025 Operations Review lists 84 active employees at period end for Q4 2025, matching the claim exactly.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/baseline/audit-2025-q4-northstar/claim-0005"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0005/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0005",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "Employees | 84 | 81 | Active employees at period end",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 84.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.98
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-03T12:38:03.092589+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "employee",
+        "attribute": "count"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-03T12:38:03.211500+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "employees"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1\",\n    \"snippet\": \"...Q3 2025\\nDefinition\\n[Employees]\\n84\\n81\\nActive [employees] at period end\\nEnterprise...\"\n  },\n  {\n    \"doc_id\": \"northstar-ops-q4-2025\",\n    \"location\": \"page:1/table:2/row:Employees\",\n    \"snippet\": \"[Employees] | 84 | 81 | Active [employees] at period end\"\n  }\n]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-03T12:38:04.803225+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-ops-q4-2025",
+        "location": "page:1/table:2/row:Employees"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\n  \"doc_id\": \"northstar-ops-q4-2025\",\n  \"location\": \"page:1/table:2/row:Employees\",\n  \"text\": \"Employees | 84 | 81 | Active employees at period end\"\n}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-03T12:38:07.106884+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-ops-q4-2025",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\n  \"doc_id\": \"northstar-ops-q4-2025\",\n  \"location\": \"page:1\",\n  \"text\": \"Northstar Analytics GmbH | Confidential | Synthetic evaluation fixture\\nPage 1\\nNORTHSTAR ANALYTICS\\nQ4 2025 Operations Review\\nPeople, customer and support metrics\\nDOCUMENT ID\\nnorthstar-ops-q4-2025\\nREPORTING PERIOD\\nQ4 2025\\nISSUED\\n16 January 2026\\nPeople and customer base\\nMetric\\nQ4 2025\\nQ3 2025\\nDefinition\\nEmployees\\n84\\n81\\nActive employees at period end\\nEnterprise customers\\n126\\n119\\nCustomers with enterprise plan at period end\\nNet revenue retention\\n106.0%\\n104.0%\\nTrailing 12-month cohort basis\\nSupport operations\\nMetric\\nQ4 2025\\nQ3 2025\\nChange\\nTickets opened\\n1,100\\n1,250\\n-150\\nTickets resolved\\n1,087\\n1,228\\n-141\\nMedian first response\\n2.4 h\\n2.8 h\\n-0.4 h\\nTicket volume calculation\\nThe quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%.\\nMetric governance\\nPeople counts are maintained by People Operations. Customer counts and retention are sourced from the revenue\\noperations snapshot dated 5 January 2026. No quarterly gross logo churn metric was approved for this review\\ncycle.\\n\"\n}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"northstar-ops-q4-2025\",\"page\":1,\"span_text\":\"Employees | 84 | 81 | Active employees at period end\",\"canonical_value\":84.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.98}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.98,\"rationale\":\"The Q4 2025 Operations Review lists 84 active employees at period end for Q4 2025, matching the claim exactly.\",\"suggested_action\":null}}"
+}

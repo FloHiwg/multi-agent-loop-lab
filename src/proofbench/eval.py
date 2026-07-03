@@ -201,6 +201,27 @@ async def run_eval_async(
     # noisy variant can't starve its siblings of budget mid-flight.
     for name in variant_names:
         variant = VARIANTS[name]
+        # Skip a whole variant (including its enrichment call) once the
+        # budget is gone -- otherwise enrichment would spend money preparing
+        # aliases for claims that are then all skipped anyway.
+        if await budget.exhausted():
+            summaries.append(
+                {
+                    "variant": variant.name,
+                    "skipped": "experiment budget exhausted before this variant started",
+                    "n_claims": 0,
+                    "correct": 0,
+                    "accuracy": None,
+                    "failures": 0,
+                    "avg_tool_calls": None,
+                    "avg_cost_usd": None,
+                    "total_cost_usd": 0.0,
+                    "enrichment_cost_usd": None,
+                    "n_attempted": 0,
+                }
+            )
+            continue
+
         enrichment_cost_usd: float | None = None
         if variant.use_aliases and alias_count(audit_id) == 0:
             written, reply = await enrich_aliases_async(audit_id, model=resolved_model)
