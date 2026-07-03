@@ -1,0 +1,60 @@
+"""Thin wrapper around the Claude Agent SDK for one-shot, tool-free agent calls.
+
+Every Proofbench agent (Claim Extractor, Verifier) is a single stateless
+query: fixed system prompt in, JSON text out, parsed and validated by the
+caller against a Pydantic model. None of them get file or shell tools --
+CONCEPT.md's bounded-worker design means these agents read what they're
+handed and return typed output, nothing else.
+"""
+
+from __future__ import annotations
+
+import os
+
+from claude_agent_sdk import AssistantMessage, ClaudeAgentOptions, TextBlock, query
+
+
+def _openrouter_env() -> dict[str, str] | None:
+    """Build the env overrides needed to route the Agent SDK through OpenRouter's
+    Anthropic-compatible endpoint (see openrouter.ai/docs/guides/community/anthropic-agent-sdk).
+    Returns None if OPENROUTER_API_KEY isn't set, so a direct Anthropic key
+    (already in the ambient environment) is used unmodified instead.
+    """
+    key = os.environ.get("OPENROUTER_API_KEY")
+    if not key:
+        return None
+    return {
+        "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
+        "ANTHROPIC_AUTH_TOKEN": key,
+        "ANTHROPIC_API_KEY": "",
+    }
+
+
+async def run_agent(system_prompt: str, user_prompt: str, *, model: str | None = None) -> str:
+    """Send one stateless prompt to Claude and return the concatenated text reply.
+
+    Raises RuntimeError if no credentials (OPENROUTER_API_KEY or an ambient
+    ANTHROPIC_API_KEY) are available.
+    """
+    env_overrides = _openrouter_env()
+    if env_overrides is None and not os.environ.get("ANTHROPIC_API_KEY"):
+        raise RuntimeError(
+            "No LLM credentials found. Set OPENROUTER_API_KEY (routed via OpenRouter's "
+            "Anthropic-compatible endpoint) or ANTHROPIC_API_KEY (direct Anthropic access)."
+        )
+
+    options = ClaudeAgentOptions(
+        system_prompt=system_prompt,
+        allowed_tools=[],
+        permission_mode="bypassPermissions",
+        model=model,
+        env=env_overrides or {},
+    )
+
+    chunks: list[str] = []
+    async for message in query(prompt=user_prompt, options=options):
+        if isinstance(message, AssistantMessage):
+            for block in message.content:
+                if isinstance(block, TextBlock):
+                    chunks.append(block.text)
+    return "".join(chunks)
