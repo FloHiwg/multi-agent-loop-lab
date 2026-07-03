@@ -1,7 +1,7 @@
 {
   "claim_id": "audit-2025-q4-northstar/claim-0005",
   "label": "Employee headcount",
-  "raw_text": "The organisation ended the quarter with 84 employees.",
+  "raw_text": "The organisation ended the quarter with 84 employees",
   "canonical_value": 84.0,
   "unit": "count",
   "currency": null,

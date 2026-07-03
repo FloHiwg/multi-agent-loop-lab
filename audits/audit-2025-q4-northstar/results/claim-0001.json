@@ -30,33 +30,18 @@
       "role": "actual",
       "effective_date": "2025-12-31",
       "extractor_confidence": 0.98
-    },
-    {
-      "evidence_id": "audit-2025-q4-northstar/claim-0001/evidence-002",
-      "claim_id": "audit-2025-q4-northstar/claim-0001",
-      "doc_id": "northstar-finance-q4-2025",
-      "page": 1,
-      "span_text": "Revenue and adjusted EBITDA reconcile to the December management ledger.",
-      "bbox": null,
-      "char_offsets": null,
-      "canonical_value": null,
-      "unit": "EUR",
-      "role": "other",
-      "effective_date": "2025-12-31",
-      "extractor_confidence": 0.7
     }
   ],
   "verdict": {
     "claim_id": "audit-2025-q4-northstar/claim-0001",
     "status": "supported",
     "matched_evidence_ids": [
-      "audit-2025-q4-northstar/claim-0001/evidence-001",
-      "audit-2025-q4-northstar/claim-0001/evidence-002"
+      "audit-2025-q4-northstar/claim-0001/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.97,
-    "rationale": "The Q4 2025 Finance Pack reports Q4 2025 actual revenue of EUR 4.2800 million, exactly matching the claimed EUR 4.28 million, with a control note confirming reconciliation to the management ledger.",
+    "confidence": 0.98,
+    "rationale": "The Q4 2025 finance pack reports Q4 2025 actual revenue of EUR 4.2800 million, exactly matching the claimed EUR 4.28 million.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0001-20260703T084455Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0001-20260703T085945Z"
   }
 }

@@ -1,10 +1,10 @@
 {
-  "run_id": "audit-2025-q4-northstar/extract-20260703T084411Z",
+  "run_id": "audit-2025-q4-northstar/extract-20260703T085845Z",
   "audit_id": "audit-2025-q4-northstar",
   "agent_role": "claim_extractor",
   "model": "claude-sonnet-5",
-  "started_at": "2026-07-03T08:44:11.155345Z",
-  "finished_at": "2026-07-03T08:44:40.870040Z",
+  "started_at": "2026-07-03T08:58:45.994805Z",
+  "finished_at": "2026-07-03T08:59:26.522752Z",
   "input_refs": [
     "northstar-master-q4-2025"
   ],

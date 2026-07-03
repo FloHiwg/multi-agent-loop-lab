@@ -6,7 +6,7 @@
   "unit": "percent",
   "currency": null,
   "entity": "Northstar Analytics GmbH",
-  "time_scope": "Trailing 12 months",
+  "time_scope": "TTM ending Q4 2025",
   "tolerance_rule": {
     "kind": "exact"
   },

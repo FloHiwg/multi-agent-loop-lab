@@ -54,9 +54,9 @@
       "audit-2025-q4-northstar/claim-0002/evidence-002"
     ],
     "delta": 0.0,
-    "confidence": 0.98,
-    "rationale": "The Q4 2025 Finance Pack income statement reports Q4 2025 actual Adjusted EBITDA of EUR 0.7400 million, exactly matching the claimed EUR 0.74 million, and is corroborated by the control note reconciling to the December management ledger.",
+    "confidence": 0.97,
+    "rationale": "The Q4 2025 finance pack income statement reports Adjusted EBITDA of EUR 0.7400 million (EUR 740,000) for the Q4 2025 actual period, exactly matching the claim.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0002-20260703T084515Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0002-20260703T085955Z"
   }
 }

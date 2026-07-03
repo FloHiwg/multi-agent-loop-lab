@@ -29,7 +29,7 @@
       "unit": "EUR",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.97
+      "extractor_confidence": 0.98
     }
   ],
   "verdict": {
@@ -39,9 +39,9 @@
       "audit-2025-q4-northstar/claim-0004/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.95,
-    "rationale": "The Q4 2025 Finance Pack liquidity table reports Cash and cash equivalents of EUR 2.1000 million as of 31 Dec 2025, matching the claimed EUR 2.10 million exactly, and this figure reconciles as operating bank accounts (1.72m) plus money market deposits (0.38m).",
+    "confidence": 0.97,
+    "rationale": "The Q4 2025 Finance Pack liquidity table reports cash and cash equivalents of EUR 2.1000 million as of 31 Dec 2025, matching the claim exactly.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0004-20260703T084559Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0004-20260703T090023Z"
   }
 }
