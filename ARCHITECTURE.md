@@ -229,7 +229,7 @@ database, cache, or websocket layer: "live" progress is the frontend
 re-polling every 3 seconds while a `proofbench verify` run in another
 terminal writes new files.
 
-Three views, matching CONCEPT.md §7 plus the Agent Run panel from the
+Five views, matching CONCEPT.md §7 plus the Agent Run panel from the
 original concept discussion:
 
 - **Audit** — coverage counts by verdict status, the claim list, and a
@@ -265,6 +265,36 @@ depending on what's actually locatable on the page:
   building anything on top of it.
 - **XLSX documents** have no page/bbox concept and degrade to a message
   pointing back at the evidence text already shown in the claim panel.
+
+- **History** — one connected narrative of a full orchestration run,
+  instead of clicking between separate Agent Runs panels. `GET
+  /api/history/{manager_run_id}` stitches a Manager's `RunManifest`
+  together with every job it scheduled (full manifest each: tool_trace,
+  final_text, cost, timing), sorted by actual start time. The frontend
+  renders it as a vertical timeline read top-to-bottom: orchestrator
+  starts with its config → each worker spawned as an expandable card
+  (collapsed by default; tool calls in call order, each with real
+  input/output, then the final answer text or error) → orchestrator
+  finishes with outcome totals.
+
+  Checked empirically before building this (a live test call, not an
+  assumption): the model never emits intermediate reasoning text between
+  tool calls — straight from tool call to tool call to final answer. So
+  "reasoning" in this view is the tool-call sequence plus the final
+  answer text; there's no separate chain-of-thought layer to surface
+  because the traces genuinely don't have one.
+
+  A related gap this surfaced and fixed: a **failed** job's `RunManifest`
+  previously recorded only the error message — the tool calls the agent
+  made and the malformed reply it produced right before failing were
+  silently dropped, even though `run_agent()` already had them at the
+  point of failure. `verification.py`'s shape-check failure now raises
+  `VerifyClaimError`, carrying the `AgentReply`'s `tool_trace`/
+  `final_text`; `manager.py`'s generic failure handler duck-types for
+  these attributes so it stays agnostic of which agent raised the
+  exception while still recording what actually happened. Verified with
+  a mocked `run_agent` (zero API cost) rather than paying to reproduce
+  the real intermittent failure again.
 
 **Effective claim status is computed by the API, not stored on the
 claim.** `Claim.status` (in `models.py`) is set once at extraction time
