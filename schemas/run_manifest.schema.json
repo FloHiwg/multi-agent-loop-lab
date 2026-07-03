@@ -117,6 +117,49 @@
       ],
       "default": null,
       "title": "Error"
+    },
+    "max_concurrency": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Manager only: concurrency cap used for this batch",
+      "title": "Max Concurrency"
+    },
+    "max_budget_usd": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Manager only: soft cost budget used for this batch",
+      "title": "Max Budget Usd"
+    },
+    "job_outcomes": {
+      "anyOf": [
+        {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "type": "array"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Manager only: one entry per scheduled job, in original order -- {job_id, run_id, status, cost_usd}",
+      "title": "Job Outcomes"
     }
   },
   "required": [

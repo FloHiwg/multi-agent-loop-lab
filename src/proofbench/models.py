@@ -178,6 +178,17 @@ class RunManifest(BaseModel):
     status: Literal["running", "succeeded", "failed", "skipped_budget"] = "running"
     error: str | None = None
 
+    # Manager-only fields (agent_role == "manager"): the orchestration
+    # record for one run_jobs() call -- what it was configured with, and
+    # what happened to every job it scheduled. See manager.py.
+    max_concurrency: int | None = Field(default=None, description="Manager only: concurrency cap used for this batch")
+    max_budget_usd: float | None = Field(default=None, description="Manager only: soft cost budget used for this batch")
+    job_outcomes: list[dict] | None = Field(
+        default=None,
+        description="Manager only: one entry per scheduled job, in original order -- "
+        "{job_id, run_id, status, cost_usd}",
+    )
+
 
 # ---------------------------------------------------------------------------
 # Audit config
