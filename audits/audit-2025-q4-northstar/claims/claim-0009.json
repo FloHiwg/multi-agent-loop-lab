@@ -5,8 +5,8 @@
   "canonical_value": -0.12,
   "unit": "percent_change",
   "currency": null,
-  "entity": "Northstar Analytics GmbH",
-  "time_scope": "Q4 vs Q3 2025",
+  "entity": "Northstar Analytics",
+  "time_scope": "Q4 2025 vs Q3 2025",
   "tolerance_rule": {
     "kind": "exact"
   },

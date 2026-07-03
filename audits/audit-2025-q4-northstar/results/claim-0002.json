@@ -6,7 +6,7 @@
     "canonical_value": 740000.0,
     "unit": "currency",
     "currency": "EUR",
-    "entity": "Northstar Analytics GmbH",
+    "entity": "Northstar Analytics",
     "time_scope": "Q4 2025",
     "tolerance_rule": {
       "kind": "exact"
@@ -22,14 +22,14 @@
       "claim_id": "audit-2025-q4-northstar/claim-0002",
       "doc_id": "northstar-finance-q4-2025",
       "page": 1,
-      "span_text": "Adjusted EBITDA\n0.7400\n0.5100\n0.6400",
+      "span_text": "Adjusted EBITDA | 0.7400 | 0.5100 | 0.6400",
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 740000.0,
       "unit": "currency",
       "role": "actual",
       "effective_date": "2025-12-31",
-      "extractor_confidence": 0.99
+      "extractor_confidence": 0.95
     }
   ],
   "verdict": {
@@ -39,9 +39,9 @@
       "audit-2025-q4-northstar/claim-0002/evidence-001"
     ],
     "delta": 0.0,
-    "confidence": 0.99,
-    "rationale": "The Q4 2025 Finance Pack income statement reports Adjusted EBITDA of EUR 0.7400 million for Q4 2025 actual, exactly matching the claim's EUR 0.74 million; a control note confirms reconciliation to the December management ledger.",
+    "confidence": 0.95,
+    "rationale": "The Q4 2025 finance pack lists Adjusted EBITDA for Q4 2025 actual as 0.7400 million EUR, which equals the claim's 740,000 EUR exactly.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0002-20260703T093421Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0002-20260703T095550Z"
   }
 }

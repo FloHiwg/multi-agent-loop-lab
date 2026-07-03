@@ -5,8 +5,8 @@
   "canonical_value": 1.08,
   "unit": "percent",
   "currency": null,
-  "entity": "Northstar Analytics GmbH",
-  "time_scope": "trailing 12 months",
+  "entity": "Northstar Analytics",
+  "time_scope": "Trailing 12 months",
   "tolerance_rule": {
     "kind": "exact"
   },

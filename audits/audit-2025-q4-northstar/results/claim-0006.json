@@ -6,7 +6,7 @@
     "canonical_value": 126.0,
     "unit": "count",
     "currency": null,
-    "entity": "Northstar Analytics GmbH",
+    "entity": "Northstar Analytics",
     "time_scope": "2025-12-31",
     "tolerance_rule": {
       "kind": "exact"
@@ -22,7 +22,7 @@
       "claim_id": "audit-2025-q4-northstar/claim-0006",
       "doc_id": "northstar-ops-q4-2025",
       "page": 1,
-      "span_text": "Enterprise customers 126 119 Customers with enterprise plan at period end",
+      "span_text": "Enterprise customers | 126 | 119 | Customers with enterprise plan at period end",
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 126.0,
@@ -36,21 +36,7 @@
       "claim_id": "audit-2025-q4-northstar/claim-0006",
       "doc_id": "northstar-customer-appendix-q4-2025",
       "page": null,
-      "span_text": "Enterprise total B13: 126 ... E13: 2025-12-31 F13: actual",
-      "bbox": null,
-      "char_offsets": null,
-      "canonical_value": 126.0,
-      "unit": "count",
-      "role": "actual",
-      "effective_date": "2025-12-31",
-      "extractor_confidence": 0.98
-    },
-    {
-      "evidence_id": "audit-2025-q4-northstar/claim-0006/evidence-003",
-      "claim_id": "audit-2025-q4-northstar/claim-0006",
-      "doc_id": "northstar-customer-appendix-q4-2025",
-      "page": null,
-      "span_text": "Enterprise ACV equals enterprise annual recurring revenue divided by enterprise customers: EUR 2,318,400 / 126 = EUR 18,400.",
+      "span_text": "Enterprise Segment Detail; Segment: Strategic Customers=18, Mid-market Customers=52, Growth Customers=56 (As of 2025-12-31, actual). 18+52+56=126",
       "bbox": null,
       "char_offsets": null,
       "canonical_value": 126.0,
@@ -65,13 +51,12 @@
     "status": "supported",
     "matched_evidence_ids": [
       "audit-2025-q4-northstar/claim-0006/evidence-001",
-      "audit-2025-q4-northstar/claim-0006/evidence-002",
-      "audit-2025-q4-northstar/claim-0006/evidence-003"
+      "audit-2025-q4-northstar/claim-0006/evidence-002"
     ],
     "delta": 0.0,
-    "confidence": 0.99,
-    "rationale": "The Q4 2025 Operations Review and the Q4 2025 Customer Appendix both independently report Enterprise customers at 126 as of 2025-12-31, matching the claim exactly; the appendix's control-note division also uses 126 as the customer base, corroborating the figure.",
+    "confidence": 0.98,
+    "rationale": "Both the operations review and the customer appendix confirm 126 enterprise customers as of 2025-12-31; the appendix decomposes the total into Strategic (18) + Mid-market (52) + Growth (56) = 126, exactly matching the claim.",
     "suggested_action": null,
-    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0006-20260703T093444Z"
+    "produced_by_run_id": "audit-2025-q4-northstar/verify-claim-0006-20260703T095643Z"
   }
 }
