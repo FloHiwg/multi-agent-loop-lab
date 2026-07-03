@@ -131,13 +131,44 @@ proofbench init <audit-id>       # parse registered documents into index/parsed/
 |---|---|
 | 1. Schemas | done |
 | 2. Ingest | done (PDF + XLSX; OCR deferred) |
-| 3. Extract + verify loop | not started |
+| 3. Extract + verify loop | done -- validated end-to-end against the Northstar fixture, matches `gold.yaml` exactly |
 | 4. Workbench UI | not started |
-| 5. Repair agent + tolerance/formula rules | not started (schema for tolerance rules already in place) |
+| 5. Tolerance/formula rules | not started (schema already in place; enforcement logic isn't) |
 
-## Open decision for step 3
+## Agent calls (resolved)
 
-How agent calls get made (Claude Agent SDK/API directly from `proofbench`,
-vs. prompts/schemas staged now and model calls wired up separately) is
-unresolved — flagged to the user, answer pending before extraction/
-verification work starts.
+Agent calls go through the Claude Agent SDK's one-shot `query()`, routed
+through OpenRouter's Anthropic-compatible endpoint when `OPENROUTER_API_KEY`
+is set (falls back to a direct `ANTHROPIC_API_KEY` otherwise). See
+`src/proofbench/llm.py`. The model is pinned (`DEFAULT_MODEL` in `llm.py`,
+override via `PROOFBENCH_MODEL`) and recorded on every `RunManifest`, since
+an unpinned "CLI default" model would break replayability.
+
+Verified by deliberately routing through OpenRouter with an invalid key: it
+hung on a real (failing) network call rather than silently succeeding via
+some other credential, confirming the routing actually works.
+
+## No repair agent
+
+CONCEPT.md originally scoped a Repair Agent (widen search / inspect
+adjacent pages on `ambiguous` verdicts, capped retries). This is
+deliberately not built. An `ambiguous` verdict goes straight to
+`review_queue/` for a human, no automated retry -- see CONCEPT.md §6 for
+the reasoning (this is the intended showcase of the human-in-the-loop
+handoff, not a placeholder to fill in later).
+
+## What's still ahead
+
+- **Manager / orchestration layer.** Today, `extraction.py` and
+  `verification.py` just run Python `for` loops with no concurrency, no
+  budget cap, and no per-claim failure isolation -- one bad LLM reply
+  raises and kills the whole `verify` run. CONCEPT.md's Manager role
+  (schedule jobs, enforce budgets, orchestration only) doesn't exist as a
+  distinct thing yet.
+- **Real retrieval.** The Verifier gets the entire vault corpus text on
+  every call; this only works because the fixture's vault is three small
+  documents. A real vault needs actual retrieval (metadata + full-text
+  first, per CONCEPT.md open question #3 -- embeddings only if that's not
+  enough).
+- **Workbench UI**, **tolerance/formula rule enforcement** (schema exists,
+  nothing evaluates a `FormulaCheck` yet).

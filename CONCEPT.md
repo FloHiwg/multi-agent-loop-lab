@@ -108,7 +108,7 @@ Every field exists to prevent one specific failure: a right number bound to the 
 
 ## 6. Agent harness
 
-One manager, four bounded workers, typed outputs everywhere. No open-ended loops.
+One manager, three bounded workers, typed outputs everywhere. No open-ended loops.
 
 | Agent | Job | Bound |
 |---|---|---|
@@ -116,9 +116,10 @@ One manager, four bounded workers, typed outputs everywhere. No open-ended loops
 | **Claim Extractor** | master text → typed claims | one document, emits schema-valid claims or nothing |
 | **Vault Retriever** | claim → candidate docs + spans | metadata filter + search, returns top-k candidates |
 | **Verifier** | claim + candidates → verdict, normalized values, deltas | explicit comparison rules only |
-| **Repair Agent** | ambiguous claims only: widen search, inspect adjacent pages/tables | invoked on demand, capped retries |
 
 Each worker gets a scoped workspace, produces schema-validated output, and its full trace lands in `runs/`. The manager never free-forms; it executes a deterministic loop over the claim list.
+
+**No repair agent, by design.** An `ambiguous` verdict goes straight to a human via the review queue — no automated retry, no widened search. This is a deliberate choice, not a placeholder: a human-in-the-loop step with no auto-retry is the clearer showcase of how the system hands off, and it keeps every `ambiguous` case honestly in front of a person rather than quietly resolved by a second, unaudited LLM guess. Revisit only if review-queue volume from ambiguity (not missing evidence or contradiction) becomes the actual bottleneck.
 
 ## 7. Workbench UI
 
@@ -176,6 +177,6 @@ The MVP works if, on a real audit case with ~50–200 numeric claims:
 2. **Ingest** — parse master + vault into `index/`, extract normalized numeric facts.
 3. **Extract + verify loop** — CLI-only, no UI: `audit verify` producing results and a review queue as files. The repo is already inspectable, so the CLI version is fully usable.
 4. **Workbench UI** — the three views over the existing files.
-5. **Repair agent + tolerance/formula rules** — once the happy path holds on a real case.
+5. **Tolerance/formula rules** — once the happy path holds on a real case.
 
 Steps 1–3 are the actual MVP test: if claim extraction and verification don't work at the file level, no UI will save it.

@@ -159,7 +159,6 @@ class AgentRole(str, Enum):
     CLAIM_EXTRACTOR = "claim_extractor"
     VAULT_RETRIEVER = "vault_retriever"
     VERIFIER = "verifier"
-    REPAIR = "repair"
 
 
 class RunManifest(BaseModel):

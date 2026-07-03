@@ -5,8 +5,7 @@
         "manager",
         "claim_extractor",
         "vault_retriever",
-        "verifier",
-        "repair"
+        "verifier"
       ],
       "title": "AgentRole",
       "type": "string"
