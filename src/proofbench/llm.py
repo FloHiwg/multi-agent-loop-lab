@@ -13,8 +13,16 @@ wrapper just waits for the final turn's text.
 from __future__ import annotations
 
 import os
+from dataclasses import dataclass
 
-from claude_agent_sdk import AssistantMessage, ClaudeAgentOptions, McpSdkServerConfig, TextBlock, query
+from claude_agent_sdk import (
+    AssistantMessage,
+    ClaudeAgentOptions,
+    McpSdkServerConfig,
+    ResultMessage,
+    TextBlock,
+    query,
+)
 
 # Pinned so every run is reproducible (see RunManifest.model): an unpinned
 # "CLI default" model can silently change out from under old runs, breaking
@@ -47,6 +55,12 @@ def _openrouter_env() -> dict[str, str] | None:
     }
 
 
+@dataclass
+class AgentReply:
+    text: str
+    cost_usd: float | None
+
+
 async def run_agent(
     system_prompt: str,
     user_prompt: str,
@@ -54,14 +68,19 @@ async def run_agent(
     model: str | None = None,
     mcp_servers: dict[str, McpSdkServerConfig] | None = None,
     allowed_tools: list[str] | None = None,
-) -> str:
-    """Run one bounded agent session and return the final turn's text reply.
+    max_budget_usd: float | None = None,
+) -> AgentReply:
+    """Run one bounded agent session and return the final turn's text reply plus its cost.
 
     With no mcp_servers/allowed_tools, this is a plain one-shot call (no
     tools granted). With them, the model may call tools across several
     turns before its final answer -- only the last AssistantMessage's text
     is returned, since intermediate turns may carry commentary alongside
     tool calls rather than the final JSON answer.
+
+    max_budget_usd is a per-call hard cap enforced by the Claude Code
+    runtime itself (defense in depth under the Manager's run-level budget,
+    see manager.py).
 
     Raises RuntimeError if no credentials (OPENROUTER_API_KEY or an ambient
     ANTHROPIC_API_KEY) are available.
@@ -80,12 +99,16 @@ async def run_agent(
         permission_mode="bypassPermissions",
         model=resolve_model(model),
         env=env_overrides or {},
+        max_budget_usd=max_budget_usd,
     )
 
     final_text = ""
+    cost_usd: float | None = None
     async for message in query(prompt=user_prompt, options=options):
         if isinstance(message, AssistantMessage):
             texts = [block.text for block in message.content if isinstance(block, TextBlock)]
             if texts:
                 final_text = "".join(texts)
-    return final_text
+        elif isinstance(message, ResultMessage):
+            cost_usd = message.total_cost_usd
+    return AgentReply(text=final_text, cost_usd=cost_usd)

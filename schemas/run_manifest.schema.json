@@ -82,12 +82,26 @@
       "title": "Tool Trace",
       "type": "array"
     },
+    "cost_usd": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Reported cost of this run, for budget enforcement",
+      "title": "Cost Usd"
+    },
     "status": {
       "default": "running",
       "enum": [
         "running",
         "succeeded",
-        "failed"
+        "failed",
+        "skipped_budget"
       ],
       "title": "Status",
       "type": "string"
