@@ -72,6 +72,20 @@
   .doc-side { display: flex; gap: 16px; align-items: flex-start; }
   .doc-page-col { flex: 1; min-width: 0; }
   .doc-info-col { width: 320px; flex-shrink: 0; }
+  .timeline { position: relative; padding-left: 24px; }
+  .timeline::before { content: ""; position: absolute; left: 6px; top: 8px; bottom: 8px; width: 2px; background: var(--line); }
+  .timeline-event { position: relative; margin-bottom: 8px; }
+  .timeline-event::before { content: ""; position: absolute; left: -24px; top: 4px; width: 10px; height: 10px; border-radius: 50%; background: var(--navy); border: 2px solid white; box-shadow: 0 0 0 2px var(--line); }
+  .timeline-event.manager-event::before { background: var(--teal); }
+  .job-card { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 10px 14px; margin-bottom: 6px; }
+  .job-card.failed { border-left: 3px solid var(--red); }
+  .job-card.succeeded { border-left: 3px solid #2b6b26; }
+  .job-card-header { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .job-card-header .job-title { font-weight: 700; font-size: 13px; flex: 1; }
+  .job-card-body { margin-top: 10px; display: none; }
+  .job-card.expanded .job-card-body { display: block; }
+  .job-card-body .final-answer { background: #f6f8fa; border-radius: 4px; padding: 8px 10px; font-family: "SF Mono", Consolas, monospace; font-size: 12px; white-space: pre-wrap; word-break: break-word; margin-top: 8px; }
+  .expand-caret { font-size: 10px; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -85,6 +99,7 @@
   <button data-view="vault">Vault</button>
   <button data-view="document">Document</button>
   <button data-view="runs">Agent Runs</button>
+  <button data-view="history">History</button>
 </nav>
 <main>
   <section id="view-audit" class="view active">
@@ -131,10 +146,18 @@
     </table>
     <div id="run-panel"></div>
   </section>
+
+  <section id="view-history" class="view">
+    <div class="doc-toolbar">
+      <label class="muted">Orchestration run:</label>
+      <select id="history-select"></select>
+    </div>
+    <div id="history-content"></div>
+  </section>
 </main>
 
 <script>
-const state = { auditId: null, view: "audit", doc: { docId: null, page: 1, pagesMeta: [] } };
+const state = { auditId: null, view: "audit", doc: { docId: null, page: 1, pagesMeta: [] }, historyRunId: null, historyExpanded: new Set() };
 
 async function api(path) {
   const res = await fetch(path);
@@ -485,9 +508,118 @@ async function refresh() {
     if (state.view === "vault") await loadVaultView();
     if (state.view === "document") await loadDocumentView();
     if (state.view === "runs") await loadRunsView();
+    if (state.view === "history") await loadHistoryView();
     indicator.textContent = `updated ${new Date().toLocaleTimeString()}`;
   } catch (e) {
     indicator.textContent = `error: ${e.message}`;
+  }
+}
+
+async function loadHistoryView() {
+  if (!state.auditId) return;
+  const runs = await api(`/api/runs?audit_id=${state.auditId}`);
+  const managerRuns = runs.filter(r => r.agent_role === "manager");
+  const select = document.getElementById("history-select");
+  const content = document.getElementById("history-content");
+
+  if (managerRuns.length === 0) {
+    select.innerHTML = "";
+    content.innerHTML = `<div class="muted">No orchestration runs yet -- run \`proofbench extract\` or \`proofbench verify\`.</div>`;
+    return;
+  }
+  if (!state.historyRunId || !managerRuns.some(r => r.run_id === state.historyRunId)) {
+    state.historyRunId = managerRuns[0].run_id;
+  }
+  select.innerHTML = managerRuns.map(r =>
+    `<option value="${r.run_id}" ${r.run_id === state.historyRunId ? "selected" : ""}>${r.run_id.split('/').pop()} (${fmtTime(r.started_at)})</option>`
+  ).join("");
+
+  const data = await api(`/api/history/${encodeURIComponent(state.historyRunId)}`);
+  renderHistory(data, content);
+}
+
+function renderHistory(data, content) {
+  const mgr = data.manager;
+  const jobs = data.jobs;
+
+  const batchAgentRole = jobs[0]?.manifest?.agent_role ?? "worker";
+  const managerStartHtml = `
+    <div class="timeline-event manager-event">
+      <div class="job-card">
+        <strong>Orchestrator started</strong> —
+        scheduling ${jobs.length} ${batchAgentRole} job(s), max_concurrency=${mgr.max_concurrency ?? "–"}, max_budget_usd=${mgr.max_budget_usd ?? "unlimited"}
+        <div class="muted">${mgr.started_at}</div>
+      </div>
+    </div>
+  `;
+
+  const jobCardsHtml = jobs.map(j => {
+    const m = j.manifest;
+    const expanded = state.historyExpanded.has(j.run_id);
+    const agentLabel = m ? m.agent_role : "?";
+    const jobLabel = j.job_id.split("/").pop();
+    const claimLink = j.job_id.includes("/claim-")
+      ? `<a href="#" onclick="event.stopPropagation(); jumpToClaimFromDoc(event, '${jobLabel}')">view claim ↗</a>` : "";
+
+    let body = "";
+    if (!m) {
+      body = `<div class="muted">Skipped by budget before it could run.</div>`;
+    } else {
+      const traceHtml = (m.tool_trace || []).map(t => `
+        <div class="trace-entry ${t.is_error ? "error" : ""}">
+          <div class="tool-name">🔧 ${t.tool}</div>
+          <div class="muted">${t.at}</div>
+          <div class="mono">args: ${JSON.stringify(t.input)}</div>
+          <div class="mono">→ ${typeof t.output === "string" ? t.output : JSON.stringify(t.output)}</div>
+        </div>
+      `).join("") || `<div class="muted">No tool calls recorded before this job ended.</div>`;
+      const finalHtml = m.final_text
+        ? `<div class="muted" style="margin-top:8px;">Final answer:</div><div class="final-answer">${m.final_text}</div>`
+        : "";
+      const errorHtml = m.error ? `<div class="muted" style="margin-top:8px;">Error:</div><div class="final-answer">${m.error}</div>` : "";
+      body = traceHtml + finalHtml + errorHtml;
+    }
+
+    return `
+      <div class="timeline-event">
+        <div class="job-card ${j.outcome_status} ${expanded ? "expanded" : ""}" data-run="${j.run_id}">
+          <div class="job-card-header" onclick="toggleHistoryJob('${j.run_id}')">
+            <span class="expand-caret">${expanded ? "▼" : "▶"}</span>
+            <span class="job-title">${agentLabel} spawned for ${jobLabel}</span>
+            ${statusBadge(j.outcome_status)}
+            <span class="muted">${fmtCost(j.cost_usd)}</span>
+            <span class="muted">${m ? fmtTime(m.started_at) + " → " + fmtTime(m.finished_at) : ""}</span>
+            ${claimLink}
+          </div>
+          <div class="job-card-body">${body}</div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  const managerEndHtml = `
+    <div class="timeline-event manager-event">
+      <div class="job-card">
+        <strong>Orchestrator finished</strong> — ${mgr.job_outcomes.filter(o => o.status === "succeeded").length} succeeded,
+        ${mgr.job_outcomes.filter(o => o.status === "failed").length} failed,
+        ${mgr.job_outcomes.filter(o => o.status === "skipped_budget").length} skipped by budget,
+        total cost ${fmtCost(mgr.cost_usd)}
+        <div class="muted">${mgr.finished_at ?? "still running"}</div>
+      </div>
+    </div>
+  `;
+
+  content.innerHTML = `<div class="timeline">${managerStartHtml}${jobCardsHtml}${managerEndHtml}</div>`;
+}
+
+function toggleHistoryJob(runId) {
+  if (state.historyExpanded.has(runId)) state.historyExpanded.delete(runId);
+  else state.historyExpanded.add(runId);
+  const card = document.querySelector(`.job-card[data-run="${CSS.escape(runId)}"]`);
+  if (card) {
+    card.classList.toggle("expanded");
+    const caret = card.querySelector(".expand-caret");
+    if (caret) caret.textContent = card.classList.contains("expanded") ? "▼" : "▶";
   }
 }
 
@@ -497,6 +629,7 @@ document.querySelectorAll("nav button").forEach(b =>
 document.getElementById("audit-select").addEventListener("change", e => {
   state.auditId = e.target.value;
   state.doc.docId = null;
+  state.historyRunId = null;
   refresh();
 });
 document.getElementById("doc-select").addEventListener("change", e => {
@@ -509,6 +642,11 @@ document.getElementById("doc-prev").addEventListener("click", () => {
 });
 document.getElementById("doc-next").addEventListener("click", () => {
   if (state.doc.page < state.doc.pagesMeta.length) { state.doc.page += 1; loadDocumentView(); }
+});
+document.getElementById("history-select").addEventListener("change", e => {
+  state.historyRunId = e.target.value;
+  state.historyExpanded.clear();
+  loadHistoryView();
 });
 
 refresh();

@@ -360,4 +360,36 @@ def run_detail(run_id: str) -> dict:
     return manifest
 
 
+@app.get("/api/history/{manager_run_id:path}")
+def run_history(manager_run_id: str) -> dict:
+    """Stitch a Manager run together with every job it scheduled into one
+    chronological narrative: orchestrator starts -> workers spawned (each
+    with its full tool-call trace and final answer) -> orchestrator
+    finishes. This is what the workbench's History view renders -- one
+    connected trace instead of separate manager/job panels a person has
+    to click between.
+    """
+    manager = _find_run_manifest(manager_run_id)
+    if manager is None:
+        raise HTTPException(404, f"no such run: {manager_run_id}")
+    if manager.get("agent_role") != "manager":
+        raise HTTPException(400, f"{manager_run_id} is not a Manager run (agent_role={manager.get('agent_role')})")
+
+    jobs = []
+    for outcome in manager.get("job_outcomes") or []:
+        job_manifest = _find_run_manifest(outcome["run_id"])
+        jobs.append(
+            {
+                "job_id": outcome["job_id"],
+                "run_id": outcome["run_id"],
+                "outcome_status": outcome["status"],
+                "cost_usd": outcome["cost_usd"],
+                "manifest": job_manifest,  # None for skipped_budget jobs that never ran
+            }
+        )
+    jobs.sort(key=lambda j: (j["manifest"] or {}).get("started_at") or "")
+
+    return {"manager": manager, "jobs": jobs}
+
+
 app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
