@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 
 from proofbench import models
 from proofbench.extraction import extract_claims
+from proofbench.index_db import build_index
 from proofbench.ingest import ingest_audit
 from proofbench.verification import verify_audit
 
@@ -56,6 +57,13 @@ def init(audit_id: str) -> None:
     written = ingest_audit(audit_id)
     for path in written:
         typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
+
+
+@app.command()
+def index(audit_id: str) -> None:
+    """Build the searchable index (full-text spans + entity/attribute facts) from index/parsed/."""
+    path = build_index(audit_id)
+    typer.echo(f"wrote {path.relative_to(REPO_ROOT)}")
 
 
 @app.command()
