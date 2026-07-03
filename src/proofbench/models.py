@@ -174,6 +174,9 @@ class RunManifest(BaseModel):
     output_refs: list[str] = Field(default_factory=list, description="claim_ids / evidence_ids / verdict ids produced")
     prompt: str | None = None
     tool_trace: list[dict] = Field(default_factory=list)
+    final_text: str | None = Field(
+        default=None, description="The agent's final answer text, before being parsed into claims/evidence/verdict"
+    )
     cost_usd: float | None = Field(default=None, description="Reported cost of this run, for budget enforcement")
     status: Literal["running", "succeeded", "failed", "skipped_budget"] = "running"
     error: str | None = None

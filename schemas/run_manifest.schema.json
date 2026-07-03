@@ -82,6 +82,19 @@
       "title": "Tool Trace",
       "type": "array"
     },
+    "final_text": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "The agent's final answer text, before being parsed into claims/evidence/verdict",
+      "title": "Final Text"
+    },
     "cost_usd": {
       "anyOf": [
         {
