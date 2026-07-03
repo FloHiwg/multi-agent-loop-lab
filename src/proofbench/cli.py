@@ -104,5 +104,21 @@ def verify(
             typer.echo(f"  FAILED {claim_id}: {error}", err=True)
 
 
+@app.command()
+def serve(
+    host: str = typer.Option("127.0.0.1", help="Bind address."),
+    port: int = typer.Option(8420, help="Port to serve the workbench on."),
+) -> None:
+    """Serve the workbench UI: audits, claims, vault, and agent run traces.
+
+    Reads live off the on-disk state -- run `extract`/`verify` in another
+    terminal and the UI picks up new files on its next poll (every 3s).
+    """
+    import uvicorn
+
+    typer.echo(f"Workbench at http://{host}:{port}")
+    uvicorn.run("proofbench.web.api:app", host=host, port=port, log_level="warning")
+
+
 if __name__ == "__main__":
     app()

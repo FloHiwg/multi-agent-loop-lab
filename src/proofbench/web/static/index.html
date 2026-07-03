@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Proofbench Workbench</title>
+<style>
+  :root {
+    --navy: #17324d; --teal: #1e7a78; --pale: #eaf3f2; --ink: #24313d;
+    --muted: #65737e; --line: #d7e0e5; --bg: #f6f8fa; --red: #a4372e; --amber: #a5750c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: var(--bg); }
+  header { background: var(--navy); color: white; padding: 14px 20px; display: flex; align-items: center; gap: 16px; }
+  header h1 { font-size: 16px; margin: 0; font-weight: 700; letter-spacing: 0.02em; }
+  header select { background: #ffffff22; color: white; border: 1px solid #ffffff44; border-radius: 4px; padding: 4px 8px; }
+  nav { display: flex; gap: 4px; background: white; border-bottom: 1px solid var(--line); padding: 0 20px; }
+  nav button { border: none; background: none; padding: 10px 14px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; }
+  nav button.active { color: var(--teal); border-bottom-color: var(--teal); }
+  main { padding: 20px; max-width: 1200px; margin: 0 auto; }
+  .view { display: none; }
+  .view.active { display: block; }
+  .cards { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .card { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 10px 16px; min-width: 100px; }
+  .card .n { font-size: 22px; font-weight: 700; }
+  .card .l { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
+  table { width: 100%; border-collapse: collapse; background: white; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  th, td { text-align: left; padding: 8px 12px; font-size: 13px; border-bottom: 1px solid var(--line); }
+  th { background: var(--navy); color: white; font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em; }
+  tr.clickable { cursor: pointer; }
+  tr.clickable:hover { background: var(--pale); }
+  .status { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+  .status.supported { background: #e3f3e1; color: #2b6b26; }
+  .status.contradicted { background: #fbe5e2; color: var(--red); }
+  .status.ambiguous, .status.outdated { background: #fdf1dc; color: var(--amber); }
+  .status.missing_evidence { background: #ececec; color: var(--muted); }
+  .status.pending { background: #eef3fb; color: #345; }
+  .status.failed { background: #fbe5e2; color: var(--red); }
+  .status.succeeded { background: #e3f3e1; color: #2b6b26; }
+  .status.running { background: #eef3fb; color: #345; }
+  .status.skipped_budget { background: #fdf1dc; color: var(--amber); }
+  .panel { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 16px; margin-top: 16px; }
+  .panel h3 { margin-top: 0; font-size: 14px; color: var(--teal); }
+  .kv { display: grid; grid-template-columns: 160px 1fr; gap: 4px 12px; font-size: 13px; margin-bottom: 12px; }
+  .kv div:nth-child(odd) { color: var(--muted); }
+  .mono { font-family: "SF Mono", Consolas, monospace; font-size: 12px; background: #f6f8fa; padding: 6px 8px; border-radius: 4px; white-space: pre-wrap; word-break: break-word; }
+  .trace-entry { border: 1px solid var(--line); border-radius: 4px; margin-bottom: 8px; padding: 8px 10px; }
+  .trace-entry .tool-name { font-weight: 700; font-size: 12px; color: var(--navy); }
+  .trace-entry.error { border-color: var(--red); }
+  .muted { color: var(--muted); font-size: 12px; }
+  .back-link { cursor: pointer; color: var(--teal); font-size: 13px; font-weight: 600; }
+  .refresh-indicator { font-size: 11px; color: var(--muted); margin-left: auto; }
+</style>
+</head>
+<body>
+<header>
+  <h1>PROOFBENCH</h1>
+  <select id="audit-select"></select>
+  <span class="refresh-indicator" id="refresh-indicator"></span>
+</header>
+<nav>
+  <button data-view="audit" class="active">Audit</button>
+  <button data-view="vault">Vault</button>
+  <button data-view="runs">Agent Runs</button>
+</nav>
+<main>
+  <section id="view-audit" class="view active">
+    <div class="cards" id="coverage-cards"></div>
+    <table>
+      <thead><tr><th>Claim</th><th>Label</th><th>Value</th><th>Entity / Period</th><th>Status</th></tr></thead>
+      <tbody id="claims-body"></tbody>
+    </table>
+    <div id="claim-panel"></div>
+  </section>
+
+  <section id="view-vault" class="view">
+    <table>
+      <thead><tr><th>Document</th><th>Kind</th><th>Tag</th><th>Format</th><th>Spans</th><th>Facts</th></tr></thead>
+      <tbody id="vault-body"></tbody>
+    </table>
+  </section>
+
+  <section id="view-runs" class="view">
+    <table>
+      <thead><tr><th>Run</th><th>Agent</th><th>Status</th><th>Model</th><th>Cost</th><th>Tools called</th><th>Started</th></tr></thead>
+      <tbody id="runs-body"></tbody>
+    </table>
+    <div id="run-panel"></div>
+  </section>
+</main>
+
+<script>
+const state = { auditId: null, view: "audit" };
+
+async function api(path) {
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`${path} -> ${res.status}`);
+  return res.json();
+}
+
+function statusBadge(status) {
+  return `<span class="status ${status}">${status.replace("_", " ")}</span>`;
+}
+
+function fmtCost(v) {
+  return v == null ? "–" : `$${v.toFixed(4)}`;
+}
+
+function fmtTime(v) {
+  return v ? new Date(v).toLocaleTimeString() : "–";
+}
+
+async function loadAudits() {
+  const audits = await api("/api/audits");
+  const select = document.getElementById("audit-select");
+  const prev = state.auditId;
+  select.innerHTML = audits.map(a => `<option value="${a.audit_id}">${a.audit_id} (${a.claim_count} claims)</option>`).join("");
+  if (audits.length === 0) return;
+  state.auditId = prev && audits.some(a => a.audit_id === prev) ? prev : audits[0].audit_id;
+  select.value = state.auditId;
+}
+
+async function loadAuditView() {
+  if (!state.auditId) return;
+  const detail = await api(`/api/audits/${state.auditId}`);
+  const cards = document.getElementById("coverage-cards");
+  cards.innerHTML = Object.entries(detail.coverage).map(([status, n]) =>
+    `<div class="card"><div class="n">${n}</div><div class="l">${status.replace("_", " ")}</div></div>`
+  ).join("") || `<div class="muted">No claims extracted yet.</div>`;
+
+  const claims = await api(`/api/audits/${state.auditId}/claims`);
+  const body = document.getElementById("claims-body");
+  body.innerHTML = claims.map(c => `
+    <tr class="clickable" data-claim="${c.claim_id.split('/').pop()}">
+      <td>${c.claim_id.split('/').pop()}</td>
+      <td>${c.label}</td>
+      <td>${c.canonical_value} ${c.unit}</td>
+      <td>${c.entity} / ${c.time_scope}</td>
+      <td>${statusBadge(c.effective_status)}</td>
+    </tr>
+  `).join("");
+  body.querySelectorAll("tr.clickable").forEach(tr =>
+    tr.addEventListener("click", () => showClaim(tr.dataset.claim))
+  );
+}
+
+async function showClaim(claimSuffix) {
+  const d = await api(`/api/audits/${state.auditId}/claims/${claimSuffix}`);
+  const panel = document.getElementById("claim-panel");
+  const evidenceHtml = d.evidence.length
+    ? d.evidence.map(e => `
+        <div class="trace-entry">
+          <div class="tool-name">${e.doc_id}${e.page != null ? " p." + e.page : ""}</div>
+          <div class="mono">${e.span_text || ""}</div>
+          <div class="muted">value: ${e.canonical_value ?? "–"} ${e.unit || ""} | role: ${e.role} | confidence: ${e.extractor_confidence}</div>
+        </div>`).join("")
+    : `<div class="muted">No evidence recorded.</div>`;
+
+  panel.innerHTML = `
+    <div class="panel">
+      <span class="back-link" onclick="document.getElementById('claim-panel').innerHTML=''">✕ close</span>
+      <h3>${d.claim.label} ${statusBadge(d.effective_status)}</h3>
+      <div class="kv">
+        <div>Raw text</div><div>${d.claim.raw_text}</div>
+        <div>Source</div><div>${d.claim.source_doc_id} ${d.claim.source_page ? "p." + d.claim.source_page : ""}</div>
+        <div>Expected evidence</div><div>${d.claim.expected_evidence_type ?? "–"}</div>
+      </div>
+      ${d.verdict ? `
+        <div class="kv">
+          <div>Rationale</div><div>${d.verdict.rationale}</div>
+          <div>Delta</div><div>${d.verdict.delta ?? "–"}</div>
+          <div>Confidence</div><div>${d.verdict.confidence}</div>
+          <div>Suggested action</div><div>${d.verdict.suggested_action ?? "–"}</div>
+          <div>Produced by run</div><div><a href="#" onclick="viewRunFromClaim(event)" data-run="${d.verdict.produced_by_run_id}">${d.verdict.produced_by_run_id}</a></div>
+        </div>
+      ` : `<div class="muted">Not yet verified.</div>`}
+      <h3>Evidence</h3>
+      ${evidenceHtml}
+    </div>
+  `;
+}
+
+function viewRunFromClaim(evt) {
+  evt.preventDefault();
+  const runId = evt.target.dataset.run;
+  document.querySelector('nav button[data-view="runs"]').click();
+  showRun(runId);
+}
+
+async function loadVaultView() {
+  if (!state.auditId) return;
+  const d = await api(`/api/audits/${state.auditId}/vault`);
+  const body = document.getElementById("vault-body");
+  body.innerHTML = d.documents.map(doc => `
+    <tr>
+      <td>${doc.doc_id}</td>
+      <td>${doc.kind}</td>
+      <td>${doc.tag ?? "–"}</td>
+      <td>${doc.format}</td>
+      <td>${doc.span_count ?? "–"}</td>
+      <td>${doc.fact_count ?? "–"}</td>
+    </tr>
+  `).join("");
+}
+
+async function loadRunsView() {
+  const runs = await api(`/api/runs?audit_id=${state.auditId || ""}`);
+  const body = document.getElementById("runs-body");
+  body.innerHTML = runs.map(r => `
+    <tr class="clickable" data-run="${r.run_id}">
+      <td>${r.run_id.split('/').pop()}</td>
+      <td>${r.agent_role}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${r.model}</td>
+      <td>${fmtCost(r.cost_usd)}</td>
+      <td>${r.tool_call_count}</td>
+      <td>${fmtTime(r.started_at)}</td>
+    </tr>
+  `).join("");
+  body.querySelectorAll("tr.clickable").forEach(tr =>
+    tr.addEventListener("click", () => showRun(tr.dataset.run))
+  );
+}
+
+async function showRun(runId) {
+  const r = await api(`/api/runs/${encodeURIComponent(runId)}`);
+  const panel = document.getElementById("run-panel");
+  const trace = (r.tool_trace || []).map(t => `
+    <div class="trace-entry ${t.is_error ? "error" : ""}">
+      <div class="tool-name">#${t.seq} ${t.tool}</div>
+      <div class="muted">${t.at}</div>
+      <div class="mono">input: ${JSON.stringify(t.input)}</div>
+      <div class="mono">output: ${typeof t.output === "string" ? t.output : JSON.stringify(t.output)}</div>
+    </div>
+  `).join("") || `<div class="muted">No tool calls recorded.</div>`;
+
+  panel.innerHTML = `
+    <div class="panel">
+      <span class="back-link" onclick="document.getElementById('run-panel').innerHTML=''">✕ close</span>
+      <h3>${r.run_id} ${statusBadge(r.status)}</h3>
+      <div class="kv">
+        <div>Agent role</div><div>${r.agent_role}</div>
+        <div>Model</div><div>${r.model}</div>
+        <div>Cost</div><div>${fmtCost(r.cost_usd)}</div>
+        <div>Started</div><div>${r.started_at}</div>
+        <div>Finished</div><div>${r.finished_at ?? "–"}</div>
+        <div>Input refs</div><div>${(r.input_refs || []).join(", ")}</div>
+        <div>Output refs</div><div>${(r.output_refs || []).join(", ") || "–"}</div>
+        ${r.error ? `<div>Error</div><div class="mono">${r.error}</div>` : ""}
+      </div>
+      <h3>Tool trace</h3>
+      ${trace}
+      <h3>System prompt</h3>
+      <div class="mono">${r.prompt ?? ""}</div>
+    </div>
+  `;
+}
+
+function switchView(view) {
+  state.view = view;
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b.dataset.view === view));
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === `view-${view}`));
+  refresh();
+}
+
+async function refresh() {
+  const indicator = document.getElementById("refresh-indicator");
+  try {
+    await loadAudits();
+    if (state.view === "audit") await loadAuditView();
+    if (state.view === "vault") await loadVaultView();
+    if (state.view === "runs") await loadRunsView();
+    indicator.textContent = `updated ${new Date().toLocaleTimeString()}`;
+  } catch (e) {
+    indicator.textContent = `error: ${e.message}`;
+  }
+}
+
+document.querySelectorAll("nav button").forEach(b =>
+  b.addEventListener("click", () => switchView(b.dataset.view))
+);
+document.getElementById("audit-select").addEventListener("change", e => {
+  state.auditId = e.target.value;
+  refresh();
+});
+
+refresh();
+setInterval(refresh, 3000);
+</script>
+</body>
+</html>
