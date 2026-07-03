@@ -28,10 +28,15 @@ def load_audit_config(audit_id: str) -> AuditConfig:
 
 def parse_pdf(path: Path) -> dict:
     pages = []
+    tables = []
     with fitz.open(path) as pdf:
         for page_number, page in enumerate(pdf, start=1):
             pages.append({"page": page_number, "text": page.get_text()})
-    return {"pages": pages}
+            for table_index, table in enumerate(page.find_tables().tables, start=1):
+                rows = table.extract()
+                if rows:
+                    tables.append({"page": page_number, "table_index": table_index, "rows": rows})
+    return {"pages": pages, "tables": tables}
 
 
 def parse_xlsx(path: Path) -> dict:
