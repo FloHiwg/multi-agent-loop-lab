@@ -25,7 +25,7 @@ from pathlib import Path
 
 from proofbench.index_db import db_path
 from proofbench.jsonutil import extract_json
-from proofbench.llm import resolve_model, run_agent
+from proofbench.llm import AgentReply, resolve_model, run_agent
 from proofbench.manager import Job, ManagerReport, run_jobs
 from proofbench.models import (
     AgentRole,
@@ -96,7 +96,7 @@ markdown fences.
 
 async def verify_claim_async(
     claim: Claim, audit_id: str, run_id: str, *, model: str | None = None
-) -> tuple[list[EvidenceCandidate], Verdict, float | None]:
+) -> tuple[list[EvidenceCandidate], Verdict, AgentReply]:
     server = build_server(audit_id, "vault", SERVER_NAME)
     user_prompt = f"CLAIM:\n{claim.model_dump_json(indent=2)}"
     reply = await run_agent(
@@ -134,7 +134,7 @@ async def verify_claim_async(
         suggested_action=raw_verdict.get("suggested_action"),
         produced_by_run_id=run_id,
     )
-    return evidence, verdict, reply.cost_usd
+    return evidence, verdict, reply
 
 
 async def _process_claim(claim: Claim, audit_id: str, model: str) -> float | None:
@@ -145,7 +145,7 @@ async def _process_claim(claim: Claim, audit_id: str, model: str) -> float | Non
     run_id = f"{audit_id}/verify-{claim.claim_id.split('/')[-1]}-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
     started_at = datetime.now(timezone.utc)
 
-    evidence, verdict, cost_usd = await verify_claim_async(claim, audit_id, run_id, model=model)
+    evidence, verdict, reply = await verify_claim_async(claim, audit_id, run_id, model=model)
 
     write_run_manifest(
         RunManifest(
@@ -158,14 +158,15 @@ async def _process_claim(claim: Claim, audit_id: str, model: str) -> float | Non
             input_refs=[claim.claim_id],
             output_refs=[verdict.claim_id] + [e.evidence_id for e in evidence],
             prompt=SYSTEM_PROMPT,
-            cost_usd=cost_usd,
+            cost_usd=reply.cost_usd,
+            tool_trace=reply.tool_trace,
             status="succeeded",
         )
     )
     _write_result(audit_id, claim, evidence, verdict)
     if verdict.status != VerdictStatus.SUPPORTED:
         _write_review_card(audit_id, claim, evidence, verdict)
-    return cost_usd
+    return reply.cost_usd
 
 
 async def verify_audit_async(

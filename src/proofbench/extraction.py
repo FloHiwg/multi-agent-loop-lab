@@ -101,6 +101,7 @@ async def _process_extraction(audit_id: str, model: str, claims_out: list[Claim]
             output_refs=[c.claim_id for c in claims],
             prompt=SYSTEM_PROMPT,
             cost_usd=reply.cost_usd,
+            tool_trace=reply.tool_trace,
             status="succeeded",
         )
     )

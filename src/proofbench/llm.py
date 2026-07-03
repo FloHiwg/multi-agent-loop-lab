@@ -13,7 +13,8 @@ wrapper just waits for the final turn's text.
 from __future__ import annotations
 
 import os
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+from datetime import datetime, timezone
 
 from claude_agent_sdk import (
     AssistantMessage,
@@ -21,6 +22,9 @@ from claude_agent_sdk import (
     McpSdkServerConfig,
     ResultMessage,
     TextBlock,
+    ToolResultBlock,
+    ToolUseBlock,
+    UserMessage,
     query,
 )
 
@@ -59,6 +63,11 @@ def _openrouter_env() -> dict[str, str] | None:
 class AgentReply:
     text: str
     cost_usd: float | None
+    tool_trace: list[dict] = field(default_factory=list)
+    """One entry per tool call this session made, in call order: {seq, at,
+    tool, input, output, is_error}. This is what RunManifest.tool_trace
+    stores -- the workbench UI's whole reason for existing is to make this
+    visible, not just the final claim/verdict."""
 
 
 async def run_agent(
@@ -104,11 +113,36 @@ async def run_agent(
 
     final_text = ""
     cost_usd: float | None = None
+    trace: list[dict] = []
+    pending_by_id: dict[str, dict] = {}
+    seq = 0
+
     async for message in query(prompt=user_prompt, options=options):
         if isinstance(message, AssistantMessage):
             texts = [block.text for block in message.content if isinstance(block, TextBlock)]
             if texts:
                 final_text = "".join(texts)
+            for block in message.content:
+                if isinstance(block, ToolUseBlock):
+                    seq += 1
+                    entry = {
+                        "seq": seq,
+                        "at": datetime.now(timezone.utc).isoformat(),
+                        "tool": block.name,
+                        "input": block.input,
+                        "output": None,
+                        "is_error": None,
+                    }
+                    trace.append(entry)
+                    pending_by_id[block.id] = entry
+        elif isinstance(message, UserMessage):
+            for block in message.content if isinstance(message.content, list) else []:
+                if isinstance(block, ToolResultBlock):
+                    entry = pending_by_id.get(block.tool_use_id)
+                    if entry is not None:
+                        entry["output"] = block.content
+                        entry["is_error"] = block.is_error
         elif isinstance(message, ResultMessage):
             cost_usd = message.total_cost_usd
-    return AgentReply(text=final_text, cost_usd=cost_usd)
+
+    return AgentReply(text=final_text, cost_usd=cost_usd, tool_trace=trace)
