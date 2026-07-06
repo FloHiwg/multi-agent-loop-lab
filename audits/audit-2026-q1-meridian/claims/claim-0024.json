@@ -1,7 +1,7 @@
 {
   "claim_id": "audit-2026-q1-meridian/claim-0024",
-  "label": "The pre-close pack reported quarterly turnover of EUR 12.31 million",
-  "raw_text": "The pre-close pack reported quarterly turnover of EUR 12.31 million.",
+  "label": "Quarterly turnover was EUR 12.31 million",
+  "raw_text": "Quarterly turnover was EUR 12.31 million.",
   "canonical_value": 12310000,
   "unit": "currency",
   "currency": "EUR",

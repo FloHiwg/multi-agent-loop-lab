@@ -150,7 +150,14 @@ async def verify_claim_async(
     )
     if system_prompt is None:
         system_prompt = SYSTEM_PROMPT + (GRAPH_TOOLS_PROMPT if graph_tools else "")
-    user_prompt = f"CLAIM:\n{claim.model_dump_json(indent=2)}"
+    # The output contract is restated here, not just in the system prompt:
+    # after a long tool-use session the system prompt is many turns away,
+    # and hard claims (8-12 tool calls) were the ones losing the shape.
+    user_prompt = (
+        f"CLAIM:\n{claim.model_dump_json(indent=2)}\n\n"
+        'Reply with ONLY one JSON object of the form {"evidence": [...], "verdict": {...}} '
+        "-- never a bare array."
+    )
     reply = await run_agent(
         system_prompt,
         user_prompt,

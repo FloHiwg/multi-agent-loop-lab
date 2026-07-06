@@ -1,7 +1,7 @@
 {
   "claim_id": "audit-2026-q1-meridian/claim-0026",
-  "label": "The initial close showed EUR 3.71 million of available liquidity",
-  "raw_text": "The initial close showed EUR 3.71 million of available liquidity.",
+  "label": "Available liquidity stood at EUR 3.71 million",
+  "raw_text": "Available liquidity stood at EUR 3.71 million.",
   "canonical_value": 3710000,
   "unit": "currency",
   "currency": "EUR",

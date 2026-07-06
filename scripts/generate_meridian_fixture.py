@@ -61,9 +61,13 @@ CLAIMS = [
  (21,"New enterprise wins totalled 46.",46,"count","ambiguous",DOCS[3][0],None,"New enterprise accounts | 46 | 41 | 39",{"kind":"exact"},"Operations review says 49; equal authority, same period."),
  (22,"Qualified commercial pipeline stood at EUR 8.4 million.",8400000,"currency","ambiguous",DOCS[1][0],2,"Qualified pipeline | 8.400 | 7.920 | 8.100",{"kind":"exact"},"Regional review says EUR 8.1m; no authority ordering."),
  (23,"Formal learning time totalled 1,240 hours.",1240,"hours","ambiguous",DOCS[6][0],None,"Structured learning hours | 1,240 | 1,080 | 4,520",{"kind":"exact"},"Sustainability note says 1,190 hours."),
- (24,"The pre-close pack reported quarterly turnover of EUR 12.31 million.",12310000,"currency","outdated",DOCS[0][0],1,"Net revenue | 12.310 | 10.960 | 11.900",{"kind":"exact"},"Supported only by superseded v1; v2 restates EUR 12.48m."),
- (25,"The preliminary operating contribution was EUR 2.05 million.",2050000,"currency","outdated",DOCS[0][0],1,"Adjusted operating result | 2.050 | 1.720 | 1.960",{"kind":"exact"},"Supported only by superseded v1; v2 reports EUR 2.14m."),
- (26,"The initial close showed EUR 3.71 million of available liquidity.",3710000,"currency","outdated",DOCS[0][0],2,"Cash and cash equivalents | 3.710 | 3.180 | 3.500",{"kind":"exact"},"Superseded by treasury confirmation and restated pack."),
+ # Outdated claims must assert the value as current fact -- self-referential
+ # wording ("the pre-close pack reported X") is literally true and lets the
+ # Verifier defensibly answer `supported`, which both variants did in the
+ # first smoke test.
+ (24,"Quarterly turnover was EUR 12.31 million.",12310000,"currency","outdated",DOCS[0][0],1,"Net revenue | 12.310 | 10.960 | 11.900",{"kind":"exact"},"Supported only by superseded v1; v2 restates EUR 12.48m."),
+ (25,"The operating contribution came to EUR 2.05 million.",2050000,"currency","outdated",DOCS[0][0],1,"Adjusted operating result | 2.050 | 1.720 | 1.960",{"kind":"exact"},"Supported only by superseded v1; v2 reports EUR 2.14m."),
+ (26,"Available liquidity stood at EUR 3.71 million.",3710000,"currency","outdated",DOCS[0][0],2,"Cash and cash equivalents | 3.710 | 3.180 | 3.500",{"kind":"exact"},"Superseded by treasury confirmation and restated pack."),
  (27,"Monthly active product seats were 6,840.",6840,"count","missing_evidence",None,None,None,{"kind":"exact"},"Similar-sounding Licensed seats (7,020) exists; must not force-match."),
  (28,"Median implementation cycle was 31 days.",31,"days","missing_evidence",None,None,None,{"kind":"exact"},"Similar value Median resolution time (31 hours) exists."),
 ]

@@ -1,7 +1,7 @@
 {
   "claim_id": "audit-2026-q1-meridian/claim-0025",
-  "label": "The preliminary operating contribution was EUR 2.05 million",
-  "raw_text": "The preliminary operating contribution was EUR 2.05 million.",
+  "label": "The operating contribution came to EUR 2.05 million",
+  "raw_text": "The operating contribution came to EUR 2.05 million.",
   "canonical_value": 2050000,
   "unit": "currency",
   "currency": "EUR",

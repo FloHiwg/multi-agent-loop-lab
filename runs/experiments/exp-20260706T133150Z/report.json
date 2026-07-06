@@ -1,0 +1,38 @@
+{
+  "experiment_id": "exp-20260706T133150Z",
+  "audit_id": "audit-2026-q1-meridian",
+  "model": "z-ai/glm-5.2",
+  "max_concurrency": 2,
+  "max_budget_usd": 1.6,
+  "started_variants": [
+    "baseline",
+    "graph"
+  ],
+  "total_cost_usd": 1.4179265,
+  "summaries": [
+    {
+      "variant": "baseline",
+      "n_claims": 5,
+      "correct": 2,
+      "accuracy": 0.4,
+      "failures": 2,
+      "avg_tool_calls": 8.8,
+      "avg_cost_usd": 0.1385602,
+      "total_cost_usd": 0.692801,
+      "enrichment_cost_usd": null,
+      "n_attempted": 5
+    },
+    {
+      "variant": "graph",
+      "n_claims": 5,
+      "correct": 4,
+      "accuracy": 0.8,
+      "failures": 0,
+      "avg_tool_calls": 10.2,
+      "avg_cost_usd": 0.14502510000000002,
+      "total_cost_usd": 0.7251255000000001,
+      "enrichment_cost_usd": null,
+      "n_attempted": 5
+    }
+  ]
+}

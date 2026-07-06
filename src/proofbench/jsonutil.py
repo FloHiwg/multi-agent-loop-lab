@@ -19,14 +19,29 @@ def extract_json(text: str) -> Any:
     except json.JSONDecodeError:
         pass
 
-    # Fall back to the outermost [...] or {...} span in the raw text.
-    for open_ch, close_ch in (("[", "]"), ("{", "}")):
-        start = candidate.find(open_ch)
-        end = candidate.rfind(close_ch)
-        if start != -1 and end != -1 and end > start:
-            try:
-                return json.loads(candidate[start : end + 1])
-            except json.JSONDecodeError:
-                continue
+    # Fall back: scan for every balanced JSON value in the text and return
+    # the largest one. The old find("[")..rfind("]") heuristic tried arrays
+    # before objects and sliced across the whole text -- when a reply was
+    # "prose... {\"evidence\": [...], \"verdict\": {...}}", it carved the
+    # evidence array out of the middle of a perfectly valid object, which
+    # is what most recorded Verifier "shape failures" actually were.
+    decoder = json.JSONDecoder()
+    best: Any = None
+    best_len = 0
+    i = 0
+    while i < len(candidate):
+        if candidate[i] not in "{[":
+            i += 1
+            continue
+        try:
+            value, end = decoder.raw_decode(candidate, i)
+        except json.JSONDecodeError:
+            i += 1
+            continue
+        if end - i > best_len:
+            best, best_len = value, end - i
+        i = end
+    if best is not None:
+        return best
 
     raise ValueError(f"could not extract JSON from LLM reply: {text[:200]!r}")

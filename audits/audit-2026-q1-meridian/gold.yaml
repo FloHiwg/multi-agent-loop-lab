@@ -290,7 +290,7 @@ claims:
     kind: exact
   notes: Sustainability note says 1,190 hours.
 - claim_id: audit-2026-q1-meridian/claim-0024
-  claim_text: The pre-close pack reported quarterly turnover of EUR 12.31 million.
+  claim_text: Quarterly turnover was EUR 12.31 million.
   canonical_value: 12310000
   unit: currency
   currency: EUR
@@ -302,7 +302,7 @@ claims:
     kind: exact
   notes: Supported only by superseded v1; v2 restates EUR 12.48m.
 - claim_id: audit-2026-q1-meridian/claim-0025
-  claim_text: The preliminary operating contribution was EUR 2.05 million.
+  claim_text: The operating contribution came to EUR 2.05 million.
   canonical_value: 2050000
   unit: currency
   currency: EUR
@@ -314,7 +314,7 @@ claims:
     kind: exact
   notes: Supported only by superseded v1; v2 reports EUR 2.14m.
 - claim_id: audit-2026-q1-meridian/claim-0026
-  claim_text: The initial close showed EUR 3.71 million of available liquidity.
+  claim_text: Available liquidity stood at EUR 3.71 million.
   canonical_value: 3710000
   unit: currency
   currency: EUR
