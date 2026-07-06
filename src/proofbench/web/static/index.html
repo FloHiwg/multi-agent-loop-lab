@@ -53,6 +53,10 @@
   .trace-entry { border: 1px solid var(--line); border-radius: 4px; margin-bottom: 8px; padding: 8px 10px; }
   .trace-entry .tool-name { font-weight: 700; font-size: 12px; color: var(--navy); }
   .trace-entry.error { border-color: var(--red); }
+  .mono.io { max-height: 280px; overflow: auto; margin-top: 2px; }
+  .io-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; margin-top: 6px; }
+  details.io-details { margin-top: 6px; }
+  details.io-details summary { cursor: pointer; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em; }
   .muted { color: var(--muted); font-size: 12px; }
   .back-link { cursor: pointer; color: var(--teal); font-size: 13px; font-weight: 600; }
   .refresh-indicator { font-size: 11px; color: var(--muted); margin-left: auto; }
@@ -186,6 +190,35 @@ function fmtCost(v) {
 
 function fmtTime(v) {
   return v ? new Date(v).toLocaleTimeString() : "–";
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function unwrapToolPayload(v) {
+  // MCP tool results arrive as content blocks [{type:"text", text:"..."}],
+  // usually with JSON escaped inside the text -- unwrap both layers so the
+  // trace shows the actual payload, not the transport envelope.
+  if (Array.isArray(v) && v.length && v.every(b => b && b.type === "text")) {
+    v = v.map(b => b.text).join("\n");
+  }
+  if (typeof v === "string") {
+    try { return JSON.parse(v); } catch { return v; }
+  }
+  return v;
+}
+
+function toolIO(label, v) {
+  if (v == null) return "";
+  v = unwrapToolPayload(v);
+  const compact = typeof v === "string" ? v : JSON.stringify(v);
+  const text = typeof v === "string" || compact.length <= 100 ? compact : JSON.stringify(v, null, 2);
+  const body = `<div class="mono io">${escHtml(text)}</div>`;
+  const lines = text.split("\n").length;
+  return lines > 14 || text.length > 900
+    ? `<details class="io-details"><summary>${label} · ${lines} lines</summary>${body}</details>`
+    : `<div class="io-label">${label}</div>${body}`;
 }
 
 async function loadAudits() {
@@ -460,8 +493,8 @@ async function showRun(runId) {
     <div class="trace-entry ${t.is_error ? "error" : ""}">
       <div class="tool-name">#${t.seq} ${t.tool}</div>
       <div class="muted">${t.at}</div>
-      <div class="mono">input: ${JSON.stringify(t.input)}</div>
-      <div class="mono">output: ${typeof t.output === "string" ? t.output : JSON.stringify(t.output)}</div>
+      ${toolIO("input", t.input)}
+      ${toolIO("output", t.output)}
     </div>
   `).join("") || `<div class="muted">No tool calls recorded.</div>`;
 
@@ -629,8 +662,8 @@ function renderHistory(data, content) {
         <div class="trace-entry ${t.is_error ? "error" : ""}">
           <div class="tool-name">🔧 ${t.tool}</div>
           <div class="muted">${t.at}</div>
-          <div class="mono">args: ${JSON.stringify(t.input)}</div>
-          <div class="mono">→ ${typeof t.output === "string" ? t.output : JSON.stringify(t.output)}</div>
+          ${toolIO("input", t.input)}
+          ${toolIO("output", t.output)}
         </div>
       `).join("") || `<div class="muted">No tool calls recorded before this job ended.</div>`;
       const finalHtml = m.final_text
@@ -774,8 +807,8 @@ async function showEvalClaim(variant, claimSuffix) {
   const trace = (r.tool_trace || []).map(t => `
     <div class="trace-entry ${t.is_error ? "error" : ""}">
       <div class="tool-name">#${t.seq} ${t.tool}</div>
-      <div class="mono">input: ${JSON.stringify(t.input)}</div>
-      <div class="mono">output: ${typeof t.output === "string" ? t.output : JSON.stringify(t.output)}</div>
+      ${toolIO("input", t.input)}
+      ${toolIO("output", t.output)}
     </div>
   `).join("") || `<div class="muted">No tool calls recorded.</div>`;
 
