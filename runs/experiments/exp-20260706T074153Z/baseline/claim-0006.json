@@ -1,0 +1,76 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0006",
+  "variant": "baseline",
+  "expected_status": "supported",
+  "status": null,
+  "correct": false,
+  "tool_calls": 4,
+  "cost_usd": 0.055712000000000005,
+  "error": "expected a JSON object with 'evidence' and 'verdict' keys, got list: \"[{'doc_id': 'northstar-ops-q4-2025', 'page': 1, 'span_text': 'Enterprise customers | 126 | 119 | Customers with enterprise plan at period end', 'canonical_value': 126.0, 'unit': 'count', 'role': 'actu\"",
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-06T07:42:22.377917+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "Enterprise customers"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"entity\":\"Enterprise customers\",\"attribute\":\"Q4 2025\",\"value\":\"126\"},{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"entity\":\"Enterprise customers\",\"attribute\":\"Q3 2025\",\"value\":\"119\"},{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"entity\":\"Enterprise customers\",\"attribute\":\"Definition\",\"value\":\"Customers with enterprise plan at period end\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-06T07:42:22.635485+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "Enterprise customers",
+        "tag": "customer_appendix"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"location\":\"sheet:Customer Summary\",\"snippet\":\"...[Enterprise] ACV equals [enterprise] annual recurring revenue divided by [enterprise] [customers]: EUR...\"},{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"location\":\"sheet:Segment Detail\",\"snippet\":\"A1: [Enterprise] Segment Detail\\nA4: Segment\\nB4: [Customers]\\nC4: ARR\\nD4: ACV...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-06T07:42:24.841355+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-ops-q4-2025",
+        "location": "page:1/table:2/row:Enterprise customers"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"text\":\"Enterprise customers | 126 | 119 | Customers with enterprise plan at period end\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-06T07:42:25.366124+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-customer-appendix-q4-2025",
+        "location": "sheet:Segment Detail"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"location\":\"sheet:Segment Detail\",\"text\":\"A1: Enterprise Segment Detail\\nA4: Segment\\nB4: Customers\\nC4: ARR\\nD4: ACV\\nE4: As of\\nF4: Role\\nA5: Strategic\\nB5: 18\\nC5: 648000\\nD5: 36000\\nE5: 2025-12-31\\nF5: actual\\nA6: Mid-market\\nB6: 52\\nC6: 1040000\\nD6: 20000\\nE6: 2025-12-31\\nF6: actual\\nA7: Growth\\nB7: 56\\nC7: 630400\\nD7: 11257.142857142857\\nE7: 2025-12-31\\nF7: actual\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The enterprise customer count of 126 is confirmed by two independent sources: the operations review table directly states 126 for Q4 2025, and the customer appendix's segment detail sums to 126 (18 Strategic + 52 Mid-market + 56 Growth), all as of 2025-12-31.\n\n{\"evidence\":[{\"doc_id\":\"northstar-ops-q4-2025\",\"page\":1,\"span_text\":\"Enterprise customers | 126 | 119 | Customers with enterprise plan at period end\",\"canonical_value\":126.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.95},{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"page\":null,\"span_text\":\"Enterprise Segment Detail ... Strategic 18 ... Mid-market 52 ... Growth 56 ... As of 2025-12-31 ... actual\",\"canonical_value\":126.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.92}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.96,\"rationale\":\"The operations review table reports Enterprise customers = 126 for Q4 2025, and the customer appendix segment detail reconciles to 126 (18 Strategic + 52 Mid-market + 56 Growth), both as of 2025-12-31.\",\"suggested_action\":null}}"
+}

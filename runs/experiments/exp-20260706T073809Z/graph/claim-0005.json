@@ -1,0 +1,71 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0005",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 2,
+  "cost_usd": 0.04136,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0005",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0005/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "The operations review reports 84 active employees at Q4 2025 period end (defined as 'Active employees at period end'), matching the claim's value of 84 exactly.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2025-q4-northstar/claim-0005"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0005/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0005",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "Employees | 84 | 81 | Active employees at period end",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 84.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-06T07:40:03.634173+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "employees"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Employees\",\"facts\":[{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Employees\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"84\"},{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Employees\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"81\"},{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Employees\",\"attribute\":\"Definition\",\"period\":null,\"role\":\"definition\",\"value\":\"Active employees at period end\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-06T07:40:03.806148+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "employees"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1\",\"snippet\":\"...Q3 2025\\nDefinition\\n[Employees]\\n84\\n81\\nActive [employees] at period end\\nEnterprise...\"},{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Employees\",\"snippet\":\"[Employees] | 84 | 81 | Active [employees] at period end\"}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\n  \"evidence\": [\n    {\n      \"doc_id\": \"northstar-ops-q4-2025\",\n      \"page\": 1,\n      \"span_text\": \"Employees | 84 | 81 | Active employees at period end\",\n      \"canonical_value\": 84.0,\n      \"unit\": \"count\",\n      \"role\": \"actual\",\n      \"effective_date\": \"2025-12-31\",\n      \"extractor_confidence\": 0.95\n    }\n  ],\n  \"verdict\": {\n    \"status\": \"supported\",\n    \"delta\": 0.0,\n    \"confidence\": 0.95,\n    \"rationale\": \"The operations review reports 84 active employees at Q4 2025 period end (defined as 'Active employees at period end'), matching the claim's value of 84 exactly.\",\n    \"suggested_action\": null\n  }\n}"
+}

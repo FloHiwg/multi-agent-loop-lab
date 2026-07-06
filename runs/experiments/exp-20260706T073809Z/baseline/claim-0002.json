@@ -1,0 +1,88 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0002",
+  "variant": "baseline",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 3,
+  "cost_usd": 0.147663,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0002",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0002/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "The Q4 2025 finance pack reports Adjusted EBITDA of 0.7400 (EUR millions), exactly matching the claim's EUR 0.74 million.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/baseline/audit-2025-q4-northstar/claim-0002"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0002/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0002",
+      "doc_id": "northstar-finance-q4-2025",
+      "page": 1,
+      "span_text": "Adjusted EBITDA | 0.7400 | 0.5100 | 0.6400",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 740000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2025-10-01",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-06T07:38:15.196129+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "EBITDA",
+        "attribute": "Q4 2025"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1/table:2/row:Adjusted EBITDA\",\"entity\":\"Adjusted EBITDA\",\"attribute\":\"Q4 2025 actual\",\"value\":\"0.7400\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-06T07:38:15.337341+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "adjusted EBITDA Q4 2025"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1\",\"snippet\":\"...ID\\nnorthstar-finance-[q4]-[2025]\\nREPORTING PERIOD\\n[Q4] [2025]\\nISSUED\\n16 January...\"},{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1/table:2/row:Adjusted EBITDA\",\"snippet\":\"[Adjusted] [EBITDA] | 0.7400 | 0.5100 | 0.6400\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-06T07:38:18.109764+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-finance-q4-2025",
+        "location": "page:1/table:2/row:Adjusted EBITDA"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1/table:2/row:Adjusted EBITDA\",\"text\":\"Adjusted EBITDA | 0.7400 | 0.5100 | 0.6400\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"northstar-finance-q4-2025\",\"page\":1,\"span_text\":\"Adjusted EBITDA | 0.7400 | 0.5100 | 0.6400\",\"canonical_value\":740000.0,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":\"2025-10-01\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.95,\"rationale\":\"The Q4 2025 finance pack reports Adjusted EBITDA of 0.7400 (EUR millions), exactly matching the claim's EUR 0.74 million.\",\"suggested_action\":null}}"
+}

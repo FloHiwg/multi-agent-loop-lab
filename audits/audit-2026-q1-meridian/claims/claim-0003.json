@@ -1,0 +1,19 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0003",
+  "label": "The trading margin was 61.5%",
+  "raw_text": "The trading margin was 61.5%.",
+  "canonical_value": 0.615,
+  "unit": "percent",
+  "currency": null,
+  "entity": "Meridian Cloud Systems SE",
+  "time_scope": "Q1 2026",
+  "tolerance_rule": {
+    "kind": "formula",
+    "formula": "gross_profit / net_revenue",
+    "tolerance_pct": 0.2
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "meridian-master-q1-2026",
+  "source_page": 1
+}

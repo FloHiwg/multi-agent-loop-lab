@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0008",
+  "label": "Priority requests met the response commitment in 94.2% of cases",
+  "raw_text": "Priority requests met the response commitment in 94.2% of cases.",
+  "canonical_value": 0.942,
+  "unit": "percent",
+  "currency": null,
+  "entity": "Meridian Cloud Systems SE",
+  "time_scope": "Q1 2026",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "meridian-master-q1-2026",
+  "source_page": 2
+}

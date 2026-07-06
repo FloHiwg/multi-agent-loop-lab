@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0024",
+  "label": "The pre-close pack reported quarterly turnover of EUR 12.31 million",
+  "raw_text": "The pre-close pack reported quarterly turnover of EUR 12.31 million.",
+  "canonical_value": 12310000,
+  "unit": "currency",
+  "currency": "EUR",
+  "entity": "Meridian Cloud Systems SE",
+  "time_scope": "Q1 2026",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "meridian-master-q1-2026",
+  "source_page": 4
+}

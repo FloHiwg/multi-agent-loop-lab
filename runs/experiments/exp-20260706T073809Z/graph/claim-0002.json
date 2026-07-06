@@ -1,0 +1,44 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0002",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": null,
+  "correct": false,
+  "tool_calls": 2,
+  "cost_usd": 0.065582,
+  "error": "expected a JSON object with 'evidence' and 'verdict' keys, got list: \"[{'doc_id': 'northstar-finance-q4-2025', 'page': 1, 'span_text': 'Adjusted EBITDA | 0.7400 | 0.5100 | 0.6400', 'canonical_value': 740000.0, 'unit': 'currency', 'role': 'actual', 'effective_date': '202\"",
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-06T07:39:40.470813+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "adjusted EBITDA"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Adjusted EBITDA\",\"facts\":[{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1/table:2/row:Adjusted EBITDA\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"0.7400\"},{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1/table:2/row:Adjusted EBITDA\",\"attribute\":\"Q3 2025 actual\",\"period\":\"2025-Q3\",\"role\":\"actual\",\"value\":\"0.5100\"},{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1/table:2/row:Adjusted EBITDA\",\"attribute\":\"Q4 budget\",\"period\":\"Q4\",\"role\":\"budget\",\"value\":\"0.6400\"}],\"edges\":[{\"kind\":\"aggregates\",\"doc_id\":\"northstar-finance-q4-2025\",\"op\":\"sum\",\"target\":\"Adjusted EBITDA\",\"inputs\":[\"Gross profit\",\"Operating expenses\"],\"holds_for\":[\"Q4 2025 actual\",\"Q3 2025 actual\",\"Q4 budget\"]}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-06T07:39:43.047475+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-finance-q4-2025",
+        "location": "page:1/table:2/row:Adjusted EBITDA"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1/table:2/row:Adjusted EBITDA\",\"text\":\"Adjusted EBITDA | 0.7400 | 0.5100 | 0.6400\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The claim is confirmed: the finance pack shows Adjusted EBITDA for Q4 2025 actual at 0.7400 (EUR millions), exactly matching the claim's EUR 0.74 million.\n\n{\"evidence\":[{\"doc_id\":\"northstar-finance-q4-2025\",\"page\":1,\"span_text\":\"Adjusted EBITDA | 0.7400 | 0.5100 | 0.6400\",\"canonical_value\":740000.0,\"unit\":\"currency\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.98}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.98,\"rationale\":\"The Q4 2025 finance pack reports Adjusted EBITDA actual of 0.7400 (EUR millions), exactly matching the claim's EUR 0.74 million.\",\"suggested_action\":null}}"
+}

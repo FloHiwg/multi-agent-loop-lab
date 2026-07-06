@@ -1,0 +1,19 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0010",
+  "label": "Average enterprise contract value was about EUR 105.6 thousand",
+  "raw_text": "Average enterprise contract value was about EUR 105.6 thousand.",
+  "canonical_value": 105607.48,
+  "unit": "currency",
+  "currency": "EUR",
+  "entity": "Meridian Cloud Systems SE",
+  "time_scope": "Q1 2026",
+  "tolerance_rule": {
+    "kind": "formula",
+    "formula": "annualized_subscription_value / enterprise_accounts",
+    "tolerance_pct": 0.1
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "meridian-master-q1-2026",
+  "source_page": 2
+}

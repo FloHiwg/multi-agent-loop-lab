@@ -1,0 +1,351 @@
+fixture_version: 2.0.0
+audit_id: audit-2026-q1-meridian
+description: Deterministic Meridian Q1 2026 retrieval and verification stress fixture.
+claims:
+- claim_id: audit-2026-q1-meridian/claim-0001
+  claim_text: Net sales for the quarter were EUR 12.48 million.
+  canonical_value: 12480000
+  unit: currency
+  currency: EUR
+  expected_status: supported
+  source_doc: meridian-finance-v2-q1-2026
+  source_page: 1
+  source_span: Net revenue | 12.480 | 10.960 | 11.900
+  tolerance_rule:
+    kind: exact
+  notes: 'Vocabulary mismatch: net sales vs Net revenue; EUR millions.'
+- claim_id: audit-2026-q1-meridian/claim-0002
+  claim_text: Operating contribution reached EUR 2.14 million.
+  canonical_value: 2140000
+  unit: currency
+  currency: EUR
+  expected_status: supported
+  source_doc: meridian-finance-v2-q1-2026
+  source_page: 1
+  source_span: Adjusted operating result | 2.140 | 1.720 | 1.960
+  tolerance_rule:
+    kind: exact
+  notes: 'Vocabulary mismatch: operating contribution vs adjusted operating result.'
+- claim_id: audit-2026-q1-meridian/claim-0003
+  claim_text: The trading margin was 61.5%.
+  canonical_value: 0.615
+  unit: percent
+  currency: null
+  expected_status: supported
+  source_doc: meridian-finance-v2-q1-2026
+  source_page: 1
+  source_span: Gross profit | 7.675 | 6.575 | 7.259
+  tolerance_rule:
+    kind: formula
+    formula: gross_profit / net_revenue
+    tolerance_pct: 0.2
+  notes: 'Formula: gross profit / net revenue = 61.5%.'
+- claim_id: audit-2026-q1-meridian/claim-0004
+  claim_text: Available liquidity at quarter end was EUR 3.62 million.
+  canonical_value: 3620000
+  unit: currency
+  currency: EUR
+  expected_status: supported
+  source_doc: meridian-treasury-q1-2026
+  source_page: 1
+  source_span: Total | 3,620 | 3,180 | 3,710
+  tolerance_rule:
+    kind: exact
+  notes: 'Hardest supported claim: liquidity binds to the first duplicate ''Total''
+    row of the treasury ledger; source is kEUR.'
+- claim_id: audit-2026-q1-meridian/claim-0005
+  claim_text: Headcount at quarter end was 142.
+  canonical_value: 142
+  unit: count
+  currency: null
+  expected_status: supported
+  source_doc: meridian-operations-q1-2026
+  source_page: 1
+  source_span: FTE, period end | 142 | 136 | 130
+  tolerance_rule:
+    kind: exact
+  notes: 'Vocabulary mismatch: headcount vs FTE.'
+- claim_id: audit-2026-q1-meridian/claim-0006
+  claim_text: The enterprise client base closed at 214.
+  canonical_value: 214
+  unit: count
+  currency: null
+  expected_status: supported
+  source_doc: meridian-customer-q1-2026
+  source_page: null
+  source_span: Enterprise accounts | 214 | 201 | 188
+  tolerance_rule:
+    kind: exact
+  notes: XLSX repeated-header block.
+- claim_id: audit-2026-q1-meridian/claim-0007
+  claim_text: Recurring revenue retention was 111.2%.
+  canonical_value: 1.112
+  unit: percent
+  currency: null
+  expected_status: supported
+  source_doc: meridian-customer-q1-2026
+  source_page: null
+  source_span: Net dollar retention | 111.2% | 109.8% | 108.5%
+  tolerance_rule:
+    kind: percent_tolerance
+    tolerance_pct: 0.1
+  notes: Vocabulary mismatch and percentage normalization.
+- claim_id: audit-2026-q1-meridian/claim-0008
+  claim_text: Priority requests met the response commitment in 94.2% of cases.
+  canonical_value: 0.942
+  unit: percent
+  currency: null
+  expected_status: supported
+  source_doc: meridian-operations-q1-2026
+  source_page: 1
+  source_span: P1 response SLA attainment | 94.2% | 92.8% | 93.0%
+  tolerance_rule:
+    kind: exact
+  notes: Narrative/table vocabulary mismatch.
+- claim_id: audit-2026-q1-meridian/claim-0009
+  claim_text: Contracted recurring value was EUR 22.60 million.
+  canonical_value: 22600000
+  unit: currency
+  currency: EUR
+  expected_status: supported
+  source_doc: meridian-customer-q1-2026
+  source_page: null
+  source_span: "Annualized subscription value | \u20AC22,600,000 | \u20AC20,940,000\
+    \ | \u20AC19,870,000"
+  tolerance_rule:
+    kind: exact
+  notes: Currency formatting variety.
+- claim_id: audit-2026-q1-meridian/claim-0010
+  claim_text: Average enterprise contract value was about EUR 105.6 thousand.
+  canonical_value: 105607.48
+  unit: currency
+  currency: EUR
+  expected_status: supported
+  source_doc: meridian-customer-q1-2026
+  source_page: null
+  source_span: Enterprise accounts | 214 | 201 | 188
+  tolerance_rule:
+    kind: formula
+    formula: annualized_subscription_value / enterprise_accounts
+    tolerance_pct: 0.1
+  notes: 'Formula: EUR 22.6m / 214 customers.'
+- claim_id: audit-2026-q1-meridian/claim-0011
+  claim_text: DACH contributed EUR 5.12 million of quarterly sales.
+  canonical_value: 5120000
+  unit: currency
+  currency: EUR
+  expected_status: supported
+  source_doc: meridian-regional-q1-2026
+  source_page: 1
+  source_span: DACH | 5.120 | 4.610 | 4.820
+  tolerance_rule:
+    kind: exact
+  notes: Regional table lookup.
+- claim_id: audit-2026-q1-meridian/claim-0012
+  claim_text: UK and Ireland delivered EUR 3.44 million.
+  canonical_value: 3440000
+  unit: currency
+  currency: EUR
+  expected_status: supported
+  source_doc: meridian-regional-q1-2026
+  source_page: 1
+  source_span: UKI | 3.440 | 2.980 | 3.200
+  tolerance_rule:
+    kind: exact
+  notes: 'Cross-document naming drift: UK and Ireland vs UKI.'
+- claim_id: audit-2026-q1-meridian/claim-0013
+  claim_text: The external delivery workforce numbered 18.
+  canonical_value: 18
+  unit: count
+  currency: null
+  expected_status: supported
+  source_doc: meridian-people-q1-2026
+  source_page: null
+  source_span: Contract personnel | 18 | 16 | 15
+  tolerance_rule:
+    kind: exact
+  notes: Vocabulary mismatch in messy XLSX.
+- claim_id: audit-2026-q1-meridian/claim-0014
+  claim_text: Location-based electricity emissions were 412 tCO2e.
+  canonical_value: 412
+  unit: tCO2e
+  currency: null
+  expected_status: supported
+  source_doc: meridian-esg-q1-2026
+  source_page: 1
+  source_span: Scope 2 location based | 412 | 438 | 1,690
+  tolerance_rule:
+    kind: exact
+  notes: FY and quarterly periods coexist.
+- claim_id: audit-2026-q1-meridian/claim-0015
+  claim_text: Cash burn from operations was EUR 1.284 million.
+  canonical_value: -1284000
+  unit: currency
+  currency: EUR
+  expected_status: supported
+  source_doc: meridian-treasury-q1-2026
+  source_page: 1
+  source_span: Net operating cash outflow | (1,284) | (940) | (4,230)
+  tolerance_rule:
+    kind: exact
+  notes: 'Pure unit/sign normalization trap: kEUR and parentheses.'
+- claim_id: audit-2026-q1-meridian/claim-0016
+  claim_text: Quarterly sales per employee were about EUR 87.9 thousand.
+  canonical_value: 87887.32
+  unit: currency_per_fte
+  currency: EUR
+  expected_status: supported
+  source_doc: meridian-finance-v2-q1-2026
+  source_page: 1
+  source_span: Net revenue | 12.480 | 10.960 | 11.900
+  tolerance_rule:
+    kind: formula
+    formula: net_revenue / fte_period_end
+    tolerance_pct: 0.2
+  notes: 'Cross-document formula: finance revenue / operations FTE.'
+- claim_id: audit-2026-q1-meridian/claim-0017
+  claim_text: There were 7.89 employees per external contractor.
+  canonical_value: 7.8889
+  unit: ratio
+  currency: null
+  expected_status: supported
+  source_doc: meridian-operations-q1-2026
+  source_page: 1
+  source_span: FTE, period end | 142 | 136 | 130
+  tolerance_rule:
+    kind: formula
+    formula: fte_period_end / contract_personnel
+    tolerance_pct: 0.2
+  notes: 'Cross-document formula: operations FTE / people contractors.'
+- claim_id: audit-2026-q1-meridian/claim-0018
+  claim_text: The closing workforce was 143 FTE.
+  canonical_value: 143
+  unit: count
+  currency: null
+  expected_status: contradicted
+  source_doc: meridian-operations-q1-2026
+  source_page: 1
+  source_span: FTE, period end | 142 | 136 | 130
+  tolerance_rule:
+    kind: exact
+  notes: 'Subtle contradiction: right period/entity, off by one.'
+- claim_id: audit-2026-q1-meridian/claim-0019
+  claim_text: Quarterly customer attrition was 2.8%.
+  canonical_value: 0.028
+  unit: percent
+  currency: null
+  expected_status: contradicted
+  source_doc: meridian-customer-q1-2026
+  source_page: null
+  source_span: Gross account attrition | 3.4% | 3.1% | 3.0%
+  tolerance_rule:
+    kind: exact
+  notes: Contradicted by approved customer workbook.
+- claim_id: audit-2026-q1-meridian/claim-0020
+  claim_text: The unresolved support queue ended at 312 cases.
+  canonical_value: 312
+  unit: count
+  currency: null
+  expected_status: contradicted
+  source_doc: meridian-operations-q1-2026
+  source_page: 1
+  source_span: Open case inventory | 327 | 298 | 305
+  tolerance_rule:
+    kind: exact
+  notes: Contradicted; label mismatch discourages numeric-only matching.
+- claim_id: audit-2026-q1-meridian/claim-0021
+  claim_text: New enterprise wins totalled 46.
+  canonical_value: 46
+  unit: count
+  currency: null
+  expected_status: ambiguous
+  source_doc: meridian-customer-q1-2026
+  source_page: null
+  source_span: New enterprise accounts | 46 | 41 | 39
+  tolerance_rule:
+    kind: exact
+  notes: Operations review says 49; equal authority, same period.
+- claim_id: audit-2026-q1-meridian/claim-0022
+  claim_text: Qualified commercial pipeline stood at EUR 8.4 million.
+  canonical_value: 8400000
+  unit: currency
+  currency: EUR
+  expected_status: ambiguous
+  source_doc: meridian-finance-v2-q1-2026
+  source_page: 2
+  source_span: Qualified pipeline | 8.400 | 7.920 | 8.100
+  tolerance_rule:
+    kind: exact
+  notes: Regional review says EUR 8.1m; no authority ordering.
+- claim_id: audit-2026-q1-meridian/claim-0023
+  claim_text: Formal learning time totalled 1,240 hours.
+  canonical_value: 1240
+  unit: hours
+  currency: null
+  expected_status: ambiguous
+  source_doc: meridian-people-q1-2026
+  source_page: null
+  source_span: Structured learning hours | 1,240 | 1,080 | 4,520
+  tolerance_rule:
+    kind: exact
+  notes: Sustainability note says 1,190 hours.
+- claim_id: audit-2026-q1-meridian/claim-0024
+  claim_text: The pre-close pack reported quarterly turnover of EUR 12.31 million.
+  canonical_value: 12310000
+  unit: currency
+  currency: EUR
+  expected_status: outdated
+  source_doc: meridian-finance-v1-q1-2026
+  source_page: 1
+  source_span: Net revenue | 12.310 | 10.960 | 11.900
+  tolerance_rule:
+    kind: exact
+  notes: Supported only by superseded v1; v2 restates EUR 12.48m.
+- claim_id: audit-2026-q1-meridian/claim-0025
+  claim_text: The preliminary operating contribution was EUR 2.05 million.
+  canonical_value: 2050000
+  unit: currency
+  currency: EUR
+  expected_status: outdated
+  source_doc: meridian-finance-v1-q1-2026
+  source_page: 1
+  source_span: Adjusted operating result | 2.050 | 1.720 | 1.960
+  tolerance_rule:
+    kind: exact
+  notes: Supported only by superseded v1; v2 reports EUR 2.14m.
+- claim_id: audit-2026-q1-meridian/claim-0026
+  claim_text: The initial close showed EUR 3.71 million of available liquidity.
+  canonical_value: 3710000
+  unit: currency
+  currency: EUR
+  expected_status: outdated
+  source_doc: meridian-finance-v1-q1-2026
+  source_page: 2
+  source_span: Cash and cash equivalents | 3.710 | 3.180 | 3.500
+  tolerance_rule:
+    kind: exact
+  notes: Superseded by treasury confirmation and restated pack.
+- claim_id: audit-2026-q1-meridian/claim-0027
+  claim_text: Monthly active product seats were 6,840.
+  canonical_value: 6840
+  unit: count
+  currency: null
+  expected_status: missing_evidence
+  source_doc: null
+  source_page: null
+  source_span: null
+  tolerance_rule:
+    kind: exact
+  notes: Similar-sounding Licensed seats (7,020) exists; must not force-match.
+- claim_id: audit-2026-q1-meridian/claim-0028
+  claim_text: Median implementation cycle was 31 days.
+  canonical_value: 31
+  unit: days
+  currency: null
+  expected_status: missing_evidence
+  source_doc: null
+  source_page: null
+  source_span: null
+  tolerance_rule:
+    kind: exact
+  notes: Similar value Median resolution time (31 hours) exists.

@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0014",
+  "label": "Location-based electricity emissions were 412 tCO2e",
+  "raw_text": "Location-based electricity emissions were 412 tCO2e.",
+  "canonical_value": 412,
+  "unit": "tCO2e",
+  "currency": null,
+  "entity": "Meridian Cloud Systems SE",
+  "time_scope": "Q1 2026",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "meridian-master-q1-2026",
+  "source_page": 2
+}

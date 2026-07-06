@@ -1,0 +1,19 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0016",
+  "label": "Quarterly sales per employee were about EUR 87.9 thousand",
+  "raw_text": "Quarterly sales per employee were about EUR 87.9 thousand.",
+  "canonical_value": 87887.32,
+  "unit": "currency_per_fte",
+  "currency": "EUR",
+  "entity": "Meridian Cloud Systems SE",
+  "time_scope": "Q1 2026",
+  "tolerance_rule": {
+    "kind": "formula",
+    "formula": "net_revenue / fte_period_end",
+    "tolerance_pct": 0.2
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "meridian-master-q1-2026",
+  "source_page": 3
+}

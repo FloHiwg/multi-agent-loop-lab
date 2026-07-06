@@ -1,0 +1,59 @@
+audit_id: audit-2026-q1-meridian
+master_doc_id: meridian-master-q1-2026
+default_tolerance_rule:
+  kind: exact
+evidence_priority:
+- finance_pack
+- operations_review
+- customer_appendix
+- regional_review
+- treasury
+- people_review
+- sustainability
+documents:
+- doc_id: meridian-master-q1-2026
+  path: audits/audit-2026-q1-meridian/master/meridian-q1-board-review.pdf
+  kind: master
+  format: pdf
+  tag: null
+- doc_id: meridian-finance-v1-q1-2026
+  path: audits/audit-2026-q1-meridian/vault/finance-pack-v1.pdf
+  kind: vault
+  format: pdf
+  tag: finance_pack
+- doc_id: meridian-finance-v2-q1-2026
+  path: audits/audit-2026-q1-meridian/vault/finance-pack-restated-v2.pdf
+  kind: vault
+  format: pdf
+  tag: finance_pack
+- doc_id: meridian-operations-q1-2026
+  path: audits/audit-2026-q1-meridian/vault/operations-review.pdf
+  kind: vault
+  format: pdf
+  tag: operations_review
+- doc_id: meridian-customer-q1-2026
+  path: audits/audit-2026-q1-meridian/vault/customer-metrics.xlsx
+  kind: vault
+  format: xlsx
+  tag: customer_appendix
+- doc_id: meridian-regional-q1-2026
+  path: audits/audit-2026-q1-meridian/vault/regional-performance.pdf
+  kind: vault
+  format: pdf
+  tag: regional_review
+- doc_id: meridian-treasury-q1-2026
+  path: audits/audit-2026-q1-meridian/vault/treasury-and-cash.pdf
+  kind: vault
+  format: pdf
+  tag: treasury
+- doc_id: meridian-people-q1-2026
+  path: audits/audit-2026-q1-meridian/vault/people-roster.xlsx
+  kind: vault
+  format: xlsx
+  tag: people_review
+- doc_id: meridian-esg-q1-2026
+  path: audits/audit-2026-q1-meridian/vault/sustainability-note.pdf
+  kind: vault
+  format: pdf
+  tag: sustainability
+created_at: '2026-04-15T09:00:00+02:00'

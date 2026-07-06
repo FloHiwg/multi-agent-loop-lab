@@ -1,0 +1,132 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0009",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 5,
+  "cost_usd": 0.073159,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0009",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0009/evidence-001",
+      "audit-2025-q4-northstar/claim-0009/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.98,
+    "rationale": "The Q4 2025 Operations Review states tickets opened were 1,100 in Q4 2025 vs 1,250 in Q3 2025 and explicitly computes the quarter-over-quarter change as (1,100 - 1,250) / 1,250 = -12.0%, matching the claim exactly.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2025-q4-northstar/claim-0009"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0009/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0009",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "Support operations\nMetric\nQ4 2025\nQ3 2025\nChange\nTickets opened\n1,100\n1,250\n-150",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": -0.12,
+      "unit": "percent_change",
+      "role": "actual",
+      "effective_date": "2026-01-16",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0009/evidence-002",
+      "claim_id": "audit-2025-q4-northstar/claim-0009",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "The quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": -0.12,
+      "unit": "percent_change",
+      "role": "actual",
+      "effective_date": "2026-01-16",
+      "extractor_confidence": 0.98
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-06T07:40:37.743116+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "support tickets"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'support tickets' -- try list_entities\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-06T07:40:37.889751+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "support tickets quarter over quarter"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1\",\"snippet\":\"...volume calculation\\nThe [quarter]-[over]-[quarter] change in [tickets] opened is (1...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-06T07:40:40.026236+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "support tickets opened"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1\",\"snippet\":\"...basis\\n[Support] operations\\nMetric\\nQ4 2025\\nQ3 2025\\nChange\\n[Tickets] [opened]\\n1...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-06T07:40:40.099814+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "support ticket"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-06T07:40:48.313970+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-ops-q4-2025",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1\",\"text\":\"Northstar Analytics GmbH | Confidential | Synthetic evaluation fixture\\nPage 1\\nNORTHSTAR ANALYTICS\\nQ4 2025 Operations Review\\nPeople, customer and support metrics\\nDOCUMENT ID\\nnorthstar-ops-q4-2025\\nREPORTING PERIOD\\nQ4 2025\\nISSUED\\n16 January 2026\\nPeople and customer base\\nMetric\\nQ4 2025\\nQ3 2025\\nDefinition\\nEmployees\\n84\\n81\\nActive employees at period end\\nEnterprise customers\\n126\\n119\\nCustomers with enterprise plan at period end\\nNet revenue retention\\n106.0%\\n104.0%\\nTrailing 12-month cohort basis\\nSupport operations\\nMetric\\nQ4 2025\\nQ3 2025\\nChange\\nTickets opened\\n1,100\\n1,250\\n-150\\nTickets resolved\\n1,087\\n1,228\\n-141\\nMedian first response\\n2.4 h\\n2.8 h\\n-0.4 h\\nTicket volume calculation\\nThe quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%.\\nMetric governance\\nPeople counts are maintained by People Operations. Customer counts and retention are sourced from the revenue\\noperations snapshot dated 5 January 2026. No quarterly gross logo churn metric was approved for this review\\ncycle.\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\n  \"evidence\": [\n    {\n      \"doc_id\": \"northstar-ops-q4-2025\",\n      \"page\": 1,\n      \"span_text\": \"Support operations\\nMetric\\nQ4 2025\\nQ3 2025\\nChange\\nTickets opened\\n1,100\\n1,250\\n-150\",\n      \"canonical_value\": -0.12,\n      \"unit\": \"percent_change\",\n      \"role\": \"actual\",\n      \"effective_date\": \"2026-01-16\",\n      \"extractor_confidence\": 0.95\n    },\n    {\n      \"doc_id\": \"northstar-ops-q4-2025\",\n      \"page\": 1,\n      \"span_text\": \"The quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%.\",\n      \"canonical_value\": -0.12,\n      \"unit\": \"percent_change\",\n      \"role\": \"actual\",\n      \"effective_date\": \"2026-01-16\",\n      \"extractor_confidence\": 0.98\n    }\n  ],\n  \"verdict\": {\n    \"status\": \"supported\",\n    \"delta\": 0.0,\n    \"confidence\": 0.98,\n    \"rationale\": \"The Q4 2025 Operations Review states tickets opened were 1,100 in Q4 2025 vs 1,250 in Q3 2025 and explicitly computes the quarter-over-quarter change as (1,100 - 1,250) / 1,250 = -12.0%, matching the claim exactly.\",\n    \"suggested_action\": null\n  }\n}"
+}

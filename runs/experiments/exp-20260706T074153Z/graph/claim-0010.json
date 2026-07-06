@@ -1,0 +1,218 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0010",
+  "variant": "graph",
+  "expected_status": "missing_evidence",
+  "status": "missing_evidence",
+  "correct": true,
+  "tool_calls": 11,
+  "cost_usd": 0.11468199999999998,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0010",
+    "status": "missing_evidence",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0010/evidence-001",
+      "audit-2025-q4-northstar/claim-0010/evidence-002"
+    ],
+    "delta": null,
+    "confidence": 0.92,
+    "rationale": "The Q4 2025 operations review explicitly states no quarterly gross logo churn metric was approved for this review cycle, and the customer appendix provides only segment customer/ARR counts with no churn figure, so no vault span confirms or even states the claimed 3.1% value.",
+    "suggested_action": "Confirm with revenue operations whether a Q4 2025 gross logo churn figure (3.1%) was produced outside the reviewed customer appendix and ops review; if not, the master claim should be retracted or flagged as unsupported.",
+    "produced_by_run_id": "eval/graph/audit-2025-q4-northstar/claim-0010"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0010/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0010",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "No quarterly gross logo churn metric was approved for this review cycle.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "percent",
+      "role": "other",
+      "effective_date": "2026-01-16",
+      "extractor_confidence": 0.98
+    },
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0010/evidence-002",
+      "claim_id": "audit-2025-q4-northstar/claim-0010",
+      "doc_id": "northstar-customer-appendix-q4-2025",
+      "page": null,
+      "span_text": "Segment | Customers | Annual recurring revenue | ACV | Period | Role ... Strategic 18 ... Mid-market 52 ... Growth 56 ... Enterprise total 126 ...",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "customers",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-06T07:44:12.369362+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Gross logo churn"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'Gross logo churn' -- try list_entities\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-06T07:44:12.497200+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {
+        "tag": "customer_appendix"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Customer Summary\",\"sheet:Segment Detail\"]}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-06T07:44:14.300111+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "churn"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-06T07:44:14.583895+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "gross logo churn",
+        "tag": "customer_appendix"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-06T07:44:15.961553+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "churn"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1\",\"snippet\":\"...No quarterly gross logo [churn] metric was approved for this review\\ncycle.\\n\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-06T07:44:15.986900+00:00",
+      "tool": "mcp__proofbench_vault__list_entities",
+      "input": {},
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"entity\":\"Revenue\",\"doc_ids\":[\"northstar-finance-q4-2025\"]},{\"entity\":\"Cost of revenue\",\"doc_ids\":[\"northstar-finance-q4-2025\"]},{\"entity\":\"Gross profit\",\"doc_ids\":[\"northstar-finance-q4-2025\"]},{\"entity\":\"Operating expenses\",\"doc_ids\":[\"northstar-finance-q4-2025\"]},{\"entity\":\"Adjusted EBITDA\",\"doc_ids\":[\"northstar-finance-q4-2025\"]},{\"entity\":\"Operating bank accounts\",\"doc_ids\":[\"northstar-finance-q4-2025\"]},{\"entity\":\"Money market deposits\",\"doc_ids\":[\"northstar-finance-q4-2025\"]},{\"entity\":\"Cash and cash equivalents\",\"doc_ids\":[\"northstar-finance-q4-2025\"]},{\"entity\":\"Employees\",\"doc_ids\":[\"northstar-ops-q4-2025\"]},{\"entity\":\"Enterprise customers\",\"doc_ids\":[\"northstar-ops-q4-2025\"]},{\"entity\":\"Net revenue retention\",\"doc_ids\":[\"northstar-ops-q4-2025\"]},{\"entity\":\"Tickets opened\",\"doc_ids\":[\"northstar-ops-q4-2025\"]},{\"entity\":\"Tickets resolved\",\"doc_ids\":[\"northstar-ops-q4-2025\"]},{\"entity\":\"Median first response\",\"doc_ids\":[\"northstar-ops-q4-2025\"]},{\"entity\":\"Strategic\",\"doc_ids\":[\"northstar-customer-appendix-q4-2025\"]},{\"entity\":\"Mid-market\",\"doc_ids\":[\"northstar-customer-appendix-q4-2025\"]},{\"entity\":\"Growth\",\"doc_ids\":[\"northstar-customer-appendix-q4-2025\"]},{\"entity\":\"Enterprise total\",\"doc_ids\":[\"northstar-customer-appendix-q4-2025\"]}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-06T07:44:18.384452+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-ops-q4-2025",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1\",\"text\":\"Northstar Analytics GmbH | Confidential | Synthetic evaluation fixture\\nPage 1\\nNORTHSTAR ANALYTICS\\nQ4 2025 Operations Review\\nPeople, customer and support metrics\\nDOCUMENT ID\\nnorthstar-ops-q4-2025\\nREPORTING PERIOD\\nQ4 2025\\nISSUED\\n16 January 2026\\nPeople and customer base\\nMetric\\nQ4 2025\\nQ3 2025\\nDefinition\\nEmployees\\n84\\n81\\nActive employees at period end\\nEnterprise customers\\n126\\n119\\nCustomers with enterprise plan at period end\\nNet revenue retention\\n106.0%\\n104.0%\\nTrailing 12-month cohort basis\\nSupport operations\\nMetric\\nQ4 2025\\nQ3 2025\\nChange\\nTickets opened\\n1,100\\n1,250\\n-150\\nTickets resolved\\n1,087\\n1,228\\n-141\\nMedian first response\\n2.4 h\\n2.8 h\\n-0.4 h\\nTicket volume calculation\\nThe quarter-over-quarter change in tickets opened is (1,100 - 1,250) / 1,250 = -12.0%.\\nMetric governance\\nPeople counts are maintained by People Operations. Customer counts and retention are sourced from the revenue\\noperations snapshot dated 5 January 2026. No quarterly gross logo churn metric was approved for this review\\ncycle.\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 8,
+      "at": "2026-07-06T07:44:18.695069+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-customer-appendix-q4-2025",
+        "location": "sheet:Customer Summary"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"location\":\"sheet:Customer Summary\",\"text\":\"A1: Northstar Analytics | Q4 2025 Customer Appendix\\nA3: Document ID\\nB3: northstar-customer-appendix-q4-2025\\nA4: Reporting period\\nB4: Q4 2025\\nA5: As-of date\\nB5: 2025-12-31T00:00:00\\nA6: Issued\\nB6: 2026-01-16T00:00:00\\nA7: Status\\nB7: Final management reporting\\nA9: Segment\\nB9: Customers\\nC9: Annual recurring revenue\\nD9: ACV\\nE9: Period\\nF9: Role\\nA10: Strategic\\nB10: 18\\nC10: 648000\\nD10: 36000\\nE10: 2025-12-31\\nF10: actual\\nA11: Mid-market\\nB11: 52\\nC11: 1040000\\nD11: 20000\\nE11: 2025-12-31\\nF11: actual\\nA12: Growth\\nB12: 56\\nC12: 630400\\nD12: 11257.142857142857\\nE12: 2025-12-31\\nF12: actual\\nA13: Enterprise total\\nB13: 126\\nC13: 2318400\\nD13: 18400\\nE13: 2025-12-31\\nF13: actual\\nA15: Control note\\nA16: Enterprise ACV equals enterprise annual recurring revenue divided by enterprise customers: EUR 2,318,400 / 126 = EUR 18,400.\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 9,
+      "at": "2026-07-06T07:44:22.137812+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-customer-appendix-q4-2025",
+        "location": "sheet:Segment Detail"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"location\":\"sheet:Segment Detail\",\"text\":\"A1: Enterprise Segment Detail\\nA4: Segment\\nB4: Customers\\nC4: ARR\\nD4: ACV\\nE4: As of\\nF4: Role\\nA5: Strategic\\nB5: 18\\nC5: 648000\\nD5: 36000\\nE5: 2025-12-31\\nF5: actual\\nA6: Mid-market\\nB6: 52\\nC6: 1040000\\nD6: 20000\\nE6: 2025-12-31\\nF6: actual\\nA7: Growth\\nB7: 56\\nC7: 630400\\nD7: 11257.142857142857\\nE7: 2025-12-31\\nF7: actual\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 10,
+      "at": "2026-07-06T07:44:22.328637+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "3.1 churn"
+      },
+      "output": "search error: fts5: syntax error near \".\"",
+      "is_error": true
+    },
+    {
+      "seq": 11,
+      "at": "2026-07-06T07:44:23.829390+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "logo churn 3"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"northstar-ops-q4-2025\",\"page\":1,\"span_text\":\"No quarterly gross logo churn metric was approved for this review cycle.\",\"canonical_value\":null,\"unit\":\"percent\",\"role\":\"other\",\"effective_date\":\"2026-01-16\",\"extractor_confidence\":0.98},{\"doc_id\":\"northstar-customer-appendix-q4-2025\",\"page\":null,\"span_text\":\"Segment | Customers | Annual recurring revenue | ACV | Period | Role ... Strategic 18 ... Mid-market 52 ... Growth 56 ... Enterprise total 126 ...\",\"canonical_value\":null,\"unit\":\"customers\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"missing_evidence\",\"delta\":null,\"confidence\":0.92,\"rationale\":\"The Q4 2025 operations review explicitly states no quarterly gross logo churn metric was approved for this review cycle, and the customer appendix provides only segment customer/ARR counts with no churn figure, so no vault span confirms or even states the claimed 3.1% value.\",\"suggested_action\":\"Confirm with revenue operations whether a Q4 2025 gross logo churn figure (3.1%) was produced outside the reviewed customer appendix and ops review; if not, the master claim should be retracted or flagged as unsupported.\"}}"
+}

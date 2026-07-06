@@ -1,0 +1,87 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0006",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 3,
+  "cost_usd": 0.05556799999999999,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0006",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0006/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The operations review (northstar-ops-q4-2025, page 1) reports Enterprise customers at 126 for Q4 2025, matching the claim's canonical value of 126 exactly.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2025-q4-northstar/claim-0006"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0006/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0006",
+      "doc_id": "northstar-ops-q4-2025",
+      "page": 1,
+      "span_text": "Enterprise customers | 126 | 119 | Customers with enterprise plan at period end",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 126.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-06T07:40:06.335063+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Enterprise customers"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Enterprise customers\",\"facts\":[{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"126\"},{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"119\"},{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"attribute\":\"Definition\",\"period\":null,\"role\":\"definition\",\"value\":\"Customers with enterprise plan at period end\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-06T07:40:06.494715+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "Enterprise customers"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"entity\":\"Enterprise customers\",\"attribute\":\"Q4 2025\",\"value\":\"126\"},{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"entity\":\"Enterprise customers\",\"attribute\":\"Q3 2025\",\"value\":\"119\"},{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"entity\":\"Enterprise customers\",\"attribute\":\"Definition\",\"value\":\"Customers with enterprise plan at period end\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-06T07:40:15.157274+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-ops-q4-2025",
+        "location": "page:1/table:2/row:Enterprise customers"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"northstar-ops-q4-2025\",\"location\":\"page:1/table:2/row:Enterprise customers\",\"text\":\"Enterprise customers | 126 | 119 | Customers with enterprise plan at period end\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"northstar-ops-q4-2025\",\"page\":1,\"span_text\":\"Enterprise customers | 126 | 119 | Customers with enterprise plan at period end\",\"canonical_value\":126.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.97,\"rationale\":\"The operations review (northstar-ops-q4-2025, page 1) reports Enterprise customers at 126 for Q4 2025, matching the claim's canonical value of 126 exactly.\",\"suggested_action\":null}}"
+}

@@ -1,0 +1,12 @@
+{
+  "variant": "baseline",
+  "n_claims": 10,
+  "correct": 9,
+  "accuracy": 0.9,
+  "failures": 1,
+  "avg_tool_calls": 4.9,
+  "avg_cost_usd": 0.06410745,
+  "total_cost_usd": 0.6410745,
+  "enrichment_cost_usd": null,
+  "n_attempted": 10
+}

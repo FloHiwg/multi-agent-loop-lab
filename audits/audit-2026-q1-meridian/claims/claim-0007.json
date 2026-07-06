@@ -1,0 +1,18 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0007",
+  "label": "Recurring revenue retention was 111.2%",
+  "raw_text": "Recurring revenue retention was 111.2%.",
+  "canonical_value": 1.112,
+  "unit": "percent",
+  "currency": null,
+  "entity": "Meridian Cloud Systems SE",
+  "time_scope": "Q1 2026",
+  "tolerance_rule": {
+    "kind": "percent_tolerance",
+    "tolerance_pct": 0.1
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "meridian-master-q1-2026",
+  "source_page": 1
+}

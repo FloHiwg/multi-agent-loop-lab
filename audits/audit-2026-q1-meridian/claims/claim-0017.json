@@ -1,0 +1,19 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0017",
+  "label": "There were 7.89 employees per external contractor",
+  "raw_text": "There were 7.89 employees per external contractor.",
+  "canonical_value": 7.8889,
+  "unit": "ratio",
+  "currency": null,
+  "entity": "Meridian Cloud Systems SE",
+  "time_scope": "Q1 2026",
+  "tolerance_rule": {
+    "kind": "formula",
+    "formula": "fte_period_end / contract_personnel",
+    "tolerance_pct": 0.2
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "meridian-master-q1-2026",
+  "source_page": 3
+}

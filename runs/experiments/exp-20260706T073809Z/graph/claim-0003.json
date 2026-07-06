@@ -1,0 +1,132 @@
+{
+  "claim_id": "audit-2025-q4-northstar/claim-0003",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 5,
+  "cost_usd": 0.0633575,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2025-q4-northstar/claim-0003",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2025-q4-northstar/claim-0003/evidence-001",
+      "audit-2025-q4-northstar/claim-0003/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.98,
+    "rationale": "The Q4 2025 finance pack's margin bridge explicitly states gross margin equals (Revenue 4.2800 - Cost of revenue 1.5836) / Revenue 4.2800 = 63.0%, matching the claim exactly; the underlying income statement rows confirm the inputs.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2025-q4-northstar/claim-0003"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0003/evidence-001",
+      "claim_id": "audit-2025-q4-northstar/claim-0003",
+      "doc_id": "northstar-finance-q4-2025",
+      "page": 1,
+      "span_text": "Gross margin is calculated as (Revenue - Cost of revenue) / Revenue. Using Q4 actuals: (EUR 4.2800m - EUR 1.5836m) / EUR 4.2800m = 63.0%.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 0.63,
+      "unit": "percent",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.97
+    },
+    {
+      "evidence_id": "audit-2025-q4-northstar/claim-0003/evidence-002",
+      "claim_id": "audit-2025-q4-northstar/claim-0003",
+      "doc_id": "northstar-finance-q4-2025",
+      "page": 1,
+      "span_text": "Revenue 4.2800 ... Cost of revenue (1.5836) ... Gross profit 2.6964",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 0.63,
+      "unit": "percent",
+      "role": "actual",
+      "effective_date": "2025-12-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-06T07:39:50.361095+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "gross margin"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'gross margin' -- try list_entities\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-06T07:39:50.486202+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {
+        "tag": "finance_pack"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"northstar-finance-q4-2025\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:REPORTING PERIOD\",\"page:1/table:1/row:ISSUED\",\"page:1/table:2/row:Revenue\",\"page:1/table:2/row:Cost of revenue\",\"page:1/table:2/row:Gross profit\",\"page:1/table:2/row:Operating expenses\",\"page:1/table:2/row:Adjusted EBITDA\",\"page:1/table:3/row:Operating bank accounts\",\"page:1/table:3/row:Money market deposits\",\"page:1/table:3/row:Cash and cash equivalents\"]}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-06T07:39:53.448071+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Gross profit"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Gross profit\",\"facts\":[{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1/table:2/row:Gross profit\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"2.6964\"},{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1/table:2/row:Gross profit\",\"attribute\":\"Q3 2025 actual\",\"period\":\"2025-Q3\",\"role\":\"actual\",\"value\":\"2.4095\"},{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1/table:2/row:Gross profit\",\"attribute\":\"Q4 budget\",\"period\":\"Q4\",\"role\":\"budget\",\"value\":\"2.6040\"}],\"edges\":[{\"kind\":\"aggregates\",\"doc_id\":\"northstar-finance-q4-2025\",\"op\":\"sum\",\"target\":\"Gross profit\",\"inputs\":[\"Revenue\",\"Cost of revenue\"],\"holds_for\":[\"Q4 2025 actual\",\"Q3 2025 actual\",\"Q4 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"northstar-finance-q4-2025\",\"op\":\"sum\",\"target\":\"Adjusted EBITDA\",\"inputs\":[\"Gross profit\",\"Operating expenses\"],\"holds_for\":[\"Q4 2025 actual\",\"Q3 2025 actual\",\"Q4 budget\"]}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-06T07:39:53.482334+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "Gross margin"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-06T07:39:53.827374+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "northstar-finance-q4-2025",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"northstar-finance-q4-2025\",\"location\":\"page:1\",\"text\":\"Northstar Analytics GmbH | Confidential | Synthetic evaluation fixture\\nPage 1\\nNORTHSTAR ANALYTICS\\nQ4 2025 Finance Pack\\nManagement accounts and liquidity detail\\nDOCUMENT ID\\nnorthstar-finance-q4-2025\\nREPORTING PERIOD\\nQ4 2025\\nISSUED\\n16 January 2026\\nIncome statement\\nEUR million\\nQ4 2025 actual\\nQ3 2025 actual\\nQ4 budget\\nRevenue\\n4.2800\\n3.9500\\n4.2000\\nCost of revenue\\n(1.5836)\\n(1.5405)\\n(1.5960)\\nGross profit\\n2.6964\\n2.4095\\n2.6040\\nOperating expenses\\n(1.9564)\\n(1.8995)\\n(1.9640)\\nAdjusted EBITDA\\n0.7400\\n0.5100\\n0.6400\\nMargin bridge\\nGross margin is calculated as (Revenue - Cost of revenue) / Revenue. Using Q4 actuals: (EUR 4.2800m - EUR\\n1.5836m) / EUR 4.2800m = 63.0%.\\nLiquidity\\nEUR million\\n31 Dec 2025\\n30 Sep 2025\\nOperating bank accounts\\n1.7200\\n1.4100\\nMoney market deposits\\n0.3800\\n0.4000\\nCash and cash equivalents\\n2.1000\\n1.8100\\nControl note\\nRevenue and adjusted EBITDA reconcile to the December management ledger. Cash includes unrestricted\\ndeposits with an original maturity below three months.\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"northstar-finance-q4-2025\",\"page\":1,\"span_text\":\"Gross margin is calculated as (Revenue - Cost of revenue) / Revenue. Using Q4 actuals: (EUR 4.2800m - EUR 1.5836m) / EUR 4.2800m = 63.0%.\",\"canonical_value\":0.63,\"unit\":\"percent\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.97},{\"doc_id\":\"northstar-finance-q4-2025\",\"page\":1,\"span_text\":\"Revenue 4.2800 ... Cost of revenue (1.5836) ... Gross profit 2.6964\",\"canonical_value\":0.63,\"unit\":\"percent\",\"role\":\"actual\",\"effective_date\":\"2025-12-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0,\"confidence\":0.98,\"rationale\":\"The Q4 2025 finance pack's margin bridge explicitly states gross margin equals (Revenue 4.2800 - Cost of revenue 1.5836) / Revenue 4.2800 = 63.0%, matching the claim exactly; the underlying income statement rows confirm the inputs.\",\"suggested_action\":null}}"
+}

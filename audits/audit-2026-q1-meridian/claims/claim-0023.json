@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0023",
+  "label": "Formal learning time totalled 1,240 hours",
+  "raw_text": "Formal learning time totalled 1,240 hours.",
+  "canonical_value": 1240,
+  "unit": "hours",
+  "currency": null,
+  "entity": "Meridian Cloud Systems SE",
+  "time_scope": "Q1 2026",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "meridian-master-q1-2026",
+  "source_page": 4
+}

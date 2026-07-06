@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0022",
+  "label": "Qualified commercial pipeline stood at EUR 8.4 million",
+  "raw_text": "Qualified commercial pipeline stood at EUR 8.4 million.",
+  "canonical_value": 8400000,
+  "unit": "currency",
+  "currency": "EUR",
+  "entity": "Meridian Cloud Systems SE",
+  "time_scope": "Q1 2026",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "meridian-master-q1-2026",
+  "source_page": 4
+}
