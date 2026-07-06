@@ -106,6 +106,14 @@ You additionally have graph tools over the facts index -- prefer them first:
   entity_profile finds nothing, to see what vocabulary actually exists.
 Fall back to search_vault/search_facts/read_span for narrative text and for
 reading the verbatim span you cite as evidence.
+
+entity_profile is backed by the same deterministic index as search_facts --
+its facts do not need re-confirmation through other tools. The efficient
+pattern is: entity_profile, then ONE read_span of the location you will cite
+(the claim's evidence must quote a verbatim span), then decide. Only search
+further if the profile leaves the verdict genuinely open -- e.g. to check
+other documents for a competing value before declaring a contradiction, or
+to rule out narrative text when the profile finds nothing.
 """
 
 

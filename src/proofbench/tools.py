@@ -24,7 +24,10 @@ def _connect(audit_id: str) -> sqlite3.Connection:
 
 
 def _tool_result(payload: object) -> dict:
-    return {"content": [{"type": "text", "text": json.dumps(payload, indent=2)}]}
+    # Compact on purpose: the agent pays input tokens to read every tool
+    # result, and indented JSON was measurably inflating per-claim cost
+    # (the workbench pretty-prints traces client-side anyway).
+    return {"content": [{"type": "text", "text": json.dumps(payload, separators=(",", ":"))}]}
 
 
 def _list_documents_tool(audit_id: str, kind: str) -> SdkMcpTool:
