@@ -209,6 +209,16 @@ function unwrapToolPayload(v) {
   return v;
 }
 
+function fmtFinalAnswer(text) {
+  // final answers are usually a JSON object/array as one escaped line --
+  // pretty-print when they parse, show verbatim when they don't
+  try {
+    return escHtml(JSON.stringify(JSON.parse(text), null, 2));
+  } catch {
+    return escHtml(text);
+  }
+}
+
 function toolIO(label, v) {
   if (v == null) return "";
   v = unwrapToolPayload(v);
@@ -514,8 +524,9 @@ async function showRun(runId) {
       </div>
       <h3>Tool trace</h3>
       ${trace}
+      ${r.final_text ? `<h3>Final answer</h3><div class="mono">${fmtFinalAnswer(r.final_text)}</div>` : ""}
       <h3>System prompt</h3>
-      <div class="mono">${r.prompt ?? ""}</div>
+      <div class="mono">${escHtml(r.prompt ?? "")}</div>
     </div>
   `;
 }
@@ -667,7 +678,7 @@ function renderHistory(data, content) {
         </div>
       `).join("") || `<div class="muted">No tool calls recorded before this job ended.</div>`;
       const finalHtml = m.final_text
-        ? `<div class="muted" style="margin-top:8px;">Final answer:</div><div class="final-answer">${m.final_text}</div>`
+        ? `<div class="muted" style="margin-top:8px;">Final answer:</div><div class="final-answer">${fmtFinalAnswer(m.final_text)}</div>`
         : "";
       const errorHtml = m.error ? `<div class="muted" style="margin-top:8px;">Error:</div><div class="final-answer">${m.error}</div>` : "";
       body = traceHtml + finalHtml + errorHtml;
@@ -826,7 +837,7 @@ async function showEvalClaim(variant, claimSuffix) {
       </div>
       <h3>Tool trace</h3>
       ${trace}
-      ${r.final_text ? `<h3>Final answer</h3><div class="mono">${r.final_text.replace(/</g, "&lt;")}</div>` : ""}
+      ${r.final_text ? `<h3>Final answer</h3><div class="mono">${fmtFinalAnswer(r.final_text)}</div>` : ""}
     </div>
   `;
   panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
