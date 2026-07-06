@@ -39,24 +39,61 @@ from claude_agent_sdk import (
 DEFAULT_MODEL = "z-ai/glm-5.2"
 
 
+def _zai_key() -> str | None:
+    return os.environ.get("ZAI_API_KEY") or os.environ.get("Z_AI")
+
+
+def resolve_provider() -> str:
+    """Which Anthropic-compatible backend to route through: "openrouter",
+    "zai" (Z.ai's own endpoint, typically cheaper for GLM models), or
+    "anthropic" (direct). PROOFBENCH_PROVIDER overrides; otherwise the
+    OpenRouter key keeps precedence so existing setups don't silently
+    switch backends."""
+    explicit = os.environ.get("PROOFBENCH_PROVIDER")
+    if explicit:
+        return explicit
+    if os.environ.get("OPENROUTER_API_KEY"):
+        return "openrouter"
+    if _zai_key():
+        return "zai"
+    return "anthropic"
+
+
 def resolve_model(model: str | None = None) -> str:
-    return model or os.environ.get("PROOFBENCH_MODEL", DEFAULT_MODEL)
+    resolved = model or os.environ.get("PROOFBENCH_MODEL", DEFAULT_MODEL)
+    # OpenRouter namespaces GLM as "z-ai/glm-5.2"; Z.ai's own endpoint wants
+    # the bare model id. Normalize so the default works on both backends.
+    if resolve_provider() == "zai" and resolved.startswith("z-ai/"):
+        resolved = resolved.removeprefix("z-ai/")
+    return resolved
 
 
-def _openrouter_env() -> dict[str, str] | None:
-    """Build the env overrides needed to route the Agent SDK through OpenRouter's
-    Anthropic-compatible endpoint (see openrouter.ai/docs/guides/community/anthropic-agent-sdk).
-    Returns None if OPENROUTER_API_KEY isn't set, so a direct Anthropic key
-    (already in the ambient environment) is used unmodified instead.
-    """
-    key = os.environ.get("OPENROUTER_API_KEY")
-    if not key:
+def _provider_env() -> dict[str, str] | None:
+    """Env overrides routing the Agent SDK through the resolved provider's
+    Anthropic-compatible endpoint. Returns None for direct Anthropic access
+    (the ambient ANTHROPIC_API_KEY is used unmodified)."""
+    provider = resolve_provider()
+    if provider == "openrouter":
+        key = os.environ.get("OPENROUTER_API_KEY")
+        if not key:
+            raise RuntimeError("PROOFBENCH_PROVIDER=openrouter but OPENROUTER_API_KEY is not set")
+        return {
+            "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
+            "ANTHROPIC_AUTH_TOKEN": key,
+            "ANTHROPIC_API_KEY": "",
+        }
+    if provider == "zai":
+        key = _zai_key()
+        if not key:
+            raise RuntimeError("PROOFBENCH_PROVIDER=zai but ZAI_API_KEY (or Z_AI) is not set")
+        return {
+            "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+            "ANTHROPIC_AUTH_TOKEN": key,
+            "ANTHROPIC_API_KEY": "",
+        }
+    if provider == "anthropic":
         return None
-    return {
-        "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
-        "ANTHROPIC_AUTH_TOKEN": key,
-        "ANTHROPIC_API_KEY": "",
-    }
+    raise RuntimeError(f"unknown PROOFBENCH_PROVIDER: {provider!r} (expected openrouter, zai, or anthropic)")
 
 
 @dataclass
@@ -94,11 +131,11 @@ async def run_agent(
     Raises RuntimeError if no credentials (OPENROUTER_API_KEY or an ambient
     ANTHROPIC_API_KEY) are available.
     """
-    env_overrides = _openrouter_env()
+    env_overrides = _provider_env()
     if env_overrides is None and not os.environ.get("ANTHROPIC_API_KEY"):
         raise RuntimeError(
-            "No LLM credentials found. Set OPENROUTER_API_KEY (routed via OpenRouter's "
-            "Anthropic-compatible endpoint) or ANTHROPIC_API_KEY (direct Anthropic access)."
+            "No LLM credentials found. Set OPENROUTER_API_KEY, ZAI_API_KEY (Anthropic-"
+            "compatible endpoints), or ANTHROPIC_API_KEY (direct Anthropic access)."
         )
 
     options = ClaudeAgentOptions(
