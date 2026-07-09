@@ -489,6 +489,12 @@ context run against the audit's `gold.yaml` fixture and get compared on
 accuracy (verdict status == expected_status), failure rate, avg tool
 calls/claim, and avg cost/claim.
 
+**Experiment protocol.** `runs/experiments/PROTOCOL.md` is the running
+log: one entry per experiment recording the question, the single change
+under test (with its commit), the numbers, and the decision it produced.
+New experiments get an entry there; this file only keeps the
+architectural conclusions.
+
 **Isolation.** Experiments write only to
 `runs/experiments/<experiment_id>/<variant>/` (per-claim records with full
 tool traces, a `summary.json` per variant, a `report.json` per
