@@ -1,0 +1,101 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0008",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.0678,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0008",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0008/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The operations Q1 2026 document reports P1 response SLA attainment at 94.2% for Q1 2026, matching the claim exactly; this corresponds to the claim's 'priority requests met the response commitment' metric.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0008"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0008/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0008",
+      "doc_id": "meridian-operations-q1-2026",
+      "page": 1,
+      "span_text": "P1 response SLA attainment | 94.2% | 92.8% | 93.0%",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 0.942,
+      "unit": "percent",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:57:26.232868+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "priority requests response commitment"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'priority requests response commitment' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"P1 response SLA attainment\",\"similarity\":0.499},{\"entity\":\"Compliance completion\",\"similarity\":0.416},{\"entity\":\"Open requisitions\",\"similarity\":0.349},{\"entity\":\"On-call rotations\",\"similarity\":0.338},{\"entity\":\"Customer success FTE\",\"similarity\":0.338},{\"entity\":\"Deferred revenue\",\"similarity\":0.328},{\"entity\":\"Expansion bookings\",\"similarity\":0.312},{\"entity\":\"Security incidents\",\"similarity\":0.308}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:57:26.478529+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "priority requests response commitment"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:57:28.096804+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "P1 response SLA attainment"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"P1 response SLA attainment\",\"facts\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:P1 response SLA attainment\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"94.2%\",\"span_text\":\"P1 response SLA attainment | 94.2% | 92.8% | 93.0%\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:P1 response SLA attainment\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"92.8%\",\"span_text\":\"P1 response SLA attainment | 94.2% | 92.8% | 93.0%\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:P1 response SLA attainment\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"93.0%\",\"span_text\":\"P1 response SLA attainment | 94.2% | 92.8% | 93.0%\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:57:31.151808+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "P1 response SLA attainment"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"P1 response SLA attainment\",\"facts\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:P1 response SLA attainment\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"94.2%\",\"span_text\":\"P1 response SLA attainment | 94.2% | 92.8% | 93.0%\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:P1 response SLA attainment\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"92.8%\",\"span_text\":\"P1 response SLA attainment | 94.2% | 92.8% | 93.0%\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:P1 response SLA attainment\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"93.0%\",\"span_text\":\"P1 response SLA attainment | 94.2% | 92.8% | 93.0%\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"page\":1,\"span_text\":\"P1 response SLA attainment | 94.2% | 92.8% | 93.0%\",\"canonical_value\":0.942,\"unit\":\"percent\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.97,\"rationale\":\"The operations Q1 2026 document reports P1 response SLA attainment at 94.2% for Q1 2026, matching the claim exactly; this corresponds to the claim's 'priority requests met the response commitment' metric.\",\"suggested_action\":null}}"
+}

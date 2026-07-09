@@ -1,0 +1,172 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0023",
+  "variant": "graph",
+  "expected_status": "ambiguous",
+  "status": "ambiguous",
+  "correct": true,
+  "tool_calls": 8,
+  "cost_usd": 0.14336,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0023",
+    "status": "ambiguous",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0023/evidence-001",
+      "audit-2026-q1-meridian/claim-0023/evidence-002"
+    ],
+    "delta": 50.0,
+    "confidence": 0.9,
+    "rationale": "The claim's 1,240 hours matches the People Review (meridian-people-q1-2026, B13=1240) but the ESG Sustainability Note reports 1,190 hours for the same Q1 2026 'Structured learning hours' metric; the ESG note itself states the two figures conflict 'without authority ranking,' so neither source is clearly authoritative.",
+    "suggested_action": "Reconcile the People Review vs ESG survey scope definitions for learning hours and confirm which figure the master document should cite before signing off the claim.",
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0023"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0023/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0023",
+      "doc_id": "meridian-people-q1-2026",
+      "page": null,
+      "span_text": "A13: Structured learning hours\nB13: 1240\nC13: 1080\nD13: 4520",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 1240.0,
+      "unit": "hours",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0023/evidence-002",
+      "claim_id": "audit-2026-q1-meridian/claim-0023",
+      "doc_id": "meridian-esg-q1-2026",
+      "page": 1,
+      "span_text": "Structured learning hours\n1,190\n1,050\n4,420",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 1190.0,
+      "unit": "hours",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:58:50.530311+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Formal learning time"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'Formal learning time' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Structured learning hours\",\"similarity\":0.698},{\"entity\":\"P1 response SLA attainment\",\"similarity\":0.304},{\"entity\":\"Compliance completion\",\"similarity\":0.295},{\"entity\":\"Engineering FTE\",\"similarity\":0.291},{\"entity\":\"Mentoring pairs\",\"similarity\":0.286},{\"entity\":\"Office sites\",\"similarity\":0.263},{\"entity\":\"Platform uptime\",\"similarity\":0.26},{\"entity\":\"Median resolution time\",\"similarity\":0.257}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:58:50.703715+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "Formal learning time hours"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:58:52.451438+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Structured learning hours"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Structured learning hours\",\"facts\":[{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People!row13\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"1240\",\"span_text\":null},{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People!row13\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"1080\",\"span_text\":null},{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People!row13\",\"attribute\":\"FY 2025\",\"period\":null,\"role\":null,\"value\":\"4520\",\"span_text\":null},{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1/table:1/row:Structured learning hours\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"1,190\",\"span_text\":\"Structured learning hours | 1,190 | 1,050 | 4,420\"},{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1/table:1/row:Structured learning hours\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"1,050\",\"span_text\":\"Structured learning hours | 1,190 | 1,050 | 4,420\"},{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1/table:1/row:Structured learning hours\",\"attribute\":\"FY 2025\",\"period\":null,\"role\":null,\"value\":\"4,420\",\"span_text\":\"Structured learning hours | 1,190 | 1,050 | 4,420\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:58:52.596861+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "learning hours"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People\",\"snippet\":\"...Structured [learning] [hours]\\nB13: 1240\\nC13: 1080\\nD13: 4520\\nA14: Compliance completion...\"},{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1\",\"snippet\":\"...412\\n438\\n1,690\\nStructured [learning] [hours]\\n1,190\\n1,050\\n4...\"},{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1/table:1/row:Structured learning hours\",\"snippet\":\"Structured [learning] [hours] | 1,190 | 1,050 | 4,420\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T12:59:01.924236+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {},
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:2\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Services revenue\",\"page:1/table:1/row:R&D expense\",\"page:1/table:1/row:Sales expense\",\"page:1/table:1/row:Admin expense\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:2/table:1/row:Cash and cash equivalents\",\"page:2/table:1/row:Qualified pipeline\"]},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:2\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Services revenue\",\"page:1/table:1/row:R&D expense\",\"page:1/table:1/row:Sales expense\",\"page:1/table:1/row:Admin expense\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:2/table:1/row:Qualified pipeline\",\"page:2/table:1/row:Weighted pipeline\"]},{\"doc_id\":\"meridian-operations-q1-2026\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Billable consultants\",\"page:1/table:1/row:Engineering FTE\",\"page:1/table:1/row:Voluntary exits\",\"page:1/table:1/row:Median resolution time\",\"page:1/table:1/row:Licensed seats\",\"page:1/table:1/row:Customer success FTE\",\"page:1/table:1/row:Product FTE\",\"page:1/table:1/row:Security incidents\",\"page:1/table:1/row:Platform uptime\",\"page:1/table:1/row:On-call rotations\",\"page:1/table:1/row:Knowledge articles\"]},{\"doc_id\":\"meridian-customer-q1-2026\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"meridian-regional-q1-2026\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:UKI\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Other Europe\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"meridian-treasury-q1-2026\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Operating inflow\",\"page:1/table:1/row:Supplier payments\",\"page:1/table:1/row:Payroll payments\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\",\"page:1/table:1/row:Accounts payable\",\"page:1/table:1/row:Near coincidence control\"]},{\"doc_id\":\"meridian-people-q1-2026\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"meridian-esg-q1-2026\",\"tag\":\"sustainability\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Scope 2 location based\",\"page:1/table:1/row:Structured learning hours\",\"page:1/table:1/row:Travel emissions\",\"page:1/table:1/row:Scope 1\",\"page:1/table:1/row:Renewable electricity\",\"page:1/table:1/row:Women in leadership\",\"page:1/table:2/row:Office sites\",\"page:1/table:2/row:Certified suppliers\"]}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T12:59:02.024281+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-people-q1-2026",
+        "location": "sheet:People!row13"
+      },
+      "output": "no span found at that doc_id/location",
+      "is_error": true
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-09T12:59:03.981249+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-people-q1-2026",
+        "location": "sheet:People"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People\",\"text\":\"A1: Q1 2026 People Review\\nA4: Workforce\\nA5: Metric\\nB5: Q1 2026\\nC5: Q4 2025\\nD5: FY 2025\\nA6: Contract personnel\\nB6: 18\\nC6: 16\\nD6: 15\\nA7: Permanent employees\\nB7: 139\\nC7: 133\\nD7: 128\\nA8: Open requisitions\\nB8: 12\\nC8: 14\\nD8: 11\\nA11: Learning\\nA12: Metric\\nB12: Q1 2026\\nC12: Q4 2025\\nD12: FY 2025\\nA13: Structured learning hours\\nB13: 1240\\nC13: 1080\\nD13: 4520\\nA14: Compliance completion\\nB14: 0.982\\nC14: 0.974\\nD14: 0.968\\nA15: Mentoring pairs\\nB15: 38\\nC15: 34\\nD15: 31\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 8,
+      "at": "2026-07-09T12:59:17.931888+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-esg-q1-2026",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1\",\"text\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Sustainability Note\\nEnvironmental and people indicators\\nESG scorecard\\nMetric\\nQ1 2026\\nQ4 2025\\nFY 2025\\nScope 2 location based\\n412\\n438\\n1,690\\nStructured learning hours\\n1,190\\n1,050\\n4,420\\nTravel emissions\\n96\\n88\\n351\\nScope 1\\n74\\n69\\n282\\nRenewable electricity\\n68.0%\\n61.0%\\n64.0%\\nWomen in leadership\\n41.0%\\n39.0%\\n40.0%\\nAsset footprint (header intentionally absent)\\nData centres\\n18\\n17\\nOffice sites\\n6\\n6\\nCertified suppliers\\n43\\n39\\nLearning hours use ESG survey scope and conflict with the People Review without authority ranking.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"meridian-people-q1-2026\",\"page\":null,\"span_text\":\"A13: Structured learning hours\\nB13: 1240\\nC13: 1080\\nD13: 4520\",\"canonical_value\":1240,\"unit\":\"hours\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-esg-q1-2026\",\"page\":1,\"span_text\":\"Structured learning hours\\n1,190\\n1,050\\n4,420\",\"canonical_value\":1190,\"unit\":\"hours\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"ambiguous\",\"delta\":50,\"confidence\":0.9,\"rationale\":\"The claim's 1,240 hours matches the People Review (meridian-people-q1-2026, B13=1240) but the ESG Sustainability Note reports 1,190 hours for the same Q1 2026 'Structured learning hours' metric; the ESG note itself states the two figures conflict 'without authority ranking,' so neither source is clearly authoritative.\",\"suggested_action\":\"Reconcile the People Review vs ESG survey scope definitions for learning hours and confirm which figure the master document should cite before signing off the claim.\"}}"
+}

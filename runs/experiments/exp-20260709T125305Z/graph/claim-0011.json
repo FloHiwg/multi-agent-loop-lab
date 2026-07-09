@@ -1,0 +1,72 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0011",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 2,
+  "cost_usd": 0.060075,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0011",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0011/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The Q1 2026 Regional Performance scorecard lists DACH Q1 2026 actual revenue as 5.120 (millions EUR), which equals EUR 5,120,000 \u2014 matching the claim exactly.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0011"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0011/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0011",
+      "doc_id": "meridian-regional-q1-2026",
+      "page": 1,
+      "span_text": "DACH | 5.120 | 4.610 | 4.820",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 5120000.0,
+      "unit": "currency",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.98
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:57:45.664752+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "DACH"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"DACH\",\"facts\":[{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"5.120\",\"span_text\":\"DACH | 5.120 | 4.610 | 4.820\"},{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"4.610\",\"span_text\":\"DACH | 5.120 | 4.610 | 4.820\"},{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q1 2026 budget\",\"period\":\"2026-Q1\",\"role\":\"budget\",\"value\":\"4.820\",\"span_text\":\"DACH | 5.120 | 4.610 | 4.820\"}],\"edges\":[{\"kind\":\"aggregates\",\"doc_id\":\"meridian-regional-q1-2026\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"DACH\",\"UKI\",\"Benelux\",\"Nordics\",\"France\",\"Other Europe\"],\"holds_for\":[\"Q1 2026 actual\",\"Q4 2025 actual\",\"Q1 2026 budget\"]}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:57:51.679509+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-regional-q1-2026",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1\",\"text\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Regional Performance\\nRevenue by market\\nRegional scorecard\\nRegion\\nQ1 2026 actual\\nQ4 2025 actual\\nQ1 2026 budget\\nDACH\\n5.120\\n4.610\\n4.820\\nUKI\\n3.440\\n2.980\\n3.200\\nBenelux\\n1.180\\n1.020\\n1.090\\nNordics\\n1.360\\n1.240\\n1.480\\nFrance\\n0.890\\n0.810\\n0.850\\nOther Europe\\n0.490\\n0.300\\n0.460\\nTotal\\n12.480\\n10.960\\n11.900\\nQualified commercial pipeline\\n8.100\\n7.880\\n8.000\\nRegional pipeline uses local CRM qualification and is not ranked against Finance.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"meridian-regional-q1-2026\",\"page\":1,\"span_text\":\"DACH | 5.120 | 4.610 | 4.820\",\"canonical_value\":5120000.0,\"unit\":\"currency\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.98}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.97,\"rationale\":\"The Q1 2026 Regional Performance scorecard lists DACH Q1 2026 actual revenue as 5.120 (millions EUR), which equals EUR 5,120,000 \u2014 matching the claim exactly.\",\"suggested_action\":null}}"
+}

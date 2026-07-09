@@ -123,6 +123,38 @@ superseded document versions, cross-doc contradictions.
   cheap sub-model is exactly the sub-task it exists for. (A prompt-level
   absence shortcut was considered and rejected as fixture-overfitted.)
 
+## exp-20260709T125305Z — baseline vs graph at full scale (Meridian, all 28 claims)
+
+- **Question:** does the graph variant's smoke-set advantage hold across
+  the full adversarial fixture?
+- **Result:** baseline 27/28, 7.9 tools, $0.106/claim; graph 27/28,
+  7.2 tools, $0.109/claim. Zero failures either side.
+- **Reading:**
+  - **Accuracy parity.** The July 6 smoke-set gap (graph 4/5 vs baseline
+    2/5) is explained by since-shared fixes -- the parser fix (baseline's
+    2 failures) and the outdated-rubric fix -- not by retrieval. On a
+    5-document vault, retrieval architecture does not decide accuracy.
+  - **Efficiency is a dollar wash, structured differently:** graph does
+    fewer calls on supported claims (5.9 vs 7.4) but pays more tokens per
+    call (profile payloads). The scaling argument for graph (blind FTS
+    guessing degrades with vault size, entity_profile doesn't) is real
+    but unmeasurable at 5 documents.
+  - **missing_evidence claims cost 12-14 calls in both variants** -- the
+    dominant, high-variance cost class, confirmed at scale.
+  - **Shared miss, claim-0022** (supported vs gold ambiguous: finance
+    pack 8.4 vs regional review 8.1, no authority ordering): baseline
+    under-searched and never saw the 8.1; graph found it and reasoned it
+    away with a scope distinction the documents don't state. A judgment
+    failure, not retrieval.
+- **Decision / next:** (a) conservatism rule in the verdict rubric --
+  competing value + no stated authority ordering = ambiguous, don't
+  invent reconciliations (aligned with CONCEPT.md's "the system never
+  decides alone"; noting the gold label here is itself a judgment call);
+  (b) the RLM variant, whose cheap-sub-model scan is aimed at both
+  remaining cost/accuracy classes: exhaustive absence proofs and
+  exhaustive competing-value sweeps; (c) any further graph-vs-baseline
+  claims need a bigger vault to be measurable.
+
 ---
 
 ## Non-experiment incident log

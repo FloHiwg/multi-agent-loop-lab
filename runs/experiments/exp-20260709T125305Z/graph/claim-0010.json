@@ -1,0 +1,168 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0010",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 8,
+  "cost_usd": 0.10821499999999999,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0010",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0010/evidence-001",
+      "audit-2026-q1-meridian/claim-0010/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.98,
+    "rationale": "The claim's formula (annualized_subscription_value / enterprise_accounts) for Q1 2026 yields 22,600,000 / 214 = 105,607.48 EUR, exactly matching the claim's canonical value and well within the 0.1% tolerance; both inputs are confirmed in the vault's customer metrics sheet.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0010"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0010/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0010",
+      "doc_id": "meridian-customer-q1-2026",
+      "page": null,
+      "span_text": "Annualized subscription value\nB13: 22600000\nC13: 20940000\nD13: 19870000",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 22600000.0,
+      "unit": "currency",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0010/evidence-002",
+      "claim_id": "audit-2026-q1-meridian/claim-0010",
+      "doc_id": "meridian-customer-q1-2026",
+      "page": null,
+      "span_text": "Enterprise accounts\nB6: 214\nC6: 201\nD6: 188",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 214.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:57:42.435158+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "annualized subscription value"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Annualized subscription value\",\"facts\":[{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"22600000\",\"span_text\":null},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"20940000\",\"span_text\":null},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"19870000\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:57:42.607963+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "enterprise accounts"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Enterprise accounts\",\"facts\":[{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row6\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"214\",\"span_text\":null},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row6\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"201\",\"span_text\":null},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row6\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"188\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:57:47.917656+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-customer-q1-2026",
+        "location": "sheet:Metrics!row13"
+      },
+      "output": "no span found at that doc_id/location",
+      "is_error": true
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:57:48.269096+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-customer-q1-2026",
+        "location": "sheet:Metrics!row6"
+      },
+      "output": "no span found at that doc_id/location",
+      "is_error": true
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T12:57:50.462781+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "annualized subscription value"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Annualized] [subscription] [value]\\nB13: 22600000\\nC13: 20940000\\nD13: 19870000\\nA14: Net dollar...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T12:57:50.600133+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "Annualized subscription value"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row13\",\"entity\":\"Annualized subscription value\",\"attribute\":\"Q1 2026\",\"value\":\"22600000\"},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row13\",\"entity\":\"Annualized subscription value\",\"attribute\":\"Q4 2025\",\"value\":\"20940000\"},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row13\",\"entity\":\"Annualized subscription value\",\"attribute\":\"Q1 2025\",\"value\":\"19870000\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-09T12:57:52.410626+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "enterprise accounts"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1\",\"snippet\":\"...inventory\\n327\\n298\\n305\\nNew [enterprise] [accounts]\\n49\\n42\\n38\\nBillable consultants...\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"snippet\":\"New [enterprise] [accounts] | 49 | 42 | 38\"},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Enterprise] [accounts]\\nB6: 214\\nC6: 201\\nD6: 188\\nA7: New [enterprise] [accounts]...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 8,
+      "at": "2026-07-09T12:57:52.506218+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "average enterprise contract value"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The formula inputs are confirmed in the vault. Computing: 22,600,000 / 214 = 105,607.48 EUR, which matches the claim's canonical value exactly.\n\n{\"evidence\":[{\"doc_id\":\"meridian-customer-q1-2026\",\"page\":null,\"span_text\":\"Annualized subscription value\\nB13: 22600000\\nC13: 20940000\\nD13: 19870000\",\"canonical_value\":22600000,\"unit\":\"currency\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-customer-q1-2026\",\"page\":null,\"span_text\":\"Enterprise accounts\\nB6: 214\\nC6: 201\\nD6: 188\",\"canonical_value\":214,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0,\"confidence\":0.98,\"rationale\":\"The claim's formula (annualized_subscription_value / enterprise_accounts) for Q1 2026 yields 22,600,000 / 214 = 105,607.48 EUR, exactly matching the claim's canonical value and well within the 0.1% tolerance; both inputs are confirmed in the vault's customer metrics sheet.\",\"suggested_action\":null}}"
+}

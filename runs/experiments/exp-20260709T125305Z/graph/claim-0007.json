@@ -1,0 +1,142 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0007",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 7,
+  "cost_usd": 0.107963,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0007",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0007/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.92,
+    "rationale": "The claim's 'Recurring revenue retention' corresponds to the vault's 'Net dollar retention' metric in the customer appendix (meridian-customer-q1-2026), which reports Q1 2026 as 1.112 (111.2%), matching the claim exactly within tolerance.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0007"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0007/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0007",
+      "doc_id": "meridian-customer-q1-2026",
+      "page": null,
+      "span_text": "[Net] [dollar] [retention]\nB14: 1.112\nC14: 1.098\nD14: 1.085",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 1.112,
+      "unit": "percent",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:57:20.137126+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "recurring revenue retention"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'recurring revenue retention' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Net dollar retention\",\"similarity\":0.597},{\"entity\":\"Deferred revenue\",\"similarity\":0.547},{\"entity\":\"Services revenue\",\"similarity\":0.536},{\"entity\":\"Net revenue\",\"similarity\":0.524},{\"entity\":\"Gross account attrition\",\"similarity\":0.448},{\"entity\":\"Annualized subscription value\",\"similarity\":0.436},{\"entity\":\"Expansion bookings\",\"similarity\":0.41},{\"entity\":\"Trade receivables\",\"similarity\":0.408}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:57:20.371281+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "revenue retention"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:57:22.481402+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Net dollar retention"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Net dollar retention\",\"facts\":[{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row14\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"1.112\",\"span_text\":null},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row14\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"1.098\",\"span_text\":null},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row14\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"1.085\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:57:22.630969+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "retention 111"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T12:57:24.932891+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-customer-q1-2026",
+        "location": "sheet:Metrics!row14"
+      },
+      "output": "no span found at that doc_id/location",
+      "is_error": true
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T12:57:27.454821+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "Net dollar retention"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Net] [dollar] [retention]\\nB14: 1.112\\nC14: 1.098\\nD14: 1.085...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-09T12:57:36.755854+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {
+        "tag": "customer_appendix"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-customer-q1-2026\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\n  \"evidence\": [\n    {\n      \"doc_id\": \"meridian-customer-q1-2026\",\n      \"page\": null,\n      \"span_text\": \"[Net] [dollar] [retention]\\nB14: 1.112\\nC14: 1.098\\nD14: 1.085\",\n      \"canonical_value\": 1.112,\n      \"unit\": \"percent\",\n      \"role\": \"actual\",\n      \"effective_date\": \"2026-03-31\",\n      \"extractor_confidence\": 0.95\n    }\n  ],\n  \"verdict\": {\n    \"status\": \"supported\",\n    \"delta\": 0.0,\n    \"confidence\": 0.92,\n    \"rationale\": \"The claim's 'Recurring revenue retention' corresponds to the vault's 'Net dollar retention' metric in the customer appendix (meridian-customer-q1-2026), which reports Q1 2026 as 1.112 (111.2%), matching the claim exactly within tolerance.\",\n    \"suggested_action\": null\n  }\n}"
+}

@@ -1,0 +1,149 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0016",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 5,
+  "cost_usd": 0.099234,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0016",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0016/evidence-001",
+      "audit-2026-q1-meridian/claim-0016/evidence-002",
+      "audit-2026-q1-meridian/claim-0016/evidence-003"
+    ],
+    "delta": 0.0,
+    "confidence": 0.96,
+    "rationale": "Formula net_revenue / fte_period_end using the current authoritative finance-v2 figure (EUR 12.480M) and operations FTE period end (142) gives 12,480,000 / 142 = 87,887.32, exactly matching the claim. The v1 finance figure (12.310M) is superseded by v2.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0016"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0016/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0016",
+      "doc_id": "meridian-finance-v2-q1-2026",
+      "page": 1,
+      "span_text": "Net revenue | 12.480 | 10.960 | 11.900",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 12480000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0016/evidence-002",
+      "claim_id": "audit-2026-q1-meridian/claim-0016",
+      "doc_id": "meridian-operations-q1-2026",
+      "page": 1,
+      "span_text": "FTE, period end | 142 | 136 | 130",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 142.0,
+      "unit": "FTE",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0016/evidence-003",
+      "claim_id": "audit-2026-q1-meridian/claim-0016",
+      "doc_id": "meridian-finance-v1-q1-2026",
+      "page": 1,
+      "span_text": "Net revenue | 12.310 | 10.960 | 11.900",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 12310000.0,
+      "unit": "EUR",
+      "role": "restated",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.9
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:58:10.927625+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "net revenue",
+        "attribute": "Q1 2026"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"entity\":\"Net revenue\",\"attribute\":\"Q1 2026 actual\",\"value\":\"12.310\"},{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"entity\":\"Net revenue\",\"attribute\":\"Q1 2026 budget\",\"value\":\"11.900\"},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"entity\":\"Net revenue\",\"attribute\":\"Q1 2026 actual\",\"value\":\"12.480\"},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"entity\":\"Net revenue\",\"attribute\":\"Q1 2026 budget\",\"value\":\"11.900\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:58:11.150198+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "fte",
+        "attribute": "Q1 2026"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"entity\":\"FTE, period end\",\"attribute\":\"Q1 2026\",\"value\":\"142\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Engineering FTE\",\"entity\":\"Engineering FTE\",\"attribute\":\"Q1 2026\",\"value\":\"48\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Customer success FTE\",\"entity\":\"Customer success FTE\",\"attribute\":\"Q1 2026\",\"value\":\"21\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Product FTE\",\"entity\":\"Product FTE\",\"attribute\":\"Q1 2026\",\"value\":\"17\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:58:16.672323+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Net revenue"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Net revenue\",\"facts\":[{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"12.310\",\"span_text\":\"Net revenue | 12.310 | 10.960 | 11.900\"},{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"10.960\",\"span_text\":\"Net revenue | 12.310 | 10.960 | 11.900\"},{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q1 2026 budget\",\"period\":\"2026-Q1\",\"role\":\"budget\",\"value\":\"11.900\",\"span_text\":\"Net revenue | 12.310 | 10.960 | 11.900\"},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"12.480\",\"span_text\":\"Net revenue | 12.480 | 10.960 | 11.900\"},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"10.960\",\"span_text\":\"Net revenue | 12.480 | 10.960 | 11.900\"},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q1 2026 budget\",\"period\":\"2026-Q1\",\"role\":\"budget\",\"value\":\"11.900\",\"span_text\":\"Net revenue | 12.480 | 10.960 | 11.900\"}],\"edges\":[{\"kind\":\"aggregates\",\"doc_id\":\"meridian-finance-v1-q1-2026\",\"op\":\"sum\",\"target\":\"Gross profit\",\"inputs\":[\"Net revenue\",\"Cost of delivery\"],\"holds_for\":[\"Q1 2026 actual\",\"Q4 2025 actual\",\"Q1 2026 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"meridian-finance-v2-q1-2026\",\"op\":\"sum\",\"target\":\"Gross profit\",\"inputs\":[\"Net revenue\",\"Cost of delivery\"],\"holds_for\":[\"Q1 2026 actual\",\"Q4 2025 actual\",\"Q1 2026 budget\"]}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:58:16.825992+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "FTE, period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"FTE, period end\",\"facts\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"142\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"136\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"130\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T12:58:25.554306+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-operations-q1-2026",
+        "location": "page:1/table:1/row:FTE, period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"text\":\"FTE, period end | 142 | 136 | 130\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The claim is fully confirmed. Computing the formula with the current authoritative figures: EUR 12,480,000 (net revenue, v2) / 142 (FTE period end) = 87,887.32, matching the claim's canonical value exactly.\n\n{\"evidence\":[{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"page\":1,\"span_text\":\"Net revenue | 12.480 | 10.960 | 11.900\",\"canonical_value\":12480000,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-operations-q1-2026\",\"page\":1,\"span_text\":\"FTE, period end | 142 | 136 | 130\",\"canonical_value\":142,\"unit\":\"FTE\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"page\":1,\"span_text\":\"Net revenue | 12.310 | 10.960 | 11.900\",\"canonical_value\":12310000,\"unit\":\"EUR\",\"role\":\"restated\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.9}],\"verdict\":{\"status\":\"supported\",\"delta\":0,\"confidence\":0.96,\"rationale\":\"Formula net_revenue / fte_period_end using the current authoritative finance-v2 figure (EUR 12.480M) and operations FTE period end (142) gives 12,480,000 / 142 = 87,887.32, exactly matching the claim. The v1 finance figure (12.310M) is superseded by v2.\",\"suggested_action\":null}}"
+}

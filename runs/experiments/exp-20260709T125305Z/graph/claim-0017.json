@@ -1,0 +1,116 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0017",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.07486699999999999,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0017",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0017/evidence-001",
+      "audit-2026-q1-meridian/claim-0017/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "The formula fte_period_end / contract_personnel = 142 / 18 = 7.8889, which matches the claim's canonical value of 7.8889 exactly (well within the 0.2% tolerance).",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0017"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0017/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0017",
+      "doc_id": "meridian-operations-q1-2026",
+      "page": 1,
+      "span_text": "FTE, period end | 142 | 136 | 130",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 142.0,
+      "unit": "headcount",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0017/evidence-002",
+      "claim_id": "audit-2026-q1-meridian/claim-0017",
+      "doc_id": "meridian-people-q1-2026",
+      "page": null,
+      "span_text": "Contract personnel | Q1 2026 | 18",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 18.0,
+      "unit": "headcount",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:58:12.840945+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "fte period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'fte period end' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"FTE, period end\",\"similarity\":0.663},{\"entity\":\"Product FTE\",\"similarity\":0.358},{\"entity\":\"Customer success FTE\",\"similarity\":0.327},{\"entity\":\"Compliance completion\",\"similarity\":0.305},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.301},{\"entity\":\"Engineering FTE\",\"similarity\":0.3},{\"entity\":\"Total\",\"similarity\":0.285},{\"entity\":\"Voluntary exits\",\"similarity\":0.283}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:58:12.929185+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "contract personnel"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Contract personnel\",\"facts\":[{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"18\",\"span_text\":null},{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"16\",\"span_text\":null},{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People!row6\",\"attribute\":\"FY 2025\",\"period\":null,\"role\":null,\"value\":\"15\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:58:15.217536+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "FTE, period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"FTE, period end\",\"facts\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"142\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"136\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"130\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:58:18.398978+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "employees per external contractor"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'employees per external contractor' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Contract personnel\",\"similarity\":0.66},{\"entity\":\"Permanent employees\",\"similarity\":0.553},{\"entity\":\"Engineering FTE\",\"similarity\":0.432},{\"entity\":\"FTE, period end\",\"similarity\":0.42},{\"entity\":\"Supplier payments\",\"similarity\":0.41},{\"entity\":\"Payroll payments\",\"similarity\":0.4},{\"entity\":\"Billable consultants\",\"similarity\":0.379},{\"entity\":\"Customer success FTE\",\"similarity\":0.372}]}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "Both inputs confirm the formula: FTE period end (142) \u00f7 Contract personnel (18) = 7.8889, matching the claim exactly.\n\n{\"evidence\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"page\":1,\"span_text\":\"FTE, period end | 142 | 136 | 130\",\"canonical_value\":142,\"unit\":\"headcount\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-people-q1-2026\",\"page\":null,\"span_text\":\"Contract personnel | Q1 2026 | 18\",\"canonical_value\":18,\"unit\":\"headcount\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.95,\"rationale\":\"The formula fte_period_end / contract_personnel = 142 / 18 = 7.8889, which matches the claim's canonical value of 7.8889 exactly (well within the 0.2% tolerance).\",\"suggested_action\":null}}"
+}

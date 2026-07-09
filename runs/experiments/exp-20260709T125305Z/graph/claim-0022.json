@@ -1,0 +1,156 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0022",
+  "variant": "graph",
+  "expected_status": "ambiguous",
+  "status": "supported",
+  "correct": false,
+  "tool_calls": 6,
+  "cost_usd": 0.10429,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0022",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0022/evidence-001",
+      "audit-2026-q1-meridian/claim-0022/evidence-002",
+      "audit-2026-q1-meridian/claim-0022/evidence-003"
+    ],
+    "delta": 0.0,
+    "confidence": 0.9,
+    "rationale": "The claim's EUR 8.4 million matches the Q1 2026 actual Qualified pipeline figure of 8.400 in the current authoritative Finance Pack v2 (approved 15 April 2026), which supersedes the v1 figure of 8.300. The regional review's 8.100 is a different (regional) cut rather than the consolidated value.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0022"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0022/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0022",
+      "doc_id": "meridian-finance-v2-q1-2026",
+      "page": 2,
+      "span_text": "Qualified pipeline | 8.400 | 7.920 | 8.100",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 8400000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2026-04-15",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0022/evidence-002",
+      "claim_id": "audit-2026-q1-meridian/claim-0022",
+      "doc_id": "meridian-finance-v1-q1-2026",
+      "page": 2,
+      "span_text": "Qualified pipeline | 8.300 | 7.920 | 8.100",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 8300000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.9
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0022/evidence-003",
+      "claim_id": "audit-2026-q1-meridian/claim-0022",
+      "doc_id": "meridian-regional-q1-2026",
+      "page": 1,
+      "span_text": "Qualified commercial pipeline | 8.100 | 7.880 | 8.000",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 8100000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.85
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:58:42.611341+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Qualified commercial pipeline"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Qualified commercial pipeline\",\"facts\":[{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"8.100\",\"span_text\":\"Qualified commercial pipeline | 8.100 | 7.880 | 8.000\"},{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"7.880\",\"span_text\":\"Qualified commercial pipeline | 8.100 | 7.880 | 8.000\"},{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q1 2026 budget\",\"period\":\"2026-Q1\",\"role\":\"budget\",\"value\":\"8.000\",\"span_text\":\"Qualified commercial pipeline | 8.100 | 7.880 | 8.000\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:58:42.717413+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "qualified commercial pipeline"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:2\",\"snippet\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Finance Pack v2\\n[Commercial] indicators\\n[Pipeline]\\nEUR...\"},{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1\",\"snippet\":\"...[Qualified] [commercial] [pipeline]\\n8.100\\n7.880\\n8.000\\nRegional [pipeline] uses...\"},{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"snippet\":\"[Qualified] [commercial] [pipeline] | 8.100 | 7.880 | 8.000\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:58:45.039937+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-finance-v2-q1-2026",
+        "location": "page:2"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:2\",\"text\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Finance Pack v2\\nCommercial indicators\\nPipeline\\nEUR million\\nQ1 2026 actual\\nQ4 2025 actual\\nQ1 2026 budget\\nQualified pipeline\\n8.400\\n7.920\\n8.100\\nWeighted pipeline\\n4.620\\n4.180\\n4.430\\nApproved 15 April 2026.\\nConfidential | Synthetic Proofbench fixture\\nPage 2\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:58:45.300533+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "pipeline 8.4"
+      },
+      "output": "search error: fts5: syntax error near \".\"",
+      "is_error": true
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T12:58:49.665282+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {},
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:2\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Services revenue\",\"page:1/table:1/row:R&D expense\",\"page:1/table:1/row:Sales expense\",\"page:1/table:1/row:Admin expense\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:2/table:1/row:Cash and cash equivalents\",\"page:2/table:1/row:Qualified pipeline\"]},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:2\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Services revenue\",\"page:1/table:1/row:R&D expense\",\"page:1/table:1/row:Sales expense\",\"page:1/table:1/row:Admin expense\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:2/table:1/row:Qualified pipeline\",\"page:2/table:1/row:Weighted pipeline\"]},{\"doc_id\":\"meridian-operations-q1-2026\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Billable consultants\",\"page:1/table:1/row:Engineering FTE\",\"page:1/table:1/row:Voluntary exits\",\"page:1/table:1/row:Median resolution time\",\"page:1/table:1/row:Licensed seats\",\"page:1/table:1/row:Customer success FTE\",\"page:1/table:1/row:Product FTE\",\"page:1/table:1/row:Security incidents\",\"page:1/table:1/row:Platform uptime\",\"page:1/table:1/row:On-call rotations\",\"page:1/table:1/row:Knowledge articles\"]},{\"doc_id\":\"meridian-customer-q1-2026\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"meridian-regional-q1-2026\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:UKI\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Other Europe\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"meridian-treasury-q1-2026\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Operating inflow\",\"page:1/table:1/row:Supplier payments\",\"page:1/table:1/row:Payroll payments\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\",\"page:1/table:1/row:Accounts payable\",\"page:1/table:1/row:Near coincidence control\"]},{\"doc_id\":\"meridian-people-q1-2026\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"meridian-esg-q1-2026\",\"tag\":\"sustainability\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Scope 2 location based\",\"page:1/table:1/row:Structured learning hours\",\"page:1/table:1/row:Travel emissions\",\"page:1/table:1/row:Scope 1\",\"page:1/table:1/row:Renewable electricity\",\"page:1/table:1/row:Women in leadership\",\"page:1/table:2/row:Office sites\",\"page:1/table:2/row:Certified suppliers\"]}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T12:58:51.748856+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-finance-v1-q1-2026",
+        "location": "page:2/table:1/row:Qualified pipeline"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"location\":\"page:2/table:1/row:Qualified pipeline\",\"text\":\"Qualified pipeline | 8.300 | 7.920 | 8.100\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"page\":2,\"span_text\":\"Qualified pipeline | 8.400 | 7.920 | 8.100\",\"canonical_value\":8400000.0,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":\"2026-04-15\",\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"page\":2,\"span_text\":\"Qualified pipeline | 8.300 | 7.920 | 8.100\",\"canonical_value\":8300000.0,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.9},{\"doc_id\":\"meridian-regional-q1-2026\",\"page\":1,\"span_text\":\"Qualified commercial pipeline | 8.100 | 7.880 | 8.000\",\"canonical_value\":8100000.0,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.85}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.9,\"rationale\":\"The claim's EUR 8.4 million matches the Q1 2026 actual Qualified pipeline figure of 8.400 in the current authoritative Finance Pack v2 (approved 15 April 2026), which supersedes the v1 figure of 8.300. The regional review's 8.100 is a different (regional) cut rather than the consolidated value.\",\"suggested_action\":null}}"
+}

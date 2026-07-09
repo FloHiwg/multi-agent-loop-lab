@@ -1,0 +1,143 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0006",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 7,
+  "cost_usd": 0.083235,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0006",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0006/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "The Q1 2026 Customer Metrics sheet in meridian-customer-q1-2026 reports Enterprise accounts at 214 for Q1 2026, exactly matching the claim.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0006"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0006/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0006",
+      "doc_id": "meridian-customer-q1-2026",
+      "page": null,
+      "span_text": "A6: Enterprise accounts\nB6: 214",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 214.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:57:19.313268+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "enterprise client base"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'enterprise client base' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Enterprise accounts\",\"similarity\":0.602},{\"entity\":\"New enterprise accounts\",\"similarity\":0.508},{\"entity\":\"Office sites\",\"similarity\":0.462},{\"entity\":\"Customer success FTE\",\"similarity\":0.46},{\"entity\":\"Partner accounts\",\"similarity\":0.455},{\"entity\":\"SMB accounts\",\"similarity\":0.399},{\"entity\":\"Permanent employees\",\"similarity\":0.386},{\"entity\":\"Contract personnel\",\"similarity\":0.366}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:57:19.565054+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "enterprise client"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:57:22.929177+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Enterprise accounts"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Enterprise accounts\",\"facts\":[{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row6\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"214\",\"span_text\":null},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row6\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"201\",\"span_text\":null},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row6\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"188\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:57:23.127406+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "enterprise client base"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T12:57:25.829911+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-customer-q1-2026",
+        "location": "sheet:Metrics!row6"
+      },
+      "output": "no span found at that doc_id/location",
+      "is_error": true
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T12:57:27.534297+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-customer-q1-2026",
+        "location": "sheet:Metrics"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics\",\"text\":\"A1: Q1 2026 Customer Metrics\\nA4: Customer base\\nA5: Metric\\nB5: Q1 2026\\nC5: Q4 2025\\nD5: Q1 2025\\nA6: Enterprise accounts\\nB6: 214\\nC6: 201\\nD6: 188\\nA7: New enterprise accounts\\nB7: 46\\nC7: 41\\nD7: 39\\nA8: Gross account attrition\\nB8: 0.034\\nC8: 0.031\\nD8: 0.03\\nA11: Recurring value\\nA12: Metric\\nB12: Q1 2026\\nC12: Q4 2025\\nD12: Q1 2025\\nA13: Annualized subscription value\\nB13: 22600000\\nC13: 20940000\\nD13: 19870000\\nA14: Net dollar retention\\nB14: 1.112\\nC14: 1.098\\nD14: 1.085\\nA15: Licensed seats\\nB15: 7020\\nC15: 6540\\nD15: 6100\\nA18: Other segments\\nA19: Metric\\nB19: Q1 2026\\nC19: Q4 2025\\nD19: Q1 2025\\nA20: SMB accounts\\nB20: 486\\nC20: 471\\nD20: 455\\nA21: Partner accounts\\nB21: 72\\nC21: 68\\nD21: 63\\nA22: Expansion bookings\\nB22: 2840000\\nC22: 2420000\\nD22: 2510000\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-09T12:57:27.637534+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "214"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics\",\"snippet\":\"...2025\\nA6: Enterprise accounts\\nB6: [214]\\nC6: 201\\nD6: 188\\nA7: New...\"}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"meridian-customer-q1-2026\",\"page\":null,\"span_text\":\"A6: Enterprise accounts\\nB6: 214\",\"canonical_value\":214.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.95,\"rationale\":\"The Q1 2026 Customer Metrics sheet in meridian-customer-q1-2026 reports Enterprise accounts at 214 for Q1 2026, exactly matching the claim.\",\"suggested_action\":null}}"
+}

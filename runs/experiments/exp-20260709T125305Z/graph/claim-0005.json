@@ -1,0 +1,117 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0005",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 5,
+  "cost_usd": 0.072524,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0005",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0005/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.9,
+    "rationale": "The operations review's 'FTE, period end' figure for Q1 2026 is 142, matching the claim's headcount-at-quarter-end value exactly; the surrounding columns (136 for Q4 2025, 130 for Q1 2025) confirm the period alignment.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0005"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0005/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0005",
+      "doc_id": "meridian-operations-q1-2026",
+      "page": 1,
+      "span_text": "FTE, period end | 142 | 136 | 130",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 142.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:57:17.048392+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Headcount"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'Headcount' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Permanent employees\",\"similarity\":0.462},{\"entity\":\"Product FTE\",\"similarity\":0.417},{\"entity\":\"Engineering FTE\",\"similarity\":0.412},{\"entity\":\"FTE, period end\",\"similarity\":0.411},{\"entity\":\"Payroll payments\",\"similarity\":0.404},{\"entity\":\"Customer success FTE\",\"similarity\":0.4},{\"entity\":\"Contract personnel\",\"similarity\":0.395},{\"entity\":\"Gross account attrition\",\"similarity\":0.393}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:57:19.331188+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Permanent employees"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Permanent employees\",\"facts\":[{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People!row7\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"139\",\"span_text\":null},{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People!row7\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"133\",\"span_text\":null},{\"doc_id\":\"meridian-people-q1-2026\",\"location\":\"sheet:People!row7\",\"attribute\":\"FY 2025\",\"period\":null,\"role\":null,\"value\":\"128\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:57:19.652876+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "FTE, period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"FTE, period end\",\"facts\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"142\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"136\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"130\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:57:19.926287+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "headcount quarter end 142"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T12:57:23.810148+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-operations-q1-2026",
+        "location": "page:1/table:1/row:FTE, period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"text\":\"FTE, period end | 142 | 136 | 130\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"page\":1,\"span_text\":\"FTE, period end | 142 | 136 | 130\",\"canonical_value\":142,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0,\"confidence\":0.9,\"rationale\":\"The operations review's 'FTE, period end' figure for Q1 2026 is 142, matching the claim's headcount-at-quarter-end value exactly; the surrounding columns (136 for Q4 2025, 130 for Q1 2025) confirm the period alignment.\",\"suggested_action\":null}}"
+}

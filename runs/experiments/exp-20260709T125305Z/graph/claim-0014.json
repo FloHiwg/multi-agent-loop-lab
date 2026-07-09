@@ -1,0 +1,96 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0014",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.055246,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0014",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0014/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "The Q1 2026 ESG report lists Scope 2 location-based emissions as 412 tCO2e for Q1 2026, matching the claim exactly.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0014"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0014/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0014",
+      "doc_id": "meridian-esg-q1-2026",
+      "page": 1,
+      "span_text": "Scope 2 location based | 412 | 438 | 1,690",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 412.0,
+      "unit": "tCO2e",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:58:00.919814+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Location-based electricity emissions"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'Location-based electricity emissions' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Scope 2 location based\",\"similarity\":0.601},{\"entity\":\"Travel emissions\",\"similarity\":0.538},{\"entity\":\"Renewable electricity\",\"similarity\":0.499},{\"entity\":\"Scope 1\",\"similarity\":0.37},{\"entity\":\"Office sites\",\"similarity\":0.256},{\"entity\":\"Engineering FTE\",\"similarity\":0.245},{\"entity\":\"Expansion bookings\",\"similarity\":0.235},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.23}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:58:01.020488+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "location-based electricity emissions"
+      },
+      "output": "search error: no such column: based",
+      "is_error": true
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:58:03.202799+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Scope 2 location based"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Scope 2 location based\",\"facts\":[{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1/table:1/row:Scope 2 location based\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"412\",\"span_text\":\"Scope 2 location based | 412 | 438 | 1,690\"},{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1/table:1/row:Scope 2 location based\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"438\",\"span_text\":\"Scope 2 location based | 412 | 438 | 1,690\"},{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1/table:1/row:Scope 2 location based\",\"attribute\":\"FY 2025\",\"period\":null,\"role\":null,\"value\":\"1,690\",\"span_text\":\"Scope 2 location based | 412 | 438 | 1,690\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:58:03.471228+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "Scope 2"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1/table:1/row:Scope 2 location based\",\"entity\":\"Scope 2 location based\",\"attribute\":\"Q1 2026\",\"value\":\"412\"},{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1/table:1/row:Scope 2 location based\",\"entity\":\"Scope 2 location based\",\"attribute\":\"Q4 2025\",\"value\":\"438\"},{\"doc_id\":\"meridian-esg-q1-2026\",\"location\":\"page:1/table:1/row:Scope 2 location based\",\"entity\":\"Scope 2 location based\",\"attribute\":\"FY 2025\",\"value\":\"1,690\"}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The vault confirms the claim. The ESG report lists \"Scope 2 location based\" Q1 2026 = 412, matching the claim exactly.\n\n```json\n{\"evidence\":[{\"doc_id\":\"meridian-esg-q1-2026\",\"page\":1,\"span_text\":\"Scope 2 location based | 412 | 438 | 1,690\",\"canonical_value\":412.0,\"unit\":\"tCO2e\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.95,\"rationale\":\"The Q1 2026 ESG report lists Scope 2 location-based emissions as 412 tCO2e for Q1 2026, matching the claim exactly.\",\"suggested_action\":null}}\n```"
+}

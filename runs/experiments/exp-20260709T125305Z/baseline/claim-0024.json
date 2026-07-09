@@ -1,0 +1,234 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0024",
+  "variant": "baseline",
+  "expected_status": "outdated",
+  "status": "outdated",
+  "correct": true,
+  "tool_calls": 10,
+  "cost_usd": 0.119397,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0024",
+    "status": "outdated",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0024/evidence-001",
+      "audit-2026-q1-meridian/claim-0024/evidence-002",
+      "audit-2026-q1-meridian/claim-0024/evidence-003",
+      "audit-2026-q1-meridian/claim-0024/evidence-004"
+    ],
+    "delta": -170000.0,
+    "confidence": 0.97,
+    "rationale": "The claim's EUR 12.31M matches the pre-close v1 net revenue figure, which was explicitly superseded on 15 April 2026 by the restated v2 finance pack giving net revenue of EUR 12.48M. The claim agrees with the stale value, not the current authoritative one.",
+    "suggested_action": "Update the master document to the restated Q1 2026 net revenue of EUR 12.48M from Finance Pack v2 and retire the EUR 12.31M pre-close figure.",
+    "produced_by_run_id": "eval/baseline/audit-2026-q1-meridian/claim-0024"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0024/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0024",
+      "doc_id": "meridian-finance-v1-q1-2026",
+      "page": 1,
+      "span_text": "Net revenue | 12.310 | 10.960 | 11.900",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 12310000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2026-01-01",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0024/evidence-002",
+      "claim_id": "audit-2026-q1-meridian/claim-0024",
+      "doc_id": "meridian-finance-v1-q1-2026",
+      "page": 1,
+      "span_text": "Q1 2026 Finance Pack v1 / Pre-close management accounts / ... Superseded on 15 April 2026 by restated v2.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "EUR",
+      "role": "prior_period",
+      "effective_date": "2026-04-15",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0024/evidence-003",
+      "claim_id": "audit-2026-q1-meridian/claim-0024",
+      "doc_id": "meridian-finance-v2-q1-2026",
+      "page": 1,
+      "span_text": "Net revenue | 12.480 | 10.960 | 11.900",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 12480000.0,
+      "unit": "EUR",
+      "role": "restated",
+      "effective_date": "2026-04-15",
+      "extractor_confidence": 0.97
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0024/evidence-004",
+      "claim_id": "audit-2026-q1-meridian/claim-0024",
+      "doc_id": "meridian-finance-v2-q1-2026",
+      "page": 1,
+      "span_text": "Q1 2026 Finance Pack v2 / Restated management accounts / Final restatement.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "EUR",
+      "role": "restated",
+      "effective_date": "2026-04-15",
+      "extractor_confidence": 0.97
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:55:02.877845+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "turnover",
+        "attribute": "Q1 2026"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:55:03.017575+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "turnover 12.31"
+      },
+      "output": "search error: fts5: syntax error near \".\"",
+      "is_error": true
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:55:04.754897+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "turnover EUR million"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:55:04.996250+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "turnover"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T12:55:06.354913+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {},
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:2\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Services revenue\",\"page:1/table:1/row:R&D expense\",\"page:1/table:1/row:Sales expense\",\"page:1/table:1/row:Admin expense\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:2/table:1/row:Cash and cash equivalents\",\"page:2/table:1/row:Qualified pipeline\"]},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:2\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Services revenue\",\"page:1/table:1/row:R&D expense\",\"page:1/table:1/row:Sales expense\",\"page:1/table:1/row:Admin expense\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:2/table:1/row:Qualified pipeline\",\"page:2/table:1/row:Weighted pipeline\"]},{\"doc_id\":\"meridian-operations-q1-2026\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Billable consultants\",\"page:1/table:1/row:Engineering FTE\",\"page:1/table:1/row:Voluntary exits\",\"page:1/table:1/row:Median resolution time\",\"page:1/table:1/row:Licensed seats\",\"page:1/table:1/row:Customer success FTE\",\"page:1/table:1/row:Product FTE\",\"page:1/table:1/row:Security incidents\",\"page:1/table:1/row:Platform uptime\",\"page:1/table:1/row:On-call rotations\",\"page:1/table:1/row:Knowledge articles\"]},{\"doc_id\":\"meridian-customer-q1-2026\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"meridian-regional-q1-2026\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:UKI\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Other Europe\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"meridian-treasury-q1-2026\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Operating inflow\",\"page:1/table:1/row:Supplier payments\",\"page:1/table:1/row:Payroll payments\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\",\"page:1/table:1/row:Accounts payable\",\"page:1/table:1/row:Near coincidence control\"]},{\"doc_id\":\"meridian-people-q1-2026\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"meridian-esg-q1-2026\",\"tag\":\"sustainability\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Scope 2 location based\",\"page:1/table:1/row:Structured learning hours\",\"page:1/table:1/row:Travel emissions\",\"page:1/table:1/row:Scope 1\",\"page:1/table:1/row:Renewable electricity\",\"page:1/table:1/row:Women in leadership\",\"page:1/table:2/row:Office sites\",\"page:1/table:2/row:Certified suppliers\"]}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T12:55:06.501025+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "turnover"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-09T12:55:09.439360+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-finance-v2-q1-2026",
+        "location": "page:1/table:1/row:Net revenue"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"text\":\"Net revenue | 12.480 | 10.960 | 11.900\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 8,
+      "at": "2026-07-09T12:55:09.871362+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-finance-v1-q1-2026",
+        "location": "page:1/table:1/row:Net revenue"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"location\":\"page:1/table:1/row:Net revenue\",\"text\":\"Net revenue | 12.310 | 10.960 | 11.900\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 9,
+      "at": "2026-07-09T12:55:10.098103+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-finance-v2-q1-2026",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:1\",\"text\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Finance Pack v2\\nRestated management accounts\\nIncome statement\\nEUR million\\nQ1 2026 actual\\nQ4 2025 actual\\nQ1 2026 budget\\nNet revenue\\n12.480\\n10.960\\n11.900\\nCost of delivery\\n(4.805)\\n(4.385)\\n(4.641)\\nGross profit\\n7.675\\n6.575\\n7.259\\nAdjusted operating result\\n2.140\\n1.720\\n1.960\\nServices revenue\\n1.420\\n1.310\\n1.380\\nR&D expense\\n(2.110)\\n(1.980)\\n(2.020)\\nSales expense\\n(2.440)\\n(2.210)\\n(2.390)\\nAdmin expense\\n(1.180)\\n(1.090)\\n(1.120)\\nDeferred revenue\\n6.730\\n6.210\\n6.440\\nTrade receivables\\n4.810\\n4.120\\n4.500\\nFinal restatement. Gross margin = Gross profit / Net revenue = 61.5%.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 10,
+      "at": "2026-07-09T12:55:13.404081+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-finance-v1-q1-2026",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"location\":\"page:1\",\"text\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Finance Pack v1\\nPre-close management accounts\\nIncome statement\\nEUR million\\nQ1 2026 actual\\nQ4 2025 actual\\nQ1 2026 budget\\nNet revenue\\n12.310\\n10.960\\n11.900\\nCost of delivery\\n(4.805)\\n(4.385)\\n(4.641)\\nGross profit\\n7.505\\n6.575\\n7.259\\nAdjusted operating result\\n2.050\\n1.720\\n1.960\\nServices revenue\\n1.420\\n1.310\\n1.380\\nR&D expense\\n(2.110)\\n(1.980)\\n(2.020)\\nSales expense\\n(2.440)\\n(2.210)\\n(2.390)\\nAdmin expense\\n(1.180)\\n(1.090)\\n(1.120)\\nDeferred revenue\\n6.730\\n6.210\\n6.440\\nTrade receivables\\n4.810\\n4.120\\n4.500\\nSuperseded on 15 April 2026 by restated v2.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"page\":1,\"span_text\":\"Net revenue | 12.310 | 10.960 | 11.900\",\"canonical_value\":12310000.0,\"unit\":\"EUR\",\"currency\":\"EUR\",\"role\":\"actual\",\"effective_date\":\"2026-01-01\",\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"page\":1,\"span_text\":\"Q1 2026 Finance Pack v1 / Pre-close management accounts / ... Superseded on 15 April 2026 by restated v2.\",\"canonical_value\":null,\"unit\":\"EUR\",\"currency\":\"EUR\",\"role\":\"prior_period\",\"effective_date\":\"2026-04-15\",\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"page\":1,\"span_text\":\"Net revenue | 12.480 | 10.960 | 11.900\",\"canonical_value\":12480000.0,\"unit\":\"EUR\",\"currency\":\"EUR\",\"role\":\"restated\",\"effective_date\":\"2026-04-15\",\"extractor_confidence\":0.97},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"page\":1,\"span_text\":\"Q1 2026 Finance Pack v2 / Restated management accounts / Final restatement.\",\"canonical_value\":null,\"unit\":\"EUR\",\"currency\":\"EUR\",\"role\":\"restated\",\"effective_date\":\"2026-04-15\",\"extractor_confidence\":0.97}],\"verdict\":{\"status\":\"outdated\",\"delta\":-170000.0,\"confidence\":0.97,\"rationale\":\"The claim's EUR 12.31M matches the pre-close v1 net revenue figure, which was explicitly superseded on 15 April 2026 by the restated v2 finance pack giving net revenue of EUR 12.48M. The claim agrees with the stale value, not the current authoritative one.\",\"suggested_action\":\"Update the master document to the restated Q1 2026 net revenue of EUR 12.48M from Finance Pack v2 and retire the EUR 12.31M pre-close figure.\"}}"
+}
