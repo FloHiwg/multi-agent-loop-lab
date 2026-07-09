@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0008",
+  "label": "The external delivery workforce numbered 26",
+  "raw_text": "The external delivery workforce numbered 26.",
+  "canonical_value": 26,
+  "unit": "count",
+  "currency": null,
+  "entity": "Vantage Industrial Group SE",
+  "time_scope": "Q2 2026",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "vantage-master-q2-2026",
+  "source_page": 2
+}

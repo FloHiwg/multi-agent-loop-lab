@@ -225,27 +225,35 @@ async def verify_claim_async(
             reply,
         )
 
-    evidence: list[EvidenceCandidate] = []
-    for i, raw_ev in enumerate(raw.get("evidence", []), start=1):
-        evidence.append(
-            EvidenceCandidate(
-                evidence_id=f"{claim.claim_id}/evidence-{i:03d}",
-                claim_id=claim.claim_id,
-                **raw_ev,
+    # Field-level slips (a verdict missing "rationale", a malformed evidence
+    # object) must fail as VerifyClaimError so the trace survives into the
+    # record -- a bare KeyError here used to discard everything the agent did.
+    try:
+        evidence: list[EvidenceCandidate] = []
+        for i, raw_ev in enumerate(raw.get("evidence", []), start=1):
+            evidence.append(
+                EvidenceCandidate(
+                    evidence_id=f"{claim.claim_id}/evidence-{i:03d}",
+                    claim_id=claim.claim_id,
+                    **raw_ev,
+                )
             )
-        )
 
-    raw_verdict = raw["verdict"]
-    verdict = Verdict(
-        claim_id=claim.claim_id,
-        status=VerdictStatus(raw_verdict["status"]),
-        matched_evidence_ids=[e.evidence_id for e in evidence],
-        delta=raw_verdict.get("delta"),
-        confidence=raw_verdict["confidence"],
-        rationale=raw_verdict["rationale"],
-        suggested_action=raw_verdict.get("suggested_action"),
-        produced_by_run_id=run_id,
-    )
+        raw_verdict = raw["verdict"]
+        verdict = Verdict(
+            claim_id=claim.claim_id,
+            status=VerdictStatus(raw_verdict["status"]),
+            matched_evidence_ids=[e.evidence_id for e in evidence],
+            delta=raw_verdict.get("delta"),
+            confidence=raw_verdict["confidence"],
+            rationale=raw_verdict["rationale"],
+            suggested_action=raw_verdict.get("suggested_action"),
+            produced_by_run_id=run_id,
+        )
+    except VerifyClaimError:
+        raise
+    except Exception as e:
+        raise VerifyClaimError(f"reply parsed but failed validation: {e!r}", reply) from e
     return evidence, verdict, reply
 
 

@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0004",
+  "label": "The enterprise client base closed at 329",
+  "raw_text": "The enterprise client base closed at 329.",
+  "canonical_value": 329,
+  "unit": "count",
+  "currency": null,
+  "entity": "Vantage Industrial Group SE",
+  "time_scope": "Q2 2026",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "vantage-master-q2-2026",
+  "source_page": 1
+}

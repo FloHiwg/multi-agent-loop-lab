@@ -212,6 +212,30 @@ pack 8.4 vs regional review 8.1, gold `ambiguous`). Guards in every run:
   (b) build or synthesize a larger vault where sweeps genuinely exceed
   what the Verifier can do itself.
 
+## exp-20260709T185214Z — Vantage fixture first smoke (graph, claims 0001/0009/0020/0022/0029)
+
+- **Change under test:** the scaled Vantage fixture
+  (`scripts/generate_vantage_fixture.py`, `audit-2026-q2-vantage`): 41
+  vault docs over 5 quarters from a seeded world model, with two
+  prose-only document families -- narrative evidence is indexed
+  page-level in spans_fts but never enters the facts graph. Every gold
+  entry carries a `failure_class` tag (11 classes, 31 claims).
+- **Result:** 3/5, 1 failure. Per class: table_vocab OK; **narrative_only
+  OK in 3 calls** (prose evidence retrieval works); contradicted_prose OK;
+  **prose_table_clash MISS** (supported vs gold ambiguous -- the
+  deterministic conflict surface can't see prose values, so the
+  update-vs-finance-table clash went unnoticed in 3 calls);
+  absent_near_name FAILED on a verdict missing its "rationale" field,
+  which escaped as a bare KeyError and discarded the trace (now fixed:
+  field-level validation raises trace-preserving VerifyClaimError).
+- **Reading:** the fixture discriminates exactly where intended --
+  prose/table conflicts are invisible to the graph's deterministic
+  conflict detection and need an exhaustive sweep, i.e. the researcher's
+  job. This is the vault where the rlm variant's hypothesis is actually
+  testable.
+- **Decision / next:** full 31-claim baseline vs graph vs rlm comparison
+  on Vantage, sliced by failure_class.
+
 ---
 
 ## Non-experiment incident log

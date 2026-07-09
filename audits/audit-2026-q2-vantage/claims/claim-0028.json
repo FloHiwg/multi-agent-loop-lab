@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0028",
+  "label": "Structured learning hours totalled 1,673",
+  "raw_text": "Structured learning hours totalled 1,673.",
+  "canonical_value": 1673,
+  "unit": "hours",
+  "currency": null,
+  "entity": "Vantage Industrial Group SE",
+  "time_scope": "Q2 2026",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "vantage-master-q2-2026",
+  "source_page": 4
+}

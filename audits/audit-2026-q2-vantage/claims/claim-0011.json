@@ -1,0 +1,17 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0011",
+  "label": "Median onboarding cycle for new enterprise customers was 27 days",
+  "raw_text": "Median onboarding cycle for new enterprise customers was 27 days.",
+  "canonical_value": 27,
+  "unit": "days",
+  "currency": null,
+  "entity": "Vantage Industrial Group SE",
+  "time_scope": "Q2 2026",
+  "tolerance_rule": {
+    "kind": "exact"
+  },
+  "expected_evidence_type": null,
+  "status": "pending",
+  "source_doc_id": "vantage-master-q2-2026",
+  "source_page": 2
+}
