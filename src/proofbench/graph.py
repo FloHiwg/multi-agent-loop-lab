@@ -319,8 +319,39 @@ def entity_profile_data(conn: sqlite3.Connection, kind: str, name: str) -> dict 
             }
         )
 
+    # Deterministic cross-document conflict detection -- the query that
+    # period/role normalization exists for. Same entity, same period, same
+    # role, materially different values across documents: computed here so
+    # the agent can't overlook a conflict, while resolving it (supersession?
+    # stated scope? genuinely ambiguous?) stays the agent's judgment.
+    by_key: dict[tuple, dict[str, float]] = {}
+    for doc_id, _loc, _attr, period, role, value, _text in facts:
+        parsed = parse_number(value)
+        if parsed is None or period is None:
+            continue
+        by_key.setdefault((period, role), {})[doc_id] = parsed
+    conflicts = []
+    for (period, role), doc_values in sorted(by_key.items()):
+        distinct = list(doc_values.values())
+        if len(doc_values) > 1 and any(not _close(v, distinct[0]) for v in distinct[1:]):
+            conflicts.append(
+                {
+                    "period": period,
+                    "role": role,
+                    "values": [{"doc_id": d, "value": v} for d, v in sorted(doc_values.items())],
+                }
+            )
+
+    # Near-name entities ("Qualified pipeline" vs "Qualified commercial
+    # pipeline") are separate nodes, so per-entity conflict detection can't
+    # see across the split -- point the agent at them. Lazy import: embeddings
+    # -> index_db -> graph would otherwise be a cycle at module load.
+    from proofbench.embeddings import stored_neighbors
+
     return {
         "entity": canonical,
+        "conflicts": conflicts,
+        "see_also": stored_neighbors(conn, kind, entity_id),
         "facts": [
             {
                 "doc_id": d,

@@ -66,6 +66,23 @@ Comparison rules:
 - contradiction: an authoritative source states a different value for the
   same entity/period/role
 
+Conflicting sources rule: a claim is not "supported" merely because one
+span matches it. If any other vault document states a different value for
+the same entity and period, the verdict depends on what the DOCUMENTS
+establish about which source wins: an explicit supersession/restatement
+makes the older figure "outdated"; the values don't compete only if one
+document explicitly states it covers a strictly narrower or different
+slice (a single region, segment, or subset) than the claim. A different
+measurement methodology or qualification basis for the SAME metric is
+still a competing value, not a scope difference -- and a document that
+says it is "not ranked" or "not comparable" against another source is
+explicitly telling you no authority ordering exists. In all such cases
+the verdict is "ambiguous" -- do NOT invent a reconciling explanation
+the documents don't contain. Surfacing
+unresolved conflicts for human review is the point of this system; a
+plausible-sounding reconciliation that hides a conflict is the worst
+failure mode.
+
 Verdict status must be exactly one of:
 - "supported": at least one vault span confirms the claim's value
 - "contradicted": the vault's CURRENT authoritative value differs from the claim
@@ -107,6 +124,14 @@ You additionally have graph tools over the facts index -- prefer them first:
   mined arithmetic relationships (which rows sum to it, on which columns).
   The name resolves fuzzily ('cash' finds 'Cash and cash equivalents'), so
   try it with the claim's own wording before guessing search terms.
+  Its "conflicts" list is computed deterministically: same entity, same
+  period and role, different values in different documents. A conflict
+  touching the claim's period is not optional context -- apply the
+  conflicting sources rule to it: resolve it only with what the documents
+  explicitly state, otherwise the verdict is "ambiguous". Its "see_also"
+  list names similarly-named entities that may carry the same metric under
+  different wording -- profile them too before concluding, they can hide a
+  competing value.
 - list_entities: every canonical entity name and its documents -- use it when
   entity_profile finds nothing, to see what vocabulary actually exists.
 Fall back to search_vault/search_facts/read_span for narrative text the facts

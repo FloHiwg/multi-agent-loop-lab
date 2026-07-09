@@ -123,6 +123,49 @@ def embed_entities(audit_id: str, *, model: str | None = None) -> int:
         conn.close()
 
 
+def stored_neighbors(
+    conn: sqlite3.Connection, kind: str, entity_id: int, k: int = 3, min_similarity: float = 0.5
+) -> list[dict]:
+    """Other entities (with facts of this kind) whose stored name embedding
+    is close to this entity's. Both sides come from the entity_embeddings
+    table, so this is offline and deterministic -- no query embedding.
+    Returns [] when embeddings aren't built. Used by entity_profile's
+    "see_also" so near-name entity splits ("Qualified pipeline" vs
+    "Qualified commercial pipeline") surface instead of hiding a
+    cross-document conflict."""
+    exists = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'entity_embeddings'"
+    ).fetchone()
+    if exists is None:
+        return []
+    rows = conn.execute(
+        "SELECT entities.entity_id, entities.name, entity_embeddings.vector "
+        "FROM entity_embeddings "
+        "JOIN entities ON entities.entity_id = entity_embeddings.entity_id "
+        "JOIN facts ON facts.entity_id = entities.entity_id "
+        "JOIN documents ON documents.doc_id = facts.doc_id "
+        "WHERE documents.kind = ? GROUP BY entities.entity_id",
+        (kind,),
+    ).fetchall()
+    target = next((_unpack(blob) for eid, _, blob in rows if eid == entity_id), None)
+    if target is None:
+        return []
+    scored = sorted(
+        (
+            (name, _cosine(target, _unpack(blob)))
+            for eid, name, blob in rows
+            if eid != entity_id
+        ),
+        key=lambda pair: pair[1],
+        reverse=True,
+    )
+    return [
+        {"entity": name, "similarity": round(score, 3)}
+        for name, score in scored[:k]
+        if score >= min_similarity
+    ]
+
+
 def nearest_entities(audit_id: str, kind: str, name: str, k: int = 8) -> list[dict] | None:
     """Top-k entities (that have facts of this kind) by embedding similarity
     to `name`. Returns None when embeddings aren't built or the query can't

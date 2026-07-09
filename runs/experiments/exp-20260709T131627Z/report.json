@@ -1,0 +1,25 @@
+{
+  "experiment_id": "exp-20260709T131627Z",
+  "audit_id": "audit-2026-q1-meridian",
+  "model": "z-ai/glm-5.2",
+  "max_concurrency": 2,
+  "max_budget_usd": 1.0,
+  "started_variants": [
+    "graph"
+  ],
+  "total_cost_usd": 0.5070159999999999,
+  "summaries": [
+    {
+      "variant": "graph",
+      "n_claims": 4,
+      "correct": 4,
+      "accuracy": 1.0,
+      "failures": 0,
+      "avg_tool_calls": 5.75,
+      "avg_cost_usd": 0.126754,
+      "total_cost_usd": 0.507016,
+      "enrichment_cost_usd": null,
+      "n_attempted": 4
+    }
+  ]
+}

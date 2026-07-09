@@ -155,6 +155,35 @@ superseded document versions, cross-doc contradictions.
   exhaustive competing-value sweeps; (c) any further graph-vs-baseline
   claims need a bigger vault to be measurable.
 
+## exp-20260709T131021Z / exp-20260709T131236Z / exp-20260709T131627Z — the claim-0022 conflict series (Meridian, claims 0001/0021/0022/0024)
+
+Three-run iteration on the full run's shared miss (claim-0022: finance
+pack 8.4 vs regional review 8.1, gold `ambiguous`). Guards in every run:
+0001 must stay supported, 0021 ambiguous, 0024 outdated.
+
+- **Run 1 (131021Z): conservatism rubric rule v1** ("competing value + no
+  stated authority ordering = ambiguous, don't invent reconciliations").
+  3/4 -- guards held, 0022 still supported: the model used the rule's
+  "stated scope difference" escape hatch, reading the regional doc's
+  different *methodology* as a scope difference.
+- **Run 2 (131236Z): rule v2** (methodology is not scope; "not ranked
+  against X" IS the no-ordering case). 2/3 -- 0022 still supported: the
+  model quoted the disclaimer and inverted it ("not ranked → not
+  comparable → not competing"). Conclusion: prompt wording alone cannot
+  reliably force conflict recognition; stop iterating prompts.
+- **Run 3 (131627Z): structural fix.** entity_profile now returns (a) a
+  deterministic `conflicts` list -- same entity, same normalized
+  period/role, materially different values across documents (the query
+  period/role normalization was built for) -- and (b) `see_also`,
+  near-name entities from stored embeddings (offline, no query call), so
+  entity splits like "Qualified pipeline" vs "Qualified commercial
+  pipeline" can't hide a cross-document conflict. **4/4**, and cheaper:
+  0022 in 4 calls, run avg 5.8 tools.
+- **Decision:** keep rule v2 (it's principled) but treat the structural
+  conflict surface as the real mechanism: the tool computes the conflict,
+  the model only judges it. Generalizes to any vault size; nothing in it
+  is fixture-specific.
+
 ---
 
 ## Non-experiment incident log

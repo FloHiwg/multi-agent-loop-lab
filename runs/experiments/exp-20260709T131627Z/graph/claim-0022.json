@@ -1,0 +1,148 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0022",
+  "variant": "graph",
+  "expected_status": "ambiguous",
+  "status": "ambiguous",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.08427199999999999,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0022",
+    "status": "ambiguous",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0022/evidence-001",
+      "audit-2026-q1-meridian/claim-0022/evidence-002",
+      "audit-2026-q1-meridian/claim-0022/evidence-003",
+      "audit-2026-q1-meridian/claim-0022/evidence-004"
+    ],
+    "delta": null,
+    "confidence": 0.88,
+    "rationale": "The Finance Pack v2 (approved 15 April 2026) reports Qualified pipeline Q1 2026 actual at EUR 8.4m, matching the claim, but the Regional Performance doc reports the same Q1 2026 Qualified commercial pipeline at EUR 8.1m and explicitly states it 'is not ranked against Finance' \u2014 a competing value with no authority ordering between the sources.",
+    "suggested_action": "Determine whether the master claim's 'Qualified commercial pipeline' should draw from the Finance Pack (8.4m) or the Regional scorecard (8.1m), and align the master document to one authoritative source.",
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0022"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0022/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0022",
+      "doc_id": "meridian-finance-v2-q1-2026",
+      "page": 2,
+      "span_text": "Qualified pipeline\n8.400\n7.920\n8.100",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 8400000.0,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": "2026-04-15",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0022/evidence-002",
+      "claim_id": "audit-2026-q1-meridian/claim-0022",
+      "doc_id": "meridian-finance-v2-q1-2026",
+      "page": 2,
+      "span_text": "Approved 15 April 2026.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "date",
+      "role": "other",
+      "effective_date": "2026-04-15",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0022/evidence-003",
+      "claim_id": "audit-2026-q1-meridian/claim-0022",
+      "doc_id": "meridian-regional-q1-2026",
+      "page": 1,
+      "span_text": "Qualified commercial pipeline\n8.100\n7.880\n8.000",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 8100000.0,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.92
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0022/evidence-004",
+      "claim_id": "audit-2026-q1-meridian/claim-0022",
+      "doc_id": "meridian-regional-q1-2026",
+      "page": 1,
+      "span_text": "Regional pipeline uses local CRM qualification and is not ranked against Finance.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "text",
+      "role": "other",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T13:17:02.682224+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "qualified commercial pipeline"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Qualified commercial pipeline\",\"conflicts\":[],\"see_also\":[{\"entity\":\"Qualified pipeline\",\"similarity\":0.683}],\"facts\":[{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"8.100\",\"span_text\":\"Qualified commercial pipeline | 8.100 | 7.880 | 8.000\"},{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"7.880\",\"span_text\":\"Qualified commercial pipeline | 8.100 | 7.880 | 8.000\"},{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q1 2026 budget\",\"period\":\"2026-Q1\",\"role\":\"budget\",\"value\":\"8.000\",\"span_text\":\"Qualified commercial pipeline | 8.100 | 7.880 | 8.000\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T13:17:02.818800+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "qualified commercial pipeline"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:2\",\"snippet\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Finance Pack v2\\n[Commercial] indicators\\n[Pipeline]\\nEUR...\"},{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1\",\"snippet\":\"...[Qualified] [commercial] [pipeline]\\n8.100\\n7.880\\n8.000\\nRegional [pipeline] uses...\"},{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"snippet\":\"[Qualified] [commercial] [pipeline] | 8.100 | 7.880 | 8.000\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T13:17:05.903144+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-finance-v2-q1-2026",
+        "location": "page:2"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:2\",\"text\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Finance Pack v2\\nCommercial indicators\\nPipeline\\nEUR million\\nQ1 2026 actual\\nQ4 2025 actual\\nQ1 2026 budget\\nQualified pipeline\\n8.400\\n7.920\\n8.100\\nWeighted pipeline\\n4.620\\n4.180\\n4.430\\nApproved 15 April 2026.\\nConfidential | Synthetic Proofbench fixture\\nPage 2\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T13:17:06.237039+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-regional-q1-2026",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-regional-q1-2026\",\"location\":\"page:1\",\"text\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Regional Performance\\nRevenue by market\\nRegional scorecard\\nRegion\\nQ1 2026 actual\\nQ4 2025 actual\\nQ1 2026 budget\\nDACH\\n5.120\\n4.610\\n4.820\\nUKI\\n3.440\\n2.980\\n3.200\\nBenelux\\n1.180\\n1.020\\n1.090\\nNordics\\n1.360\\n1.240\\n1.480\\nFrance\\n0.890\\n0.810\\n0.850\\nOther Europe\\n0.490\\n0.300\\n0.460\\nTotal\\n12.480\\n10.960\\n11.900\\nQualified commercial pipeline\\n8.100\\n7.880\\n8.000\\nRegional pipeline uses local CRM qualification and is not ranked against Finance.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "Based on my search, I found two competing sources. The finance pack v2 (approved 15 April 2026) reports \"Qualified pipeline\" Q1 2026 actual = 8.400 EUR million, matching the claim. But the regional performance doc reports \"Qualified commercial pipeline\" Q1 2026 actual = 8.100 EUR million, and explicitly states \"Regional pipeline uses local CRM qualification and is not ranked against Finance\" \u2014 declaring no authority ordering exists between them. Per the conflicting-sources rule, this is ambiguous.\n\n{\"evidence\":[{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"page\":2,\"span_text\":\"Qualified pipeline\\n8.400\\n7.920\\n8.100\",\"canonical_value\":8400000.0,\"unit\":\"EUR million\",\"role\":\"actual\",\"effective_date\":\"2026-04-15\",\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"page\":2,\"span_text\":\"Approved 15 April 2026.\",\"canonical_value\":null,\"unit\":\"date\",\"role\":\"other\",\"effective_date\":\"2026-04-15\",\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-regional-q1-2026\",\"page\":1,\"span_text\":\"Qualified commercial pipeline\\n8.100\\n7.880\\n8.000\",\"canonical_value\":8100000.0,\"unit\":\"EUR million\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.92},{\"doc_id\":\"meridian-regional-q1-2026\",\"page\":1,\"span_text\":\"Regional pipeline uses local CRM qualification and is not ranked against Finance.\",\"canonical_value\":null,\"unit\":\"text\",\"role\":\"other\",\"effective_date\":null,\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"ambiguous\",\"delta\":null,\"confidence\":0.88,\"rationale\":\"The Finance Pack v2 (approved 15 April 2026) reports Qualified pipeline Q1 2026 actual at EUR 8.4m, matching the claim, but the Regional Performance doc reports the same Q1 2026 Qualified commercial pipeline at EUR 8.1m and explicitly states it 'is not ranked against Finance' \u2014 a competing value with no authority ordering between the sources.\",\"suggested_action\":\"Determine whether the master claim's 'Qualified commercial pipeline' should draw from the Finance Pack (8.4m) or the Regional scorecard (8.1m), and align the master document to one authoritative source.\"}}"
+}
