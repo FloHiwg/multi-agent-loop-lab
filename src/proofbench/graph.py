@@ -283,8 +283,13 @@ def entity_profile_data(conn: sqlite3.Connection, kind: str, name: str) -> dict 
         return None
     entity_id, canonical = resolved
 
+    # span_text rides along so the agent can cite evidence verbatim straight
+    # from the profile instead of following up with read_span calls per fact
+    # (the measured tail of every verification trace).
     facts = conn.execute(
-        "SELECT facts.doc_id, location, attribute, period, role, value FROM facts "
+        "SELECT facts.doc_id, location, attribute, period, role, value, "
+        "(SELECT text FROM spans_fts WHERE spans_fts.doc_id = facts.doc_id "
+        " AND spans_fts.location = facts.location) AS span_text FROM facts "
         "JOIN documents ON documents.doc_id = facts.doc_id "
         "WHERE documents.kind = ? AND entity_id = ? ORDER BY facts.id",
         (kind, entity_id),
@@ -317,8 +322,16 @@ def entity_profile_data(conn: sqlite3.Connection, kind: str, name: str) -> dict 
     return {
         "entity": canonical,
         "facts": [
-            {"doc_id": d, "location": loc, "attribute": a, "period": p, "role": r, "value": v}
-            for d, loc, a, p, r, v in facts
+            {
+                "doc_id": d,
+                "location": loc,
+                "attribute": a,
+                "period": p,
+                "role": r,
+                "value": v,
+                "span_text": text,
+            }
+            for d, loc, a, p, r, v, text in facts
         ],
         "edges": edge_list,
     }

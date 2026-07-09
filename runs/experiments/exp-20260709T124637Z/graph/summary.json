@@ -1,0 +1,12 @@
+{
+  "variant": "graph",
+  "n_claims": 5,
+  "correct": 5,
+  "accuracy": 1.0,
+  "failures": 0,
+  "avg_tool_calls": 8.4,
+  "avg_cost_usd": 0.13902,
+  "total_cost_usd": 0.6951,
+  "enrichment_cost_usd": null,
+  "n_attempted": 5
+}

@@ -100,6 +100,29 @@ superseded document versions, cross-doc contradictions.
   Meridian baseline-vs-graph run (~$8 at current rates) to confirm at
   scale.
 
+## exp-20260709T124637Z — outdated rubric + evidence-ready profile (Meridian smoke set, 5 claims)
+
+- **Changes under test (two, deliberately bundled -- both were expected to
+  act on different claims):** (a) verdict rubric now defines "outdated" to
+  cover superseded document versions/restatements and spells out the
+  contradicted/outdated boundary (verification.py); (b) entity_profile
+  facts carry verbatim span_text so the agent cites evidence directly
+  instead of trailing read_span calls (graph.py).
+- **Result:** **5/5 (first perfect smoke run)**, 0 failures, 8.4 tools,
+  $0.139/claim.
+- **Reading:** claim-0024 flips to correct (`outdated`) -- rubric fix
+  confirmed. The intended cheap path works end-to-end on claim-0001:
+  profile miss → embedding suggestion → exact retry → cite span_text,
+  **3 calls total** (was 10 two runs ago), zero read_span. The avg-tools
+  rise (7.4 → 8.4) is entirely claim-0027, the `missing_evidence` claim,
+  which ballooned 9 → 15 calls of exhaustive absence-searching; the other
+  four claims averaged 6.75 (was 7.0). Absence proofs are now the
+  dominant cost and are high-variance between runs.
+- **Decision / next:** full 28-claim baseline-vs-graph run to lock the
+  scale baseline; then the RLM variant -- bounded absence-scanning by a
+  cheap sub-model is exactly the sub-task it exists for. (A prompt-level
+  absence shortcut was considered and rejected as fixture-overfitted.)
+
 ---
 
 ## Non-experiment incident log

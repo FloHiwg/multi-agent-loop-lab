@@ -68,9 +68,14 @@ Comparison rules:
 
 Verdict status must be exactly one of:
 - "supported": at least one vault span confirms the claim's value
-- "contradicted": an authoritative vault span gives a different value
+- "contradicted": the vault's CURRENT authoritative value differs from the claim
 - "ambiguous": multiple vault spans disagree and neither is clearly authoritative
-- "outdated": the vault's best evidence is for a different, superseded period
+- "outdated": the claim matches a figure that has since been superseded -- an
+  older document version, restatement, or earlier period that a newer
+  authoritative source explicitly replaces. A claim that agrees with the
+  superseded figure is "outdated", NOT "contradicted": contradicted means the
+  claim disagrees with the current value, outdated means it agrees with a
+  stale one.
 - "missing_evidence": no vault span addresses this claim at all
 
 For each relevant span found, output an evidence object with:
@@ -98,22 +103,23 @@ GRAPH_TOOLS_PROMPT = """\
 
 You additionally have graph tools over the facts index -- prefer them first:
 - entity_profile: everything known about one entity in a single call -- every
-  value across all documents and periods, plus mined arithmetic relationships
-  (which rows sum to it, on which columns). The name resolves fuzzily
-  ('cash' finds 'Cash and cash equivalents'), so try it with the claim's own
-  wording before guessing search terms.
+  value across all documents and periods WITH its verbatim span_text, plus
+  mined arithmetic relationships (which rows sum to it, on which columns).
+  The name resolves fuzzily ('cash' finds 'Cash and cash equivalents'), so
+  try it with the claim's own wording before guessing search terms.
 - list_entities: every canonical entity name and its documents -- use it when
   entity_profile finds nothing, to see what vocabulary actually exists.
-Fall back to search_vault/search_facts/read_span for narrative text and for
-reading the verbatim span you cite as evidence.
+Fall back to search_vault/search_facts/read_span for narrative text the facts
+index doesn't cover.
 
 entity_profile is backed by the same deterministic index as search_facts --
-its facts do not need re-confirmation through other tools. The efficient
-pattern is: entity_profile, then ONE read_span of the location you will cite
-(the claim's evidence must quote a verbatim span), then decide. Only search
-further if the profile leaves the verdict genuinely open -- e.g. to check
-other documents for a competing value before declaring a contradiction, or
-to rule out narrative text when the profile finds nothing.
+its facts do not need re-confirmation through other tools, and each fact's
+span_text is the verbatim span: cite it directly in your evidence objects
+instead of calling read_span for it. The efficient pattern is:
+entity_profile, then decide. Only search further if the profile leaves the
+verdict genuinely open -- e.g. to check other documents for a competing
+value before declaring a contradiction, or to rule out narrative text when
+the profile finds nothing.
 """
 
 
