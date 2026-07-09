@@ -8,11 +8,13 @@ tools it's handed, not from trusting the model to stay in its lane.
 
 from __future__ import annotations
 
+import asyncio
 import json
 import sqlite3
 
 from claude_agent_sdk import McpSdkServerConfig, SdkMcpTool, create_sdk_mcp_server, tool
 
+from proofbench.embeddings import nearest_entities
 from proofbench.graph import entity_profile_data, list_entities_data
 from proofbench.index_db import db_path
 
@@ -227,8 +229,10 @@ def _entity_profile_tool(audit_id: str, kind: str) -> SdkMcpTool:
         "documents and periods (with normalized period/role and the exact location for "
         "read_span), plus mined arithmetic relationships (which rows sum to it / derive "
         "from it, and on which columns that holds). The name is resolved fuzzily -- "
-        "'cash' finds 'Cash and cash equivalents'. One call here typically replaces "
-        "several search_facts/search_vault calls.",
+        "'cash' finds 'Cash and cash equivalents' -- and on a miss the reply lists "
+        "the closest entity names by semantic similarity: retry with one of those "
+        "exact names instead of guessing new phrasings. One call here typically "
+        "replaces several search_facts/search_vault calls.",
         {
             "type": "object",
             "properties": {"name": {"type": "string", "description": "Entity name or fragment"}},
@@ -239,13 +243,27 @@ def _entity_profile_tool(audit_id: str, kind: str) -> SdkMcpTool:
         conn = _connect(audit_id)
         try:
             profile = entity_profile_data(conn, kind, args["name"])
-            if profile is None:
-                return _tool_result(
-                    {"entity": None, "note": f"no entity matching {args['name']!r} -- try list_entities"}
-                )
-            return _tool_result(profile)
         finally:
             conn.close()
+        if profile is not None:
+            return _tool_result(profile)
+        # Semantic near-misses (embeddings.py) turn the dead-end turn into a
+        # redirect: suggestions only, never auto-resolved -- the agent must
+        # confirm by calling again with the exact name. The network call is
+        # off the event loop; nearest_entities opens its own connection.
+        suggestions = await asyncio.to_thread(nearest_entities, audit_id, kind, args["name"])
+        if suggestions:
+            return _tool_result(
+                {
+                    "entity": None,
+                    "note": f"no entity matching {args['name']!r} -- closest entities by name "
+                    "similarity below; call entity_profile again with one exact name",
+                    "closest": suggestions,
+                }
+            )
+        return _tool_result(
+            {"entity": None, "note": f"no entity matching {args['name']!r} -- try list_entities"}
+        )
 
     return entity_profile
 

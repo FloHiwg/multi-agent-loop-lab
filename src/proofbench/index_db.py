@@ -76,6 +76,12 @@ CREATE TABLE fact_aliases (
     PRIMARY KEY (entity, alias)
 );
 
+CREATE TABLE entity_embeddings (
+    entity_id INTEGER PRIMARY KEY,
+    model TEXT NOT NULL,
+    vector BLOB NOT NULL
+);
+
 CREATE TABLE locations (
     doc_id TEXT NOT NULL,
     location TEXT NOT NULL,

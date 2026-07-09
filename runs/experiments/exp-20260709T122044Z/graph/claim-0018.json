@@ -1,0 +1,132 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0018",
+  "variant": "graph",
+  "expected_status": "contradicted",
+  "status": "contradicted",
+  "correct": true,
+  "tool_calls": 6,
+  "cost_usd": 0.18077600000000002,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0018",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0018/evidence-001"
+    ],
+    "delta": 1.0,
+    "confidence": 0.9,
+    "rationale": "The operations review for Q1 2026 reports period-end FTE of 142, while the master document claims 143; the authoritative operations figure differs by 1.",
+    "suggested_action": "Confirm with the operations team which figure (142 vs 143) is correct for Q1 2026 period-end FTE and correct the master document.",
+    "produced_by_run_id": "eval/graph/audit-2026-q1-meridian/claim-0018"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0018/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0018",
+      "doc_id": "meridian-operations-q1-2026",
+      "page": 1,
+      "span_text": "FTE, period end | 142 | 136 | 130",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 142.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T12:20:48.554791+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "closing workforce"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'closing workforce' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Permanent employees\",\"similarity\":0.473},{\"entity\":\"Contract personnel\",\"similarity\":0.454},{\"entity\":\"Customer success FTE\",\"similarity\":0.396},{\"entity\":\"Payroll payments\",\"similarity\":0.394},{\"entity\":\"FTE, period end\",\"similarity\":0.377},{\"entity\":\"Gross account attrition\",\"similarity\":0.367},{\"entity\":\"Product FTE\",\"similarity\":0.36},{\"entity\":\"Engineering FTE\",\"similarity\":0.358}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T12:20:48.663127+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "workforce"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T12:20:51.389525+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "FTE, period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"FTE, period end\",\"facts\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"142\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"136\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"130\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T12:20:51.542469+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "FTE"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"entity\":\"FTE, period end\",\"attribute\":\"Q1 2026\",\"value\":\"142\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"entity\":\"FTE, period end\",\"attribute\":\"Q4 2025\",\"value\":\"136\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"entity\":\"FTE, period end\",\"attribute\":\"Q1 2025\",\"value\":\"130\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Engineering FTE\",\"entity\":\"Engineering FTE\",\"attribute\":\"Q1 2026\",\"value\":\"48\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Engineering FTE\",\"entity\":\"Engineering FTE\",\"attribute\":\"Q4 2025\",\"value\":\"45\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Engineering FTE\",\"entity\":\"Engineering FTE\",\"attribute\":\"Q1 2025\",\"value\":\"43\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Customer success FTE\",\"entity\":\"Customer success FTE\",\"attribute\":\"Q1 2026\",\"value\":\"21\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Customer success FTE\",\"entity\":\"Customer success FTE\",\"attribute\":\"Q4 2025\",\"value\":\"20\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Customer success FTE\",\"entity\":\"Customer success FTE\",\"attribute\":\"Q1 2025\",\"value\":\"18\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Product FTE\",\"entity\":\"Product FTE\",\"attribute\":\"Q1 2026\",\"value\":\"17\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Product FTE\",\"entity\":\"Product FTE\",\"attribute\":\"Q4 2025\",\"value\":\"16\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Product FTE\",\"entity\":\"Product FTE\",\"attribute\":\"Q1 2025\",\"value\":\"15\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T12:20:54.211595+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-operations-q1-2026",
+        "location": "page:1/table:1/row:FTE, period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"text\":\"FTE, period end | 142 | 136 | 130\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T12:20:57.969638+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "workforce FTE 143"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"page\":1,\"span_text\":\"FTE, period end | 142 | 136 | 130\",\"canonical_value\":142.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"contradicted\",\"delta\":1.0,\"confidence\":0.9,\"rationale\":\"The operations review for Q1 2026 reports period-end FTE of 142, while the master document claims 143; the authoritative operations figure differs by 1.\",\"suggested_action\":\"Confirm with the operations team which figure (142 vs 143) is correct for Q1 2026 period-end FTE and correct the master document.\"}}"
+}

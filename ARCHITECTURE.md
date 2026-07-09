@@ -455,6 +455,29 @@ via the `graph` eval variant before becoming default):
   This single call replaces the multi-call search dance that made
   verification expensive (claim-0004's 6 calls, claim-0010's 13).
 
+**Semantic name resolution** (`embeddings.py`, `proofbench embed`). The
+Meridian smoke test showed the graph variant's first `entity_profile`
+call missing on *all five* claims -- exact/substring matching can't
+bridge the fixture's deliberate renames ("Net sales" → "Net revenue",
+"turnover" → "Net revenue"), so the agent fell back to the blind search
+dance anyway (10.2 avg calls vs baseline's 8.8). Fix: `proofbench embed`
+stores one embedding per canonical entity name (one OpenRouter embeddings
+call, `entity_embeddings` table, rebuild after `proofbench index`), and
+on a resolution miss `entity_profile` returns the top-8 entities by
+cosine similarity as *suggestions* -- never auto-resolved, because
+silently binding to the nearest neighbor would rebuild the wrong-entity
+failure mode this product exists to catch. The query-side embedding runs
+only on misses, uses the same model the table was built with, and is
+memoized per process; if embeddings aren't built or the call fails, the
+tool degrades to the old "try list_entities" note. Trust posture matches
+fact_aliases: similarity can only help *find* a deterministically
+extracted fact, never alter one. Measured on the five Meridian misses:
+"Net sales" and "New enterprise wins" resolve at rank 1, "closing
+workforce" and "monthly active product seats" surface the right entity
+in the top 8; bare "turnover" still misses (the embedding reads it as
+churn -- rank 13), though claim-scoped phrasings like "quarterly
+turnover" bring it back into range.
+
 ## Eval harness (`src/proofbench/eval.py`, `src/proofbench/catalog.py`)
 
 **Why it exists.** Verification runs are both expensive (real LLM spend

@@ -117,6 +117,20 @@ def enrich(audit_id: str) -> None:
     typer.echo(f"wrote {written} aliases into index/search/{audit_id}.db (cost {cost})")
 
 
+@app.command()
+def embed(audit_id: str) -> None:
+    """Embed entity names for semantic name resolution in entity_profile
+    (one OpenRouter embeddings call, stored in the entity_embeddings table).
+    Rerun after `proofbench index` -- the index is rebuilt from scratch."""
+    from proofbench.embeddings import embed_entities, resolve_embedding_model
+
+    count = embed_entities(audit_id)
+    typer.echo(
+        f"embedded {count} entity names into index/search/{audit_id}.db "
+        f"(model {resolve_embedding_model()})"
+    )
+
+
 @app.command("eval")
 def eval_cmd(
     audit_id: str,
