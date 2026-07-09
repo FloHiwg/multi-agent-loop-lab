@@ -1,0 +1,143 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0003",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 7,
+  "cost_usd": 0.0132049,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0003",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0003/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.92,
+    "rationale": "The Q2 2026 operations review reports FTE, period end = 224 for Vantage Industrial Group, exactly matching the claim's headcount figure of 224; no competing value for the same period exists in the vault.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q2-vantage/claim-0003"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0003/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0003",
+      "doc_id": "vantage-operations-2026q2",
+      "page": 1,
+      "span_text": "FTE, period end | 224 | 221 | 228",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 224.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T19:00:36.209649+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "headcount"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'headcount' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"FTE, period end\",\"similarity\":0.391},{\"entity\":\"Gross account attrition\",\"similarity\":0.369},{\"entity\":\"Contract personnel\",\"similarity\":0.356},{\"entity\":\"Net revenue\",\"similarity\":0.348},{\"entity\":\"Net dollar retention\",\"similarity\":0.341},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.328},{\"entity\":\"Total\",\"similarity\":0.32},{\"entity\":\"Gross profit\",\"similarity\":0.318}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T19:00:36.276336+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "headcount"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T19:00:38.615998+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "FTE, period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"FTE, period end\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"213\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"217\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"214\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"213\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"218\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"216\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"214\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"220\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"221\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"216\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"225\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"224\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"221\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"228\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T19:00:39.150792+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Contract personnel"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Contract personnel\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T19:00:39.168977+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "headcount"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T19:00:44.012525+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-people-2026q2",
+        "location": "sheet:People!row6"
+      },
+      "output": "no span found at that doc_id/location",
+      "is_error": true
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-09T19:00:44.318012+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "headcount OR employees OR FTE",
+        "tag": "operations_review"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1\",\"snippet\":\"...Q2 2025\\nPrior quarter\\nPlan\\n[FTE], period end\\n213\\n-\\n217\\nP1 response...\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1\",\"snippet\":\"...Q3 2025\\nPrior quarter\\nPlan\\n[FTE], period end\\n214\\n213\\n218\\nP1...\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1\",\"snippet\":\"...Q4 2025\\nPrior quarter\\nPlan\\n[FTE], period end\\n216\\n214\\n220\\nP1...\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1\",\"snippet\":\"...Q1 2026\\nPrior quarter\\nPlan\\n[FTE], period end\\n221\\n216\\n225\\nP1...\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1\",\"snippet\":\"...Q2 2026\\nPrior quarter\\nPlan\\n[FTE], period end\\n224\\n221\\n228\\nP1...\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 224 | 221 | 228\"}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"vantage-operations-2026q2\",\"page\":1,\"span_text\":\"FTE, period end | 224 | 221 | 228\",\"canonical_value\":224,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0,\"confidence\":0.92,\"rationale\":\"The Q2 2026 operations review reports FTE, period end = 224 for Vantage Industrial Group, exactly matching the claim's headcount figure of 224; no competing value for the same period exists in the vault.\",\"suggested_action\":null}}"
+}

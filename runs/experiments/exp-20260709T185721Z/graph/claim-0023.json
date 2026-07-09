@@ -1,0 +1,87 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0023",
+  "variant": "graph",
+  "expected_status": "ambiguous",
+  "status": "supported",
+  "correct": false,
+  "tool_calls": 3,
+  "cost_usd": 0.011915680000000001,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0023",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0023/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.92,
+    "rationale": "The Q2 2026 regional document reports 'Qualified commercial pipeline' at 13.053 (EUR million), which equals the claim's 13,053,000 exactly; the separately-labelled 'Qualified pipeline' figure (13.510) in the finance docs is a differently-named entity and no document equates the two, so it does not compete with this value.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q2-vantage/claim-0023"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0023/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0023",
+      "doc_id": "vantage-regional-2026q2",
+      "page": 1,
+      "span_text": "Qualified commercial pipeline | 13.053 | - | -",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 13053000.0,
+      "unit": "currency (EUR million)",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T19:02:37.175016+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "commercial pipeline"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Qualified commercial pipeline\",\"conflicts\":[],\"see_also\":[{\"entity\":\"Qualified pipeline\",\"similarity\":0.683}],\"facts\":[{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q2 2025 actual\",\"period\":\"2025-Q2\",\"role\":\"actual\",\"value\":\"11.296\",\"span_text\":\"Qualified commercial pipeline | 11.296 | - | -\"},{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Prior actual\",\"period\":null,\"role\":\"actual\",\"value\":\"-\",\"span_text\":\"Qualified commercial pipeline | 11.296 | - | -\"},{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q2 2025 budget\",\"period\":\"2025-Q2\",\"role\":\"budget\",\"value\":\"-\",\"span_text\":\"Qualified commercial pipeline | 11.296 | - | -\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q3 2025 actual\",\"period\":\"2025-Q3\",\"role\":\"actual\",\"value\":\"11.717\",\"span_text\":\"Qualified commercial pipeline | 11.717 | - | -\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Prior actual\",\"period\":null,\"role\":\"actual\",\"value\":\"-\",\"span_text\":\"Qualified commercial pipeline | 11.717 | - | -\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q3 2025 budget\",\"period\":\"2025-Q3\",\"role\":\"budget\",\"value\":\"-\",\"span_text\":\"Qualified commercial pipeline | 11.717 | - | -\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"11.992\",\"span_text\":\"Qualified commercial pipeline | 11.992 | - | -\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Prior actual\",\"period\":null,\"role\":\"actual\",\"value\":\"-\",\"span_text\":\"Qualified commercial pipeline | 11.992 | - | -\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q4 2025 budget\",\"period\":\"2025-Q4\",\"role\":\"budget\",\"value\":\"-\",\"span_text\":\"Qualified commercial pipeline | 11.992 | - | -\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"12.521\",\"span_text\":\"Qualified commercial pipeline | 12.521 | - | -\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Prior actual\",\"period\":null,\"role\":\"actual\",\"value\":\"-\",\"span_text\":\"Qualified commercial pipeline | 12.521 | - | -\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q1 2026 budget\",\"period\":\"2026-Q1\",\"role\":\"budget\",\"value\":\"-\",\"span_text\":\"Qualified commercial pipeline | 12.521 | - | -\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q2 2026 actual\",\"period\":\"2026-Q2\",\"role\":\"actual\",\"value\":\"13.053\",\"span_text\":\"Qualified commercial pipeline | 13.053 | - | -\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Prior actual\",\"period\":null,\"role\":\"actual\",\"value\":\"-\",\"span_text\":\"Qualified commercial pipeline | 13.053 | - | -\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"attribute\":\"Q2 2026 budget\",\"period\":\"2026-Q2\",\"role\":\"budget\",\"value\":\"-\",\"span_text\":\"Qualified commercial pipeline | 13.053 | - | -\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T19:02:41.832364+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Qualified pipeline"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Qualified pipeline\",\"conflicts\":[],\"see_also\":[{\"entity\":\"Qualified commercial pipeline\",\"similarity\":0.683}],\"facts\":[{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q2 2025 actual\",\"period\":\"2025-Q2\",\"role\":\"actual\",\"value\":\"11.800\",\"span_text\":\"Qualified pipeline | 11.800 | - | 11.446\"},{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"n/a\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Qualified pipeline | 11.800 | - | 11.446\"},{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q2 2025 budget\",\"period\":\"2025-Q2\",\"role\":\"budget\",\"value\":\"11.446\",\"span_text\":\"Qualified pipeline | 11.800 | - | 11.446\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q3 2025 actual\",\"period\":\"2025-Q3\",\"role\":\"actual\",\"value\":\"12.206\",\"span_text\":\"Qualified pipeline | 12.206 | 11.800 | 11.839\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q2 2025 actual\",\"period\":\"2025-Q2\",\"role\":\"actual\",\"value\":\"11.800\",\"span_text\":\"Qualified pipeline | 12.206 | 11.800 | 11.839\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q3 2025 budget\",\"period\":\"2025-Q3\",\"role\":\"budget\",\"value\":\"11.839\",\"span_text\":\"Qualified pipeline | 12.206 | 11.800 | 11.839\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"12.352\",\"span_text\":\"Qualified pipeline | 12.352 | 12.206 | 11.981\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q3 2025 actual\",\"period\":\"2025-Q3\",\"role\":\"actual\",\"value\":\"12.206\",\"span_text\":\"Qualified pipeline | 12.352 | 12.206 | 11.981\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q4 2025 budget\",\"period\":\"2025-Q4\",\"role\":\"budget\",\"value\":\"11.981\",\"span_text\":\"Qualified pipeline | 12.352 | 12.206 | 11.981\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"12.888\",\"span_text\":\"Qualified pipeline | 12.888 | 12.352 | 12.501\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"12.352\",\"span_text\":\"Qualified pipeline | 12.888 | 12.352 | 12.501\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q1 2026 budget\",\"period\":\"2026-Q1\",\"role\":\"budget\",\"value\":\"12.501\",\"span_text\":\"Qualified pipeline | 12.888 | 12.352 | 12.501\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q2 2026 actual\",\"period\":\"2026-Q2\",\"role\":\"actual\",\"value\":\"13.510\",\"span_text\":\"Qualified pipeline | 13.510 | 12.888 | 13.104\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"12.888\",\"span_text\":\"Qualified pipeline | 13.510 | 12.888 | 13.104\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q2 2026 budget\",\"period\":\"2026-Q2\",\"role\":\"budget\",\"value\":\"13.104\",\"span_text\":\"Qualified pipeline | 13.510 | 12.888 | 13.104\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q2 2026 actual\",\"period\":\"2026-Q2\",\"role\":\"actual\",\"value\":\"13.510\",\"span_text\":\"Qualified pipeline | 13.510 | 12.888 | 13.104\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"12.888\",\"span_text\":\"Qualified pipeline | 13.510 | 12.888 | 13.104\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"attribute\":\"Q2 2026 budget\",\"period\":\"2026-Q2\",\"role\":\"budget\",\"value\":\"13.104\",\"span_text\":\"Qualified pipeline | 13.510 | 12.888 | 13.104\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T19:02:42.040828+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "commercial pipeline",
+        "tag": "finance_pack"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1\",\"snippet\":\"...receivables\\n6.300\\n-\\n6.111\\n[Commercial] indicators\\nEUR million\\nQ2 2025 actual...\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1\",\"snippet\":\"...360\\n6.300\\n6.169\\n[Commercial] indicators\\nEUR million\\nQ3 2025 actual...\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1\",\"snippet\":\"...515\\n6.360\\n6.319\\n[Commercial] indicators\\nEUR million\\nQ4 2025 actual...\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1\",\"snippet\":\"...530\\n6.515\\n6.334\\n[Commercial] indicators\\nEUR million\\nQ1 2026 actual...\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1\",\"snippet\":\"...697\\n6.530\\n6.496\\n[Commercial] indicators\\nEUR million\\nQ2 2026 actual...\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1\",\"snippet\":\"...697\\n6.530\\n6.496\\n[Commercial] indicators\\nEUR million\\nQ2 2026 actual...\"}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The claim matches a vault span exactly. The \"Qualified commercial pipeline\" entity (regional docs) shows Q2 2026 actual = 13.053 (million EUR) = 13,053,000, with no conflicts in its own index. The separately-named \"Qualified pipeline\" (finance docs, 13.510) is a different entity label \u2014 plausibly a broader total pipeline rather than a competing value for the same \"commercial\" metric, and no document states they are the same figure.\n\n{\"evidence\":[{\"doc_id\":\"vantage-regional-2026q2\",\"page\":1,\"span_text\":\"Qualified commercial pipeline | 13.053 | - | -\",\"canonical_value\":13053000.0,\"unit\":\"currency (EUR million)\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.92,\"rationale\":\"The Q2 2026 regional document reports 'Qualified commercial pipeline' at 13.053 (EUR million), which equals the claim's 13,053,000 exactly; the separately-labelled 'Qualified pipeline' figure (13.510) in the finance docs is a differently-named entity and no document equates the two, so it does not compete with this value.\",\"suggested_action\":null}}"
+}

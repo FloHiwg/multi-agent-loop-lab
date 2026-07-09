@@ -1,0 +1,12 @@
+{
+  "variant": "rlm",
+  "n_claims": 31,
+  "correct": 28,
+  "accuracy": 0.9032258064516129,
+  "failures": 1,
+  "avg_tool_calls": 6.709677419354839,
+  "avg_cost_usd": 0.01750005967741935,
+  "total_cost_usd": 0.54250185,
+  "enrichment_cost_usd": null,
+  "n_attempted": 31
+}

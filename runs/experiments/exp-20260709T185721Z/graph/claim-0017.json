@@ -1,0 +1,207 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0017",
+  "variant": "graph",
+  "expected_status": "contradicted",
+  "status": "contradicted",
+  "correct": true,
+  "tool_calls": 10,
+  "cost_usd": 0.023325779999999997,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0017",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0017/evidence-001",
+      "audit-2026-q2-vantage/claim-0017/evidence-002"
+    ],
+    "delta": 2.0,
+    "confidence": 0.95,
+    "rationale": "The claim of 226 FTE for Q2 2026 closing workforce contradicts the authoritative operations-review table value of 224 FTE (period end) and the management commentary stating 'the workforce closed at 224 full-time equivalents'; no vault document states 226 (the plan figure was 228).",
+    "suggested_action": "Confirm against the master document's source line on page 3 and correct the closing workforce figure to 224 FTE, the value reported in both the operations review and management commentary.",
+    "produced_by_run_id": "eval/graph/audit-2026-q2-vantage/claim-0017"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0017/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0017",
+      "doc_id": "vantage-operations-2026q2",
+      "page": 1,
+      "span_text": "FTE, period end | 224 | 221 | 228",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 224.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0017/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0017",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "The workforce closed at 224 full-time equivalents, supported by 26 external contract staff.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 224.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T19:01:58.123656+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "closing workforce"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'closing workforce' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Contract personnel\",\"similarity\":0.454},{\"entity\":\"FTE, period end\",\"similarity\":0.377},{\"entity\":\"Gross account attrition\",\"similarity\":0.367},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.333},{\"entity\":\"Net dollar retention\",\"similarity\":0.321},{\"entity\":\"Qualified pipeline\",\"similarity\":0.293},{\"entity\":\"Open case inventory\",\"similarity\":0.281},{\"entity\":\"Enterprise accounts\",\"similarity\":0.274}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T19:01:58.216850+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "FTE"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"FTE, period end\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"213\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"217\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"214\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"213\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"218\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"216\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"214\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"220\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"221\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"216\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"225\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"224\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"221\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"228\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T19:02:02.800463+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "workforce FTE 226"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T19:02:02.939288+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "closing workforce"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T19:02:04.891422+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "226"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T19:02:05.131116+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "headcount workforce employees"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-09T19:02:06.405404+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {},
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-finance-2025q2\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-operations-2025q2\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Production incidents\"]},{\"doc_id\":\"vantage-customer-2025q2\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-regional-2025q2\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:UK and Ireland\",\"page:1/table:1/row:Iberia\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"vantage-treasury-2025q2\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\"]},{\"doc_id\":\"vantage-people-2025q2\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"vantage-commentary-2025q2\",\"tag\":\"management_commentary\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-update-2025q2\",\"tag\":\"quarterly_update\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-finance-2025q3\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-operations-2025q3\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Production incidents\"]},{\"doc_id\":\"vantage-customer-2025q3\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-regional-2025q3\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:UK and Ireland\",\"page:1/table:1/row:Iberia\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"vantage-treasury-2025q3\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\"]},{\"doc_id\":\"vantage-people-2025q3\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"vantage-commentary-2025q3\",\"tag\":\"management_commentary\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-update-2025q3\",\"tag\":\"quarterly_update\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-finance-2025q4\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-operations-2025q4\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Production incidents\"]},{\"doc_id\":\"vantage-customer-2025q4\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-regional-2025q4\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:UK and Ireland\",\"page:1/table:1/row:Iberia\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"vantage-treasury-2025q4\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\"]},{\"doc_id\":\"vantage-people-2025q4\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"vantage-commentary-2025q4\",\"tag\":\"management_commentary\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-update-2025q4\",\"tag\":\"quarterly_update\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-finance-2026q1\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-operations-2026q1\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Production incidents\"]},{\"doc_id\":\"vantage-customer-2026q1\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-regional-2026q1\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:UK and Ireland\",\"page:1/table:1/row:Iberia\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"vantage-treasury-2026q1\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\"]},{\"doc_id\":\"vantage-people-2026q1\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"vantage-commentary-2026q1\",\"tag\":\"management_commentary\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-update-2026q1\",\"tag\":\"quarterly_update\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-operations-2026q2\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Production incidents\"]},{\"doc_id\":\"vantage-customer-2026q2\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-regional-2026q2\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:UK and Ireland\",\"page:1/table:1/row:Iberia\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"vantage-treasury-2026q2\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\"]},{\"doc_id\":\"vantage-people-2026q2\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"vantage-commentary-2026q2\",\"tag\":\"management_commentary\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-update-2026q2\",\"tag\":\"quarterly_update\",\"format\":\"pdf\",\"locations\":[\"page:1\"]}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 8,
+      "at": "2026-07-09T19:02:09.062547+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-people-2026q2",
+        "location": "sheet:People"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People\",\"text\":\"A1: Q2 2026 People Review\\nA4: Workforce\\nA5: Metric\\nB5: Q2 2026\\nC5: Prior\\nD5: Plan\\nA6: Contract personnel\\nB6: 26\\nC6: 26\\nD6: 27\\nA7: Structured learning hours\\nB7: 1757\\nC7: 1673\\nD7: 1857\\nA8: Scope 2 location based\\nB8: 563\\nC8: 575\\nD8: 553\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 9,
+      "at": "2026-07-09T19:02:09.369037+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-commentary-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Management Commentary\\nLetter to the supervisory board\\nTrading in Q2 2026 developed in line with the restated plan. Net revenue reached EUR 21.89 million, with the gross\\nresult at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\\nCustomer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the\\ngross renewal rate held at 91.4% across the installed base.\\nDelivery efficiency improved. The median onboarding cycle for new enterprise customers was 27 days, and the\\ncertified implementation partner network grew to 80 partners at quarter end.\\nThe workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 10,
+      "at": "2026-07-09T19:02:14.176805+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-update-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-update-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Quarterly Update\\nInvestor and staff brief\\nVantage Industrial Group SE closed Q2 2026 with revenue of EUR 21.89 million and 43 new enterprise account wins.\\nThe qualified pipeline stood at EUR 13.26 million entering the next quarter.\\nAnnualized subscription value reached EUR 34.78 million, with licensed seats at 10,231.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"vantage-operations-2026q2\",\"page\":1,\"span_text\":\"FTE, period end | 224 | 221 | 228\",\"canonical_value\":224.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.95},{\"doc_id\":\"vantage-commentary-2026q2\",\"page\":1,\"span_text\":\"The workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\",\"canonical_value\":224.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"contradicted\",\"delta\":2.0,\"confidence\":0.95,\"rationale\":\"The claim of 226 FTE for Q2 2026 closing workforce contradicts the authoritative operations-review table value of 224 FTE (period end) and the management commentary stating 'the workforce closed at 224 full-time equivalents'; no vault document states 226 (the plan figure was 228).\",\"suggested_action\":\"Confirm against the master document's source line on page 3 and correct the closing workforce figure to 224 FTE, the value reported in both the operations review and management commentary.\"}}"
+}

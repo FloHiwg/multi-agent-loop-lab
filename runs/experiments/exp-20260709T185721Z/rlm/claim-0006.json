@@ -1,0 +1,102 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0006",
+  "variant": "rlm",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 3,
+  "cost_usd": 0.01114498,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0006",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0006/evidence-001",
+      "audit-2026-q2-vantage/claim-0006/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "Both Q2 2026 finance packs report Deferred revenue (the balance-sheet synonym of 'unearned revenue') at 9.685 million EUR for Q2 2026 actual, equal to the claim's canonical 9,685,000; no conflicting values exist for this entity/period.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/rlm/audit-2026-q2-vantage/claim-0006"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0006/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0006",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Deferred revenue | 9.685 | 9.620 | 9.394",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 9685000.0,
+      "unit": "EUR (millions)",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0006/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0006",
+      "doc_id": "vantage-finance-v1-2026q2",
+      "page": 1,
+      "span_text": "Deferred revenue | 9.685 | 9.620 | 9.394",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 9685000.0,
+      "unit": "EUR (millions)",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T19:04:35.077420+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "unearned revenue"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'unearned revenue' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Deferred revenue\",\"similarity\":0.731},{\"entity\":\"Net revenue\",\"similarity\":0.582},{\"entity\":\"Trade receivables\",\"similarity\":0.483},{\"entity\":\"Gross profit\",\"similarity\":0.393},{\"entity\":\"Operating accounts\",\"similarity\":0.39},{\"entity\":\"Net dollar retention\",\"similarity\":0.383},{\"entity\":\"Expansion bookings\",\"similarity\":0.371},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.362}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T19:04:35.128459+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "deferred revenue"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Deferred revenue\",\"conflicts\":[],\"see_also\":[{\"entity\":\"Net revenue\",\"similarity\":0.622},{\"entity\":\"Trade receivables\",\"similarity\":0.587}],\"facts\":[{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q2 2025 actual\",\"period\":\"2025-Q2\",\"role\":\"actual\",\"value\":\"9.100\",\"span_text\":\"Deferred revenue | 9.100 | - | 8.827\"},{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"n/a\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deferred revenue | 9.100 | - | 8.827\"},{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q2 2025 budget\",\"period\":\"2025-Q2\",\"role\":\"budget\",\"value\":\"8.827\",\"span_text\":\"Deferred revenue | 9.100 | - | 8.827\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q3 2025 actual\",\"period\":\"2025-Q3\",\"role\":\"actual\",\"value\":\"9.225\",\"span_text\":\"Deferred revenue | 9.225 | 9.100 | 8.948\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q2 2025 actual\",\"period\":\"2025-Q2\",\"role\":\"actual\",\"value\":\"9.100\",\"span_text\":\"Deferred revenue | 9.225 | 9.100 | 8.948\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q3 2025 budget\",\"period\":\"2025-Q3\",\"role\":\"budget\",\"value\":\"8.948\",\"span_text\":\"Deferred revenue | 9.225 | 9.100 | 8.948\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"9.386\",\"span_text\":\"Deferred revenue | 9.386 | 9.225 | 9.104\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q3 2025 actual\",\"period\":\"2025-Q3\",\"role\":\"actual\",\"value\":\"9.225\",\"span_text\":\"Deferred revenue | 9.386 | 9.225 | 9.104\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q4 2025 budget\",\"period\":\"2025-Q4\",\"role\":\"budget\",\"value\":\"9.104\",\"span_text\":\"Deferred revenue | 9.386 | 9.225 | 9.104\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"9.620\",\"span_text\":\"Deferred revenue | 9.620 | 9.386 | 9.331\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"9.386\",\"span_text\":\"Deferred revenue | 9.620 | 9.386 | 9.331\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q1 2026 budget\",\"period\":\"2026-Q1\",\"role\":\"budget\",\"value\":\"9.331\",\"span_text\":\"Deferred revenue | 9.620 | 9.386 | 9.331\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q2 2026 actual\",\"period\":\"2026-Q2\",\"role\":\"actual\",\"value\":\"9.685\",\"span_text\":\"Deferred revenue | 9.685 | 9.620 | 9.394\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"9.620\",\"span_text\":\"Deferred revenue | 9.685 | 9.620 | 9.394\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q2 2026 budget\",\"period\":\"2026-Q2\",\"role\":\"budget\",\"value\":\"9.394\",\"span_text\":\"Deferred revenue | 9.685 | 9.620 | 9.394\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q2 2026 actual\",\"period\":\"2026-Q2\",\"role\":\"actual\",\"value\":\"9.685\",\"span_text\":\"Deferred revenue | 9.685 | 9.620 | 9.394\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"9.620\",\"span_text\":\"Deferred revenue | 9.685 | 9.620 | 9.394\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"attribute\":\"Q2 2026 budget\",\"period\":\"2026-Q2\",\"role\":\"budget\",\"value\":\"9.394\",\"span_text\":\"Deferred revenue | 9.685 | 9.620 | 9.394\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T19:04:45.719808+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-finance-v2-2026q2",
+        "location": "page:1/table:1/row:Deferred revenue"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:1/row:Deferred revenue\",\"text\":\"Deferred revenue | 9.685 | 9.620 | 9.394\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\": [{\"doc_id\": \"vantage-finance-v2-2026q2\", \"page\": 1, \"span_text\": \"Deferred revenue | 9.685 | 9.620 | 9.394\", \"canonical_value\": 9685000, \"unit\": \"EUR (millions)\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.95}, {\"doc_id\": \"vantage-finance-v1-2026q2\", \"page\": 1, \"span_text\": \"Deferred revenue | 9.685 | 9.620 | 9.394\", \"canonical_value\": 9685000, \"unit\": \"EUR (millions)\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.95}], \"verdict\": {\"status\": \"supported\", \"delta\": 0, \"confidence\": 0.95, \"rationale\": \"Both Q2 2026 finance packs report Deferred revenue (the balance-sheet synonym of 'unearned revenue') at 9.685 million EUR for Q2 2026 actual, equal to the claim's canonical 9,685,000; no conflicting values exist for this entity/period.\", \"suggested_action\": null}}"
+}

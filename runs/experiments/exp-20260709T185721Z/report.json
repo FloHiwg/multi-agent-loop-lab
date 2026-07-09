@@ -1,0 +1,51 @@
+{
+  "experiment_id": "exp-20260709T185721Z",
+  "audit_id": "audit-2026-q2-vantage",
+  "model": "z-ai/glm-5.2",
+  "max_concurrency": 4,
+  "max_budget_usd": 3.0,
+  "started_variants": [
+    "baseline",
+    "graph",
+    "rlm"
+  ],
+  "total_cost_usd": 1.566741130000001,
+  "summaries": [
+    {
+      "variant": "baseline",
+      "n_claims": 31,
+      "correct": 28,
+      "accuracy": 0.9032258064516129,
+      "failures": 0,
+      "avg_tool_calls": 8.258064516129032,
+      "avg_cost_usd": 0.016021070322580645,
+      "total_cost_usd": 0.49665317999999997,
+      "enrichment_cost_usd": null,
+      "n_attempted": 31
+    },
+    {
+      "variant": "graph",
+      "n_claims": 31,
+      "correct": 28,
+      "accuracy": 0.9032258064516129,
+      "failures": 0,
+      "avg_tool_calls": 7.096774193548387,
+      "avg_cost_usd": 0.0170189064516129,
+      "total_cost_usd": 0.5275861,
+      "enrichment_cost_usd": null,
+      "n_attempted": 31
+    },
+    {
+      "variant": "rlm",
+      "n_claims": 31,
+      "correct": 28,
+      "accuracy": 0.9032258064516129,
+      "failures": 1,
+      "avg_tool_calls": 6.709677419354839,
+      "avg_cost_usd": 0.01750005967741935,
+      "total_cost_usd": 0.54250185,
+      "enrichment_cost_usd": null,
+      "n_attempted": 31
+    }
+  ]
+}

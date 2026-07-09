@@ -1,0 +1,118 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0007",
+  "variant": "rlm",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 5,
+  "cost_usd": 0.01369988,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0007",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0007/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "The Q2 2026 regional scorecard reports DACH revenue actual of 6.631 million EUR, exactly matching the claim's EUR 6.63 million (6,631,000). No competing figures exist for DACH Q2 2026.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/rlm/audit-2026-q2-vantage/claim-0007"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0007/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0007",
+      "doc_id": "vantage-regional-2026q2",
+      "page": 1,
+      "span_text": "DACH | 6.631 | 6.579 | 6.432",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 6631000.0,
+      "unit": "EUR (millions)",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T19:04:37.028505+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "DACH sales"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'DACH sales' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"DACH\",\"similarity\":0.808},{\"entity\":\"Deferred revenue\",\"similarity\":0.339},{\"entity\":\"New enterprise accounts\",\"similarity\":0.326},{\"entity\":\"Enterprise accounts\",\"similarity\":0.326},{\"entity\":\"Licensed seats\",\"similarity\":0.317},{\"entity\":\"Gross profit\",\"similarity\":0.31},{\"entity\":\"Qualified commercial pipeline\",\"similarity\":0.31},{\"entity\":\"Expansion bookings\",\"similarity\":0.301}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T19:04:37.081348+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "DACH"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q2 2025 actual\",\"value\":\"6.200\"},{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Prior actual\",\"value\":\"-\"},{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q2 2025 budget\",\"value\":\"6.014\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q3 2025 actual\",\"value\":\"6.311\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Prior actual\",\"value\":\"6.200\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q3 2025 budget\",\"value\":\"6.121\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q4 2025 actual\",\"value\":\"6.381\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Prior actual\",\"value\":\"6.311\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q4 2025 budget\",\"value\":\"6.189\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q1 2026 actual\",\"value\":\"6.579\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Prior actual\",\"value\":\"6.381\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q1 2026 budget\",\"value\":\"6.381\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q2 2026 actual\",\"value\":\"6.631\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Prior actual\",\"value\":\"6.579\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q2 2026 budget\",\"value\":\"6.432\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T19:04:39.863766+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "DACH"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"DACH\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q2 2025 actual\",\"period\":\"2025-Q2\",\"role\":\"actual\",\"value\":\"6.200\",\"span_text\":\"DACH | 6.200 | - | 6.014\"},{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Prior actual\",\"period\":null,\"role\":\"actual\",\"value\":\"-\",\"span_text\":\"DACH | 6.200 | - | 6.014\"},{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q2 2025 budget\",\"period\":\"2025-Q2\",\"role\":\"budget\",\"value\":\"6.014\",\"span_text\":\"DACH | 6.200 | - | 6.014\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q3 2025 actual\",\"period\":\"2025-Q3\",\"role\":\"actual\",\"value\":\"6.311\",\"span_text\":\"DACH | 6.311 | 6.200 | 6.121\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Prior actual\",\"period\":null,\"role\":\"actual\",\"value\":\"6.200\",\"span_text\":\"DACH | 6.311 | 6.200 | 6.121\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q3 2025 budget\",\"period\":\"2025-Q3\",\"role\":\"budget\",\"value\":\"6.121\",\"span_text\":\"DACH | 6.311 | 6.200 | 6.121\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"6.381\",\"span_text\":\"DACH | 6.381 | 6.311 | 6.189\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Prior actual\",\"period\":null,\"role\":\"actual\",\"value\":\"6.311\",\"span_text\":\"DACH | 6.381 | 6.311 | 6.189\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q4 2025 budget\",\"period\":\"2025-Q4\",\"role\":\"budget\",\"value\":\"6.189\",\"span_text\":\"DACH | 6.381 | 6.311 | 6.189\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"6.579\",\"span_text\":\"DACH | 6.579 | 6.381 | 6.381\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Prior actual\",\"period\":null,\"role\":\"actual\",\"value\":\"6.381\",\"span_text\":\"DACH | 6.579 | 6.381 | 6.381\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q1 2026 budget\",\"period\":\"2026-Q1\",\"role\":\"budget\",\"value\":\"6.381\",\"span_text\":\"DACH | 6.579 | 6.381 | 6.381\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q2 2026 actual\",\"period\":\"2026-Q2\",\"role\":\"actual\",\"value\":\"6.631\",\"span_text\":\"DACH | 6.631 | 6.579 | 6.432\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Prior actual\",\"period\":null,\"role\":\"actual\",\"value\":\"6.579\",\"span_text\":\"DACH | 6.631 | 6.579 | 6.432\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"attribute\":\"Q2 2026 budget\",\"period\":\"2026-Q2\",\"role\":\"budget\",\"value\":\"6.432\",\"span_text\":\"DACH | 6.631 | 6.579 | 6.432\"}],\"edges\":[{\"kind\":\"aggregates\",\"doc_id\":\"vantage-regional-2025q2\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"DACH\",\"France\",\"Nordics\",\"UK and Ireland\",\"Iberia\",\"Benelux\"],\"holds_for\":[\"Q2 2025 actual\",\"Q2 2025 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-regional-2025q3\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"DACH\",\"France\",\"Nordics\",\"UK and Ireland\",\"Iberia\",\"Benelux\"],\"holds_for\":[\"Q3 2025 actual\",\"Prior actual\",\"Q3 2025 budget\"]},{\"kind\":\"derived_from\",\"doc_id\":\"vantage-regional-2025q4\",\"op\":\"diff\",\"target\":\"Iberia\",\"inputs\":[\"DACH\",\"UK and Ireland\"],\"holds_for\":[\"Q4 2025 actual\",\"Q4 2025 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-regional-2025q4\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"DACH\",\"France\",\"Nordics\",\"UK and Ireland\",\"Iberia\",\"Benelux\"],\"holds_for\":[\"Q4 2025 actual\",\"Prior actual\",\"Q4 2025 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-regional-2026q1\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"DACH\",\"France\",\"Nordics\",\"UK and Ireland\",\"Iberia\",\"Benelux\"],\"holds_for\":[\"Q1 2026 actual\",\"Prior actual\",\"Q1 2026 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-regional-2026q2\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"DACH\",\"France\",\"Nordics\",\"UK and Ireland\",\"Iberia\",\"Benelux\"],\"holds_for\":[\"Q2 2026 actual\",\"Prior actual\",\"Q2 2026 budget\"]}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T19:04:40.143330+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-regional-2026q2",
+        "location": "page:1/table:1/row:DACH"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"text\":\"DACH | 6.631 | 6.579 | 6.432\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T19:04:45.008869+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-regional-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Regional Performance\\nRevenue by market\\nRegional scorecard\\nRegion\\nQ2 2026 actual\\nPrior actual\\nQ2 2026 budget\\nDACH\\n6.631\\n6.579\\n6.432\\nFrance\\n4.134\\n4.107\\n4.009\\nNordics\\n2.804\\n2.701\\n2.719\\nUK and Ireland\\n4.927\\n4.792\\n4.779\\nIberia\\n1.888\\n1.857\\n1.831\\nBenelux\\n1.511\\n1.493\\n1.465\\nTotal\\n21.895\\n21.529\\n21.235\\nQualified commercial pipeline\\n13.053\\n-\\n-\\nRegional pipeline uses local CRM qualification and is not ranked against Finance.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"vantage-regional-2026q2\",\"page\":1,\"span_text\":\"DACH | 6.631 | 6.579 | 6.432\",\"canonical_value\":6631000,\"unit\":\"EUR (millions)\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0,\"confidence\":0.95,\"rationale\":\"The Q2 2026 regional scorecard reports DACH revenue actual of 6.631 million EUR, exactly matching the claim's EUR 6.63 million (6,631,000). No competing figures exist for DACH Q2 2026.\",\"suggested_action\":null}}"
+}

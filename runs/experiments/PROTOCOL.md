@@ -236,6 +236,43 @@ pack 8.4 vs regional review 8.1, gold `ambiguous`). Guards in every run:
 - **Decision / next:** full 31-claim baseline vs graph vs rlm comparison
   on Vantage, sliced by failure_class.
 
+## exp-20260709T185721Z — baseline vs graph vs rlm at Vantage scale (31 claims, 41 docs)
+
+- **Question:** does the graph/rlm machinery finally separate from
+  baseline on a 41-doc vault with narrative evidence?
+- **Result:** three-way tie at **28/31 (90%)** each. Tools 8.3 / 7.1 /
+  6.7 (baseline/graph/rlm); real cost $0.50/$0.53/$0.54 per variant,
+  $1.57 total.
+- **Reading, by class:**
+  - **Narrative evidence is a solved retrieval case for all variants:**
+    narrative_only 4/4 and contradicted_prose 2/2 across the board --
+    page-level FTS is enough to find and judge prose values.
+  - **prose_table_clash is the universal blind spot (0/1 in all three).**
+    Every rationale says "no source states a different value" -- nobody
+    read the quarterly update's conflicting prose figure. Root cause
+    identified: entity_profile's `conflicts: []` covers TABLE facts only,
+    but the models treat it as corpus-wide clearance, so the prose
+    disagreement is never looked for. The deterministic conflict surface
+    created false confidence outside its coverage.
+  - **stale_quarter misses are a rubric regression, not capability:** all
+    variants say `contradicted` where gold says `outdated` for
+    prior-quarter values asserted as current. The pre-2026-07-09 rubric
+    covered "different, superseded period"; the rewrite emphasized
+    version supersession and lost the period-staleness case.
+  - **rlm delegated 3 of 31 claims** (all absence-type questions, all
+    answered correctly), used the fewest tool calls of the three, and had
+    the run's one hard failure (a bare-verdict shape slip, 1 in 93).
+  - **The graph scaling hypothesis is still unconfirmed at 41 docs**:
+    baseline FTS ties on accuracy; graph/rlm are ~15-20% leaner on calls
+    but pay it back in payload tokens. Document count alone may not be
+    the scaling axis that separates them -- vocabulary diversity and
+    corpus size beyond FTS snippet quality might be.
+- **Decision / next:** (a) scope-caveat the conflicts list in the graph
+  prompt (tables only; one search_vault sweep before "supported") --
+  general, not fixture-specific; (b) restore period-staleness to the
+  outdated rubric; (c) per-claim checkpointing in eval.py (mid-variant
+  crash currently loses finished claims); re-measure after (a)+(b).
+
 ---
 
 ## Non-experiment incident log

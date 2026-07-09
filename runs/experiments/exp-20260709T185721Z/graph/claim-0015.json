@@ -1,0 +1,217 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0015",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 10,
+  "cost_usd": 0.01958332,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0015",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0015/evidence-001",
+      "audit-2026-q2-vantage/claim-0015/evidence-002",
+      "audit-2026-q2-vantage/claim-0015/evidence-003"
+    ],
+    "delta": 0.0,
+    "confidence": 0.9,
+    "rationale": "The Q2 2026 treasury ledger reports a Total cash position of 7,281 kEUR (Operating accounts 4,424 + Deposit accounts 2,857), which equals EUR 7,281,000 and matches the claim's canonical value for available liquidity at quarter end. No competing figure appears in the management commentary or quarterly update.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q2-vantage/claim-0015"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0015/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0015",
+      "doc_id": "vantage-treasury-2026q2",
+      "page": 1,
+      "span_text": "Total | 7,281 | - | -",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 7281000.0,
+      "unit": "kEUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0015/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0015",
+      "doc_id": "vantage-treasury-2026q2",
+      "page": 1,
+      "span_text": "Operating accounts | 4,424 | - | -",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 4424000.0,
+      "unit": "kEUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0015/evidence-003",
+      "claim_id": "audit-2026-q2-vantage/claim-0015",
+      "doc_id": "vantage-treasury-2026q2",
+      "page": 1,
+      "span_text": "Deposit accounts | 2,857 | - | -",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 2857000.0,
+      "unit": "kEUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T19:01:34.493691+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Available liquidity"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'Available liquidity' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Open case inventory\",\"similarity\":0.471},{\"entity\":\"Deposit accounts\",\"similarity\":0.42},{\"entity\":\"Trade receivables\",\"similarity\":0.382},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.381},{\"entity\":\"Deferred revenue\",\"similarity\":0.338},{\"entity\":\"Qualified commercial pipeline\",\"similarity\":0.328},{\"entity\":\"Licensed seats\",\"similarity\":0.327},{\"entity\":\"Operating accounts\",\"similarity\":0.315}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T19:01:34.592169+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "liquidity"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T19:01:36.803612+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "liquidity"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T19:01:36.834178+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {},
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-finance-2025q2\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-operations-2025q2\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Production incidents\"]},{\"doc_id\":\"vantage-customer-2025q2\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-regional-2025q2\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:UK and Ireland\",\"page:1/table:1/row:Iberia\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"vantage-treasury-2025q2\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\"]},{\"doc_id\":\"vantage-people-2025q2\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"vantage-commentary-2025q2\",\"tag\":\"management_commentary\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-update-2025q2\",\"tag\":\"quarterly_update\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-finance-2025q3\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-operations-2025q3\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Production incidents\"]},{\"doc_id\":\"vantage-customer-2025q3\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-regional-2025q3\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:UK and Ireland\",\"page:1/table:1/row:Iberia\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"vantage-treasury-2025q3\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\"]},{\"doc_id\":\"vantage-people-2025q3\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"vantage-commentary-2025q3\",\"tag\":\"management_commentary\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-update-2025q3\",\"tag\":\"quarterly_update\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-finance-2025q4\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-operations-2025q4\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Production incidents\"]},{\"doc_id\":\"vantage-customer-2025q4\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-regional-2025q4\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:UK and Ireland\",\"page:1/table:1/row:Iberia\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"vantage-treasury-2025q4\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\"]},{\"doc_id\":\"vantage-people-2025q4\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"vantage-commentary-2025q4\",\"tag\":\"management_commentary\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-update-2025q4\",\"tag\":\"quarterly_update\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-finance-2026q1\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-operations-2026q1\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Production incidents\"]},{\"doc_id\":\"vantage-customer-2026q1\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-regional-2026q1\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:UK and Ireland\",\"page:1/table:1/row:Iberia\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"vantage-treasury-2026q1\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\"]},{\"doc_id\":\"vantage-people-2026q1\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"vantage-commentary-2026q1\",\"tag\":\"management_commentary\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-update-2026q1\",\"tag\":\"quarterly_update\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:1/table:2/row:Qualified pipeline\",\"page:1/table:2/row:Expansion bookings\"]},{\"doc_id\":\"vantage-operations-2026q2\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Production incidents\"]},{\"doc_id\":\"vantage-customer-2026q2\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-regional-2026q2\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:UK and Ireland\",\"page:1/table:1/row:Iberia\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"vantage-treasury-2026q2\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\"]},{\"doc_id\":\"vantage-people-2026q2\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"vantage-commentary-2026q2\",\"tag\":\"management_commentary\",\"format\":\"pdf\",\"locations\":[\"page:1\"]},{\"doc_id\":\"vantage-update-2026q2\",\"tag\":\"quarterly_update\",\"format\":\"pdf\",\"locations\":[\"page:1\"]}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T19:01:39.926301+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Operating accounts"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Operating accounts\",\"conflicts\":[],\"see_also\":[{\"entity\":\"Enterprise accounts\",\"similarity\":0.671},{\"entity\":\"Deposit accounts\",\"similarity\":0.614},{\"entity\":\"Adjusted operating result\",\"similarity\":0.523}],\"facts\":[{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Q2 2025 close\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"4,100\",\"span_text\":\"Operating accounts | 4,100 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Operating accounts | 4,100 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Operating accounts | 4,100 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Q3 2025 close\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"4,148\",\"span_text\":\"Operating accounts | 4,148 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Operating accounts | 4,148 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Operating accounts | 4,148 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Q4 2025 close\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"4,152\",\"span_text\":\"Operating accounts | 4,152 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Operating accounts | 4,152 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Operating accounts | 4,152 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Q1 2026 close\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"4,300\",\"span_text\":\"Operating accounts | 4,300 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Operating accounts | 4,300 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Operating accounts | 4,300 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Q2 2026 close\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"4,424\",\"span_text\":\"Operating accounts | 4,424 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Operating accounts | 4,424 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1/table:1/row:Operating accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Operating accounts | 4,424 | - | -\"}],\"edges\":[{\"kind\":\"aggregates\",\"doc_id\":\"vantage-treasury-2025q2\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"Operating accounts\",\"Deposit accounts\"],\"holds_for\":[\"Q2 2025 close\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-treasury-2025q3\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"Operating accounts\",\"Deposit accounts\"],\"holds_for\":[\"Q3 2025 close\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-treasury-2025q4\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"Operating accounts\",\"Deposit accounts\"],\"holds_for\":[\"Q4 2025 close\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-treasury-2026q1\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"Operating accounts\",\"Deposit accounts\"],\"holds_for\":[\"Q1 2026 close\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-treasury-2026q2\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"Operating accounts\",\"Deposit accounts\"],\"holds_for\":[\"Q2 2026 close\"]}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T19:01:40.110380+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Deposit accounts"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Deposit accounts\",\"conflicts\":[],\"see_also\":[{\"entity\":\"Operating accounts\",\"similarity\":0.614},{\"entity\":\"Enterprise accounts\",\"similarity\":0.572}],\"facts\":[{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Q2 2025 close\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"2,600\",\"span_text\":\"Deposit accounts | 2,600 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deposit accounts | 2,600 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deposit accounts | 2,600 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Q3 2025 close\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"2,649\",\"span_text\":\"Deposit accounts | 2,649 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deposit accounts | 2,649 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deposit accounts | 2,649 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Q4 2025 close\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"2,692\",\"span_text\":\"Deposit accounts | 2,692 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deposit accounts | 2,692 | - | -\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deposit accounts | 2,692 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Q1 2026 close\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"2,783\",\"span_text\":\"Deposit accounts | 2,783 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deposit accounts | 2,783 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deposit accounts | 2,783 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Q2 2026 close\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"2,857\",\"span_text\":\"Deposit accounts | 2,857 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deposit accounts | 2,857 | - | -\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1/table:1/row:Deposit accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Deposit accounts | 2,857 | - | -\"}],\"edges\":[{\"kind\":\"aggregates\",\"doc_id\":\"vantage-treasury-2025q2\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"Operating accounts\",\"Deposit accounts\"],\"holds_for\":[\"Q2 2025 close\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-treasury-2025q3\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"Operating accounts\",\"Deposit accounts\"],\"holds_for\":[\"Q3 2025 close\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-treasury-2025q4\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"Operating accounts\",\"Deposit accounts\"],\"holds_for\":[\"Q4 2025 close\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-treasury-2026q1\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"Operating accounts\",\"Deposit accounts\"],\"holds_for\":[\"Q1 2026 close\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-treasury-2026q2\",\"op\":\"sum\",\"target\":\"Total\",\"inputs\":[\"Operating accounts\",\"Deposit accounts\"],\"holds_for\":[\"Q2 2026 close\"]}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-09T19:01:40.422678+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-treasury-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Treasury and Cash\\nCash position\\nTreasury ledger\\nkEUR\\nQ2 2026 close\\nPrior close\\nPlan\\nOperating accounts\\n4,424\\n-\\n-\\nDeposit accounts\\n2,857\\n-\\n-\\nTotal\\n7,281\\n-\\n-\\nNet operating cash outflow\\n(1,520)\\n-\\n-\\nAll figures in thousands of euros.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 8,
+      "at": "2026-07-09T19:01:49.994665+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-commentary-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Management Commentary\\nLetter to the supervisory board\\nTrading in Q2 2026 developed in line with the restated plan. Net revenue reached EUR 21.89 million, with the gross\\nresult at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\\nCustomer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the\\ngross renewal rate held at 91.4% across the installed base.\\nDelivery efficiency improved. The median onboarding cycle for new enterprise customers was 27 days, and the\\ncertified implementation partner network grew to 80 partners at quarter end.\\nThe workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 9,
+      "at": "2026-07-09T19:01:50.433323+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-update-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-update-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Quarterly Update\\nInvestor and staff brief\\nVantage Industrial Group SE closed Q2 2026 with revenue of EUR 21.89 million and 43 new enterprise account wins.\\nThe qualified pipeline stood at EUR 13.26 million entering the next quarter.\\nAnnualized subscription value reached EUR 34.78 million, with licensed seats at 10,231.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 10,
+      "at": "2026-07-09T19:01:50.506681+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Total"
+      },
+      "output": "'<' not supported between instances of 'NoneType' and 'str'",
+      "is_error": true
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"vantage-treasury-2026q2\",\"page\":1,\"span_text\":\"Total | 7,281 | - | -\",\"canonical_value\":7281000.0,\"unit\":\"kEUR\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95},{\"doc_id\":\"vantage-treasury-2026q2\",\"page\":1,\"span_text\":\"Operating accounts | 4,424 | - | -\",\"canonical_value\":4424000.0,\"unit\":\"kEUR\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95},{\"doc_id\":\"vantage-treasury-2026q2\",\"page\":1,\"span_text\":\"Deposit accounts | 2,857 | - | -\",\"canonical_value\":2857000.0,\"unit\":\"kEUR\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.9,\"rationale\":\"The Q2 2026 treasury ledger reports a Total cash position of 7,281 kEUR (Operating accounts 4,424 + Deposit accounts 2,857), which equals EUR 7,281,000 and matches the claim's canonical value for available liquidity at quarter end. No competing figure appears in the management commentary or quarterly update.\",\"suggested_action\":null}}"
+}

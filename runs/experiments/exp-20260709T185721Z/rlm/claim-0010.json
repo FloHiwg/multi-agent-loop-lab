@@ -1,0 +1,97 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0010",
+  "variant": "rlm",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.009655200000000001,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0010",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0010/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The Q2 2026 management commentary explicitly states the gross renewal rate held at 91.4%, matching the claim exactly; other renewal-rate figures in the vault pertain to prior quarters and are not competing values for Q2 2026.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/rlm/audit-2026-q2-vantage/claim-0010"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0010/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0010",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "the gross renewal rate held at 91.4% across the installed base.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 0.914,
+      "unit": "percent",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T19:04:53.181667+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Gross renewal rate"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'Gross renewal rate' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Gross account attrition\",\"similarity\":0.595},{\"entity\":\"Net dollar retention\",\"similarity\":0.516},{\"entity\":\"Gross profit\",\"similarity\":0.454},{\"entity\":\"Annualized subscription value\",\"similarity\":0.442},{\"entity\":\"Net revenue\",\"similarity\":0.382},{\"entity\":\"Expansion bookings\",\"similarity\":0.314},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.305},{\"entity\":\"Adjusted operating result\",\"similarity\":0.292}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T19:04:53.248803+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "gross renewal rate"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-commentary-2025q2\",\"location\":\"page:1\",\"snippet\":\"...the quarter, and the\\n[gross] [renewal] [rate] held at 90.9% across...\"},{\"doc_id\":\"vantage-commentary-2025q3\",\"location\":\"page:1\",\"snippet\":\"...the quarter, and the\\n[gross] [renewal] [rate] held at 91.8% across...\"},{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...the quarter, and the\\n[gross] [renewal] [rate] held at 94.4% across...\"},{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"snippet\":\"...the quarter, and the\\n[gross] [renewal] [rate] held at 92.9% across...\"},{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"snippet\":\"...the quarter, and the\\n[gross] [renewal] [rate] held at 91.4% across...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T19:04:55.864753+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-commentary-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Management Commentary\\nLetter to the supervisory board\\nTrading in Q2 2026 developed in line with the restated plan. Net revenue reached EUR 21.89 million, with the gross\\nresult at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\\nCustomer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the\\ngross renewal rate held at 91.4% across the installed base.\\nDelivery efficiency improved. The median onboarding cycle for new enterprise customers was 27 days, and the\\ncertified implementation partner network grew to 80 partners at quarter end.\\nThe workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T19:04:56.251967+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "renewal rate 91.4"
+      },
+      "output": "search error: fts5: syntax error near \".\"",
+      "is_error": true
+    }
+  ],
+  "final_text": "The Q2 2026 commentary explicitly confirms the claim. The other renewal rate spans are for different periods (2025 Q2\u2013Q4, 2026 Q1), so they are not competing values for the same period.\n\nThe claim is for Q2 2026, and `vantage-commentary-2026q2` states: \"the gross renewal rate held at 91.4% across the installed base.\" This is an exact match.\n\n```json\n{\"evidence\": [{\"doc_id\": \"vantage-commentary-2026q2\", \"page\": 1, \"span_text\": \"the gross renewal rate held at 91.4% across the installed base.\", \"canonical_value\": 0.914, \"unit\": \"percent\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.95}], \"verdict\": {\"status\": \"supported\", \"delta\": 0.0, \"confidence\": 0.97, \"rationale\": \"The Q2 2026 management commentary explicitly states the gross renewal rate held at 91.4%, matching the claim exactly; other renewal-rate figures in the vault pertain to prior quarters and are not competing values for Q2 2026.\", \"suggested_action\": null}}\n```"
+}

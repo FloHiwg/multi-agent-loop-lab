@@ -1,0 +1,101 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0017",
+  "variant": "rlm",
+  "expected_status": "contradicted",
+  "status": "contradicted",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.01262194,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0017",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0017/evidence-001"
+    ],
+    "delta": 2.0,
+    "confidence": 0.9,
+    "rationale": "The Q2 2026 operations review reports closing (period-end) FTE of 224, while the claim asserts 226; no vault document states 226 for the closing workforce.",
+    "suggested_action": "Reconcile the master document's 226 FTE figure against the operations review's 224 period-end FTE and correct the master if the operations figure is authoritative.",
+    "produced_by_run_id": "eval/rlm/audit-2026-q2-vantage/claim-0017"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0017/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0017",
+      "doc_id": "vantage-operations-2026q2",
+      "page": 1,
+      "span_text": "FTE, period end | 224 | 221 | 228",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 224.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T19:05:26.334869+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "closing workforce"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'closing workforce' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Contract personnel\",\"similarity\":0.454},{\"entity\":\"FTE, period end\",\"similarity\":0.377},{\"entity\":\"Gross account attrition\",\"similarity\":0.367},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.333},{\"entity\":\"Net dollar retention\",\"similarity\":0.321},{\"entity\":\"Qualified pipeline\",\"similarity\":0.293},{\"entity\":\"Open case inventory\",\"similarity\":0.281},{\"entity\":\"Enterprise accounts\",\"similarity\":0.274}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T19:05:27.609958+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "FTE, period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"FTE, period end\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"213\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"217\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"214\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"213\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"218\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"216\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"214\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"220\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"221\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"216\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"225\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"224\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"221\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"228\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T19:05:31.538485+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "workforce FTE 226"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T19:05:31.642016+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "workforce"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "No vault document states 226 for the workforce. The authoritative operations review for Q2 2026 gives period-end FTE = 224, contradicting the claim's 226.\n\n```json\n{\"evidence\":[{\"doc_id\":\"vantage-operations-2026q2\",\"page\":1,\"span_text\":\"FTE, period end | 224 | 221 | 228\",\"canonical_value\":224.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"contradicted\",\"delta\":2.0,\"confidence\":0.9,\"rationale\":\"The Q2 2026 operations review reports closing (period-end) FTE of 224, while the claim asserts 226; no vault document states 226 for the closing workforce.\",\"suggested_action\":\"Reconcile the master document's 226 FTE figure against the operations review's 224 period-end FTE and correct the master if the operations figure is authoritative.\"}}\n```"
+}

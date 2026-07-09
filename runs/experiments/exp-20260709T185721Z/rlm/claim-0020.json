@@ -1,0 +1,148 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0020",
+  "variant": "rlm",
+  "expected_status": "contradicted",
+  "status": "contradicted",
+  "correct": true,
+  "tool_calls": 6,
+  "cost_usd": 0.01938345,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0020",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0020/evidence-001",
+      "audit-2026-q2-vantage/claim-0020/evidence-002"
+    ],
+    "delta": 6.0,
+    "confidence": 0.95,
+    "rationale": "The Q2 2026 management commentary states the group-wide NPS was 38 for the quarter, not 44; the figure also declined from 57 in Q1 2026, contradicting the claim's 'improved' framing. No vault document states a value of 44.",
+    "suggested_action": "Correct the master document's Q2 2026 group NPS figure from 44 to 38 and re-check the 'improved' characterization, since the score fell from 57 in Q1 2026.",
+    "produced_by_run_id": "eval/rlm/audit-2026-q2-vantage/claim-0020"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0020/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0020",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "Customer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 38.0,
+      "unit": "score",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0020/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0020",
+      "doc_id": "vantage-commentary-2026q1",
+      "page": 1,
+      "span_text": "Customer sentiment strengthened again: the group-wide net promoter score came in at 57 for the quarter, and the gross renewal rate held at 92.9% across the installed base.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 57.0,
+      "unit": "score",
+      "role": "prior_period",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T19:05:43.742375+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "net promoter score"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'net promoter score' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Net dollar retention\",\"similarity\":0.441},{\"entity\":\"Net revenue\",\"similarity\":0.382},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.314},{\"entity\":\"Adjusted operating result\",\"similarity\":0.31},{\"entity\":\"P1 response SLA attainment\",\"similarity\":0.308},{\"entity\":\"Gross profit\",\"similarity\":0.288},{\"entity\":\"New enterprise accounts\",\"similarity\":0.283},{\"entity\":\"Annualized subscription value\",\"similarity\":0.279}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T19:05:43.954697+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "net promoter score"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-commentary-2025q2\",\"location\":\"page:1\",\"snippet\":\"...the group-wide [net] [promoter] [score] came in at 55 for the...\"},{\"doc_id\":\"vantage-commentary-2025q3\",\"location\":\"page:1\",\"snippet\":\"...the group-wide [net] [promoter] [score] came in at 41 for the...\"},{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...the group-wide [net] [promoter] [score] came in at 49 for the...\"},{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"snippet\":\"...the group-wide [net] [promoter] [score] came in at 57 for the...\"},{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"snippet\":\"...the group-wide [net] [promoter] [score] came in at 38 for the...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T19:05:47.346889+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-commentary-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Management Commentary\\nLetter to the supervisory board\\nTrading in Q2 2026 developed in line with the restated plan. Net revenue reached EUR 21.89 million, with the gross\\nresult at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\\nCustomer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the\\ngross renewal rate held at 91.4% across the installed base.\\nDelivery efficiency improved. The median onboarding cycle for new enterprise customers was 27 days, and the\\ncertified implementation partner network grew to 80 partners at quarter end.\\nThe workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T19:05:47.617034+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-commentary-2026q1",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ1 2026 Management Commentary\\nLetter to the supervisory board\\nTrading in Q1 2026 developed in line with the restated plan. Net revenue reached EUR 21.53 million, with the gross\\nresult at EUR 12.72 million and an adjusted operating result of EUR 5.52 million.\\nCustomer sentiment strengthened again: the group-wide net promoter score came in at 57 for the quarter, and the\\ngross renewal rate held at 92.9% across the installed base.\\nDelivery efficiency improved. The median onboarding cycle for new enterprise customers was 39 days, and the\\ncertified implementation partner network grew to 80 partners at quarter end.\\nThe workforce closed at 221 full-time equivalents, supported by 26 external contract staff.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T19:05:53.061918+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "NPS 44 OR \"score of 44\" OR \"score came in at 44\""
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T19:05:54.154958+00:00",
+      "tool": "mcp__proofbench_rlm__ask_researcher",
+      "input": {
+        "question": "Does any vault document state a group net promoter score (NPS) value of 44 for Vantage Industrial Group, for any period but especially Q2 2026? List every NPS value any document states, with the period and verbatim span."
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"answer\":\"No vault document states a group net promoter score value of 44 for Vantage Industrial Group. The NPS values stated are: Q2 2025 = 55; Q3 2025 = 41; Q4 2025 = 49; Q1 2026 = 57; Q2 2026 = 38.\",\"spans\":[{\"doc_id\":\"vantage-commentary-2025q2\",\"location\":\"page:1\",\"span_text\":\"Customer sentiment strengthened again: the group-wide [net] [promoter] [score] came in at 55 for the quarter, and the gross renewal rate held at 90.9% across the installed base.\"},{\"doc_id\":\"vantage-commentary-2025q3\",\"location\":\"page:1\",\"span_text\":\"Customer sentiment strengthened again: the group-wide [net] [promoter] [score] came in at 41 for the quarter, and the gross renewal rate held at 91.8% across the installed base.\"},{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"span_text\":\"Customer sentiment strengthened again: the group-wide net promoter score came in at 49 for the quarter, and the gross renewal rate held at 94.4% across the installed base.\"},{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"span_text\":\"Customer sentiment strengthened again: the group-wide [net] [promoter] [score] came in at 57 for the quarter, and the gross renewal rate held at 92.9% across the installed base.\"},{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"span_text\":\"Customer sentiment strengthened again: the group-wide [net] [promoter] [score] came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.\"}],\"searched\":[\"NPS\",\"Net Promoter Score\",\"Vantage Industrial Group NPS\",\"NPS 44\"],\"researcher_tool_calls\":10}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The evidence is conclusive. The Q2 2026 management commentary \u2014 the authoritative source for the claim's period \u2014 states the group-wide NPS came in at 38, not 44. No vault document states 44. The claim is contradicted.\n\n```json\n{\"evidence\": [{\"doc_id\": \"vantage-commentary-2026q2\", \"page\": 1, \"span_text\": \"Customer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.\", \"canonical_value\": 38, \"unit\": \"score\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.95}, {\"doc_id\": \"vantage-commentary-2026q1\", \"page\": 1, \"span_text\": \"Customer sentiment strengthened again: the group-wide net promoter score came in at 57 for the quarter, and the gross renewal rate held at 92.9% across the installed base.\", \"canonical_value\": 57, \"unit\": \"score\", \"role\": \"prior_period\", \"effective_date\": \"2026-03-31\", \"extractor_confidence\": 0.95}], \"verdict\": {\"status\": \"contradicted\", \"delta\": 6, \"confidence\": 0.95, \"rationale\": \"The Q2 2026 management commentary states the group-wide NPS was 38 for the quarter, not 44; the figure also declined from 57 in Q1 2026, contradicting the claim's 'improved' framing. No vault document states a value of 44.\", \"suggested_action\": \"Correct the master document's Q2 2026 group NPS figure from 44 to 38 and re-check the 'improved' characterization, since the score fell from 57 in Q1 2026.\"}}\n```"
+}

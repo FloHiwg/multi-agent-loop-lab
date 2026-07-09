@@ -1,0 +1,148 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0021",
+  "variant": "graph",
+  "expected_status": "contradicted",
+  "status": "contradicted",
+  "correct": true,
+  "tool_calls": 6,
+  "cost_usd": 0.012285619999999999,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0021",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0021/evidence-001",
+      "audit-2026-q2-vantage/claim-0021/evidence-002"
+    ],
+    "delta": -5.0,
+    "confidence": 0.95,
+    "rationale": "The authoritative Q2 2026 management commentary states the median onboarding cycle was 27 days, not the 22 days claimed; no vault source states 22 days for any period.",
+    "suggested_action": "Correct the master document's figure from 22 days to 27 days to match the Q2 2026 management commentary, or confirm whether the 22-day figure derives from a different methodology/scope not represented in the vault.",
+    "produced_by_run_id": "eval/graph/audit-2026-q2-vantage/claim-0021"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0021/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0021",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "The median onboarding cycle for new enterprise customers was 27 days",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 27.0,
+      "unit": "days",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.98
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0021/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0021",
+      "doc_id": "vantage-commentary-2026q1",
+      "page": 1,
+      "span_text": "The median onboarding cycle for new enterprise customers was 39 days",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 39.0,
+      "unit": "days",
+      "role": "prior_period",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.97
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T19:02:19.161510+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "onboarding cycle"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'onboarding cycle' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"New enterprise accounts\",\"similarity\":0.375},{\"entity\":\"Qualified pipeline\",\"similarity\":0.354},{\"entity\":\"Gross account attrition\",\"similarity\":0.308},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.298},{\"entity\":\"Structured learning hours\",\"similarity\":0.292},{\"entity\":\"Enterprise accounts\",\"similarity\":0.289},{\"entity\":\"Contract personnel\",\"similarity\":0.283},{\"entity\":\"Annualized subscription value\",\"similarity\":0.273}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T19:02:19.298685+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "median onboarding cycle days"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-commentary-2025q2\",\"location\":\"page:1\",\"snippet\":\"...The [median] [onboarding] [cycle] for new enterprise customers was 32 [days], and...\"},{\"doc_id\":\"vantage-commentary-2025q3\",\"location\":\"page:1\",\"snippet\":\"...The [median] [onboarding] [cycle] for new enterprise customers was 35 [days], and...\"},{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...The [median] [onboarding] [cycle] for new enterprise customers was 35 [days], and...\"},{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"snippet\":\"...The [median] [onboarding] [cycle] for new enterprise customers was 39 [days], and...\"},{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"snippet\":\"...The [median] [onboarding] [cycle] for new enterprise customers was 27 [days], and...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T19:02:21.418145+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-commentary-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Management Commentary\\nLetter to the supervisory board\\nTrading in Q2 2026 developed in line with the restated plan. Net revenue reached EUR 21.89 million, with the gross\\nresult at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\\nCustomer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the\\ngross renewal rate held at 91.4% across the installed base.\\nDelivery efficiency improved. The median onboarding cycle for new enterprise customers was 27 days, and the\\ncertified implementation partner network grew to 80 partners at quarter end.\\nThe workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T19:02:21.657430+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "onboarding",
+        "attribute": "median"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T19:02:25.335358+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "onboarding 22 days"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...The median [onboarding] cycle for new enterprise customers was 35 [days], and...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T19:02:25.538873+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "onboarding cycle 22"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...The median [onboarding] [cycle] for new enterprise customers was 35 days, and...\"}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "No 22-day figure exists anywhere in the vault. The authoritative Q2 2026 management commentary states 27 days. The claim is contradicted.\n\n```json\n{\"evidence\": [{\"doc_id\": \"vantage-commentary-2026q2\", \"page\": 1, \"span_text\": \"The median onboarding cycle for new enterprise customers was 27 days\", \"canonical_value\": 27.0, \"unit\": \"days\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.98}, {\"doc_id\": \"vantage-commentary-2026q1\", \"page\": 1, \"span_text\": \"The median onboarding cycle for new enterprise customers was 39 days\", \"canonical_value\": 39.0, \"unit\": \"days\", \"role\": \"prior_period\", \"effective_date\": \"2026-03-31\", \"extractor_confidence\": 0.97}], \"verdict\": {\"status\": \"contradicted\", \"delta\": -5.0, \"confidence\": 0.95, \"rationale\": \"The authoritative Q2 2026 management commentary states the median onboarding cycle was 27 days, not the 22 days claimed; no vault source states 22 days for any period.\", \"suggested_action\": \"Correct the master document's figure from 22 days to 27 days to match the Q2 2026 management commentary, or confirm whether the 22-day figure derives from a different methodology/scope not represented in the vault.\"}}\n```"
+}
