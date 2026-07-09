@@ -172,15 +172,31 @@ async def verify_claim_async(
     system_prompt: str | None = None,
     use_aliases: bool = False,
     graph_tools: bool = False,
+    rlm: bool = False,
 ) -> tuple[list[EvidenceCandidate], Verdict, AgentReply]:
-    # system_prompt/use_aliases/graph_tools exist for the eval harness
+    # system_prompt/use_aliases/graph_tools/rlm exist for the eval harness
     # (eval.py), which runs prompt/retrieval variants against gold.yaml --
     # production callers leave them at their defaults.
     server = build_server(
         audit_id, "vault", SERVER_NAME, use_aliases=use_aliases, include_graph_tools=graph_tools
     )
+    mcp_servers = {SERVER_NAME: server}
+    allowed_tools = allowed_tool_names(SERVER_NAME, graph_tools=graph_tools)
+    sub_costs: list[float] = []
+    if rlm:
+        from claude_agent_sdk import create_sdk_mcp_server
+
+        from proofbench.rlm import RLM_PROMPT, ask_researcher_tool
+
+        mcp_servers["proofbench_rlm"] = create_sdk_mcp_server(
+            "proofbench_rlm",
+            tools=[ask_researcher_tool(audit_id, "vault", sub_costs=sub_costs)],
+        )
+        allowed_tools.append("mcp__proofbench_rlm__ask_researcher")
     if system_prompt is None:
         system_prompt = SYSTEM_PROMPT + (GRAPH_TOOLS_PROMPT if graph_tools else "")
+        if rlm:
+            system_prompt += RLM_PROMPT
     # The output contract is restated here, not just in the system prompt:
     # after a long tool-use session the system prompt is many turns away,
     # and hard claims (8-12 tool calls) were the ones losing the shape.
@@ -193,9 +209,14 @@ async def verify_claim_async(
         system_prompt,
         user_prompt,
         model=model,
-        mcp_servers={SERVER_NAME: server},
-        allowed_tools=allowed_tool_names(SERVER_NAME, graph_tools=graph_tools),
+        mcp_servers=mcp_servers,
+        allowed_tools=allowed_tools,
     )
+    # Researcher sub-sessions are real spend: fold them into the claim's
+    # cost before any return or raise, so budget enforcement and reports
+    # see the true total.
+    if sub_costs:
+        reply.cost_usd = (reply.cost_usd or 0.0) + sum(sub_costs)
     raw = extract_json(reply.text)
     if not isinstance(raw, dict) or "evidence" not in raw or "verdict" not in raw:
         raise VerifyClaimError(

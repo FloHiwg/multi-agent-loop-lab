@@ -184,10 +184,49 @@ pack 8.4 vs regional review 8.1, gold `ambiguous`). Guards in every run:
   the model only judges it. Generalizes to any vault size; nothing in it
   is fixture-specific.
 
+## exp-20260709T182802Z — first rlm variant run (Meridian, claims 0001/0022/0027/0028)
+
+- **Change under test:** the `rlm` variant (rlm.py): graph tools plus
+  `ask_researcher`, a depth-1 sub-agent on a cheap model
+  (openai/gpt-5-nano, ~$0.003 real per question) for exhaustive sweeps.
+  Sub-model selection notes: glm-4.7-flash disqualified (36-call flail,
+  wrong sweep); qwen3.5-flash disqualified (fabricated a "searched" list
+  with zero tool calls -- hallucinated diligence). gpt-5-nano probed
+  honest and cheap. Guards: turn cap (12), CLI-dollar budget cap, and a
+  zero-tool-call warning stamped on any effort-free report.
+- **Result:** rlm 4/4 ($0.019/claim real), graph 3/4 ($0.023/claim real).
+- **Reading, honestly:**
+  - The Verifier delegated ONCE in four claims (claim-0028). The rlm
+    accuracy win is not attributable to delegation; on this vault size
+    glm-5.2 simply does the sweeps itself. The researcher's value
+    hypothesis remains untested at fixture scale -- consistent with the
+    "does this help at 100 documents?" test, it should be re-measured on
+    a bigger vault rather than prompt-forced into use here.
+  - **claim-0022 is unstable**: correct under graph in 131627Z, wrong
+    again here (supported, 6 calls) -- the conflicts/see_also surface
+    helps but glm-5.2's conflict judgment still flips between runs.
+    Needs either repeated-run measurement or a stronger judge on
+    conflict claims.
+- **Decision / next:** keep rlm registered; before investing further,
+  (a) quantify run-to-run variance (same variant, same claims, 3+ runs),
+  (b) build or synthesize a larger vault where sweeps genuinely exceed
+  what the Verifier can do itself.
+
 ---
 
 ## Non-experiment incident log
 
+- **2026-07-09, cost accounting was inflated ~120x for OpenRouter
+  models:** the Claude Code runtime prices models it doesn't know at its
+  default (Claude-level) rates -- measured CLI-reported $0.144 vs real
+  OpenRouter spend $0.0012 for one gpt-5-nano session. **Every
+  experiment cost figure before exp-20260709T182802Z is a CLI estimate,
+  not dollars** (same-model comparisons stay valid proportionally; the
+  real full-28-claim run cost was ~$0.55, not ~$3). Fixed in llm.py:
+  run_agent now reprices from token usage at the model's actual
+  OpenRouter prices (cache tokens at worst-case prompt rate when no
+  cache price is listed, so it's a tight upper bound). Per-call
+  max_budget_usd enforcement inside the runtime still uses CLI dollars.
 - **2026-07-09, deleted `exp-20260709T120356Z`:** 5/5 failures at $0 --
   Z.ai account out of balance (provider was `zai` via .env); the SDK
   surfaced it as the misleading "error result: success". Not a

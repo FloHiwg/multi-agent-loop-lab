@@ -1,0 +1,251 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0027",
+  "variant": "rlm",
+  "expected_status": "missing_evidence",
+  "status": "missing_evidence",
+  "correct": true,
+  "tool_calls": 13,
+  "cost_usd": 0.022759480000000002,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0027",
+    "status": "missing_evidence",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0027/evidence-001",
+      "audit-2026-q1-meridian/claim-0027/evidence-002"
+    ],
+    "delta": null,
+    "confidence": 0.9,
+    "rationale": "No vault document mentions a metric named 'Monthly active product seats' or the value 6,840 anywhere; the only seat-related metric is 'Licensed seats' at 7,020 for Q1 2026, a distinct metric the documents do not equate to monthly active product seats.",
+    "suggested_action": "Confirm whether 'Monthly active product seats' is a defined metric in a source not present in the vault, or whether the claim intended to reference 'Licensed seats' (7,020), in which case the claim value is wrong.",
+    "produced_by_run_id": "eval/rlm/audit-2026-q1-meridian/claim-0027"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0027/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0027",
+      "doc_id": "meridian-operations-q1-2026",
+      "page": 1,
+      "span_text": "Licensed seats 7,020 6,540 6,100",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 7020.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0027/evidence-002",
+      "claim_id": "audit-2026-q1-meridian/claim-0027",
+      "doc_id": "meridian-customer-q1-2026",
+      "page": null,
+      "span_text": "A15: Licensed seats B15: 7020 C15: 6540 D15: 6100",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 7020.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-09T18:29:50.126865+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Monthly active product seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'Monthly active product seats' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Licensed seats\",\"similarity\":0.558},{\"entity\":\"Annualized subscription value\",\"similarity\":0.438},{\"entity\":\"Product FTE\",\"similarity\":0.438},{\"entity\":\"Expansion bookings\",\"similarity\":0.413},{\"entity\":\"Enterprise accounts\",\"similarity\":0.376},{\"entity\":\"Open case inventory\",\"similarity\":0.369},{\"entity\":\"Customer success FTE\",\"similarity\":0.362},{\"entity\":\"Partner accounts\",\"similarity\":0.351}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-09T18:29:50.259784+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "monthly active product seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-09T18:29:52.452406+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "active seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-09T18:29:52.661897+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "6840"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-09T18:29:52.783313+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Licensed seats\",\"entity\":\"Licensed seats\",\"attribute\":\"Q1 2026\",\"value\":\"7,020\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Licensed seats\",\"entity\":\"Licensed seats\",\"attribute\":\"Q4 2025\",\"value\":\"6,540\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:Licensed seats\",\"entity\":\"Licensed seats\",\"attribute\":\"Q1 2025\",\"value\":\"6,100\"},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row15\",\"entity\":\"Licensed seats\",\"attribute\":\"Q1 2026\",\"value\":\"7020\"},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row15\",\"entity\":\"Licensed seats\",\"attribute\":\"Q4 2025\",\"value\":\"6540\"},{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics!row15\",\"entity\":\"Licensed seats\",\"attribute\":\"Q1 2025\",\"value\":\"6100\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-09T18:29:56.396849+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "monthly active"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-09T18:29:56.399057+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "active product"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 8,
+      "at": "2026-07-09T18:29:56.399189+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {},
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:2\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Services revenue\",\"page:1/table:1/row:R&D expense\",\"page:1/table:1/row:Sales expense\",\"page:1/table:1/row:Admin expense\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:2/table:1/row:Cash and cash equivalents\",\"page:2/table:1/row:Qualified pipeline\"]},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"tag\":\"finance_pack\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:2\",\"page:1/table:1/row:Net revenue\",\"page:1/table:1/row:Cost of delivery\",\"page:1/table:1/row:Gross profit\",\"page:1/table:1/row:Adjusted operating result\",\"page:1/table:1/row:Services revenue\",\"page:1/table:1/row:R&D expense\",\"page:1/table:1/row:Sales expense\",\"page:1/table:1/row:Admin expense\",\"page:1/table:1/row:Deferred revenue\",\"page:1/table:1/row:Trade receivables\",\"page:2/table:1/row:Qualified pipeline\",\"page:2/table:1/row:Weighted pipeline\"]},{\"doc_id\":\"meridian-operations-q1-2026\",\"tag\":\"operations_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:FTE, period end\",\"page:1/table:1/row:P1 response SLA attainment\",\"page:1/table:1/row:Open case inventory\",\"page:1/table:1/row:New enterprise accounts\",\"page:1/table:1/row:Billable consultants\",\"page:1/table:1/row:Engineering FTE\",\"page:1/table:1/row:Voluntary exits\",\"page:1/table:1/row:Median resolution time\",\"page:1/table:1/row:Licensed seats\",\"page:1/table:1/row:Customer success FTE\",\"page:1/table:1/row:Product FTE\",\"page:1/table:1/row:Security incidents\",\"page:1/table:1/row:Platform uptime\",\"page:1/table:1/row:On-call rotations\",\"page:1/table:1/row:Knowledge articles\"]},{\"doc_id\":\"meridian-customer-q1-2026\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"meridian-regional-q1-2026\",\"tag\":\"regional_review\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:DACH\",\"page:1/table:1/row:UKI\",\"page:1/table:1/row:Benelux\",\"page:1/table:1/row:Nordics\",\"page:1/table:1/row:France\",\"page:1/table:1/row:Other Europe\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Qualified commercial pipeline\"]},{\"doc_id\":\"meridian-treasury-q1-2026\",\"tag\":\"treasury\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Operating accounts\",\"page:1/table:1/row:Deposit accounts\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Operating inflow\",\"page:1/table:1/row:Supplier payments\",\"page:1/table:1/row:Payroll payments\",\"page:1/table:1/row:Total\",\"page:1/table:1/row:Net operating cash outflow\",\"page:1/table:1/row:Accounts payable\",\"page:1/table:1/row:Near coincidence control\"]},{\"doc_id\":\"meridian-people-q1-2026\",\"tag\":\"people_review\",\"format\":\"xlsx\",\"locations\":[\"sheet:People\"]},{\"doc_id\":\"meridian-esg-q1-2026\",\"tag\":\"sustainability\",\"format\":\"pdf\",\"locations\":[\"page:1\",\"page:1/table:1/row:Scope 2 location based\",\"page:1/table:1/row:Structured learning hours\",\"page:1/table:1/row:Travel emissions\",\"page:1/table:1/row:Scope 1\",\"page:1/table:1/row:Renewable electricity\",\"page:1/table:1/row:Women in leadership\",\"page:1/table:2/row:Office sites\",\"page:1/table:2/row:Certified suppliers\"]}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 9,
+      "at": "2026-07-09T18:29:58.924751+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-customer-q1-2026",
+        "location": "sheet:Metrics"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-customer-q1-2026\",\"location\":\"sheet:Metrics\",\"text\":\"A1: Q1 2026 Customer Metrics\\nA4: Customer base\\nA5: Metric\\nB5: Q1 2026\\nC5: Q4 2025\\nD5: Q1 2025\\nA6: Enterprise accounts\\nB6: 214\\nC6: 201\\nD6: 188\\nA7: New enterprise accounts\\nB7: 46\\nC7: 41\\nD7: 39\\nA8: Gross account attrition\\nB8: 0.034\\nC8: 0.031\\nD8: 0.03\\nA11: Recurring value\\nA12: Metric\\nB12: Q1 2026\\nC12: Q4 2025\\nD12: Q1 2025\\nA13: Annualized subscription value\\nB13: 22600000\\nC13: 20940000\\nD13: 19870000\\nA14: Net dollar retention\\nB14: 1.112\\nC14: 1.098\\nD14: 1.085\\nA15: Licensed seats\\nB15: 7020\\nC15: 6540\\nD15: 6100\\nA18: Other segments\\nA19: Metric\\nB19: Q1 2026\\nC19: Q4 2025\\nD19: Q1 2025\\nA20: SMB accounts\\nB20: 486\\nC20: 471\\nD20: 455\\nA21: Partner accounts\\nB21: 72\\nC21: 68\\nD21: 63\\nA22: Expansion bookings\\nB22: 2840000\\nC22: 2420000\\nD22: 2510000\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 10,
+      "at": "2026-07-09T18:29:59.160177+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-operations-q1-2026",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1\",\"text\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Operations Review\\nWorkforce and service delivery\\nOperating metrics\\nMetric\\nQ1 2026\\nQ4 2025\\nQ1 2025\\nFTE, period end\\n142\\n136\\n130\\nP1 response SLA attainment\\n94.2%\\n92.8%\\n93.0%\\nOpen case inventory\\n327\\n298\\n305\\nNew enterprise accounts\\n49\\n42\\n38\\nBillable consultants\\n63\\n59\\n56\\nEngineering FTE\\n48\\n45\\n43\\nVoluntary exits\\n6\\n4\\n5\\nMedian resolution time\\n31\\n34\\n32\\nLicensed seats\\n7,020\\n6,540\\n6,100\\nCustomer success FTE\\n21\\n20\\n18\\nProduct FTE\\n17\\n16\\n15\\nSecurity incidents\\n3\\n4\\n5\\nPlatform uptime\\n99.96%\\n99.94%\\n99.91%\\nOn-call rotations\\n8\\n8\\n7\\nKnowledge articles\\n286\\n251\\n220\\nAll metrics are final as of 31 March 2026.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 11,
+      "at": "2026-07-09T18:30:02.877866+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "active"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 12,
+      "at": "2026-07-09T18:30:02.992209+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "seats 6840"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 13,
+      "at": "2026-07-09T18:30:12.337267+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "active"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"page\":1,\"span_text\":\"Licensed seats 7,020 6,540 6,100\",\"canonical_value\":7020,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95},{\"doc_id\":\"meridian-customer-q1-2026\",\"page\":null,\"span_text\":\"A15: Licensed seats B15: 7020 C15: 6540 D15: 6100\",\"canonical_value\":7020,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"missing_evidence\",\"delta\":null,\"confidence\":0.9,\"rationale\":\"No vault document mentions a metric named 'Monthly active product seats' or the value 6,840 anywhere; the only seat-related metric is 'Licensed seats' at 7,020 for Q1 2026, a distinct metric the documents do not equate to monthly active product seats.\",\"suggested_action\":\"Confirm whether 'Monthly active product seats' is a defined metric in a source not present in the vault, or whether the claim intended to reference 'Licensed seats' (7,020), in which case the claim value is wrong.\"}}"
+}

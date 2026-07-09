@@ -58,6 +58,7 @@ class Variant:
     inject_catalog: bool = False
     use_aliases: bool = False
     graph_tools: bool = False
+    rlm: bool = False
 
 
 VARIANTS: dict[str, Variant] = {
@@ -66,6 +67,9 @@ VARIANTS: dict[str, Variant] = {
     # needs them (list_entities, entity_profile) -- the direction chosen
     # over prompt injection
     "graph": Variant("graph", graph_tools=True),
+    # graph tools plus a cheap researcher sub-agent for exhaustive sweeps
+    # (absence proofs, competing-value scans) -- see rlm.py
+    "rlm": Variant("rlm", graph_tools=True, rlm=True),
     # push-based (kept for comparison): catalog injected into the prompt,
     # optionally with LLM-generated search aliases
     "catalog": Variant("catalog", inject_catalog=True),
@@ -137,6 +141,7 @@ async def _eval_claim(
                 system_prompt=system_prompt,
                 use_aliases=variant.use_aliases,
                 graph_tools=variant.graph_tools,
+                rlm=variant.rlm,
             )
         except VerifyClaimError as e:
             record["error"] = str(e)
@@ -252,6 +257,10 @@ async def run_eval_async(
             system_prompt += catalog_prompt_section(audit_id)
         if variant.graph_tools:
             system_prompt += GRAPH_TOOLS_PROMPT
+        if variant.rlm:
+            from proofbench.rlm import RLM_PROMPT
+
+            system_prompt += RLM_PROMPT
 
         semaphore = asyncio.Semaphore(max_concurrency)
         records = await asyncio.gather(

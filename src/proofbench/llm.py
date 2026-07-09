@@ -96,6 +96,50 @@ def _provider_env() -> dict[str, str] | None:
     raise RuntimeError(f"unknown PROOFBENCH_PROVIDER: {provider!r} (expected openrouter, zai, or anthropic)")
 
 
+_pricing_cache: dict[str, dict] | None = None
+
+
+def _openrouter_pricing(model: str) -> dict | None:
+    """Per-token USD prices for one OpenRouter model id, fetched once per
+    process. Returns None when unavailable (offline, unknown model)."""
+    global _pricing_cache
+    if _pricing_cache is None:
+        import json as _json
+        import urllib.request
+
+        try:
+            with urllib.request.urlopen("https://openrouter.ai/api/v1/models", timeout=15) as resp:
+                data = _json.load(resp)["data"]
+            _pricing_cache = {m["id"]: m.get("pricing") or {} for m in data}
+        except Exception:
+            _pricing_cache = {}
+    return _pricing_cache.get(model)
+
+
+def _real_cost_usd(model: str, usage: dict | None) -> float | None:
+    """Recompute the session's cost from token usage at the model's actual
+    OpenRouter prices. The Claude Code runtime prices models it doesn't know
+    at its default (Claude-level) rates -- measured ~120x above real
+    OpenRouter spend for cheap models (PROTOCOL.md incident log,
+    2026-07-09), which would poison any cross-model cost comparison."""
+    if not usage:
+        return None
+    pricing = _openrouter_pricing(model)
+    if not pricing:
+        return None
+
+    def price(key: str, fallback: str | None = None) -> float:
+        raw = pricing.get(key) or (pricing.get(fallback) if fallback else None) or 0
+        return float(raw)
+
+    return (
+        usage.get("input_tokens", 0) * price("prompt")
+        + usage.get("cache_read_input_tokens", 0) * price("input_cache_read", "prompt")
+        + usage.get("cache_creation_input_tokens", 0) * price("input_cache_write", "prompt")
+        + usage.get("output_tokens", 0) * price("completion")
+    )
+
+
 @dataclass
 class AgentReply:
     text: str
@@ -115,6 +159,7 @@ async def run_agent(
     mcp_servers: dict[str, McpSdkServerConfig] | None = None,
     allowed_tools: list[str] | None = None,
     max_budget_usd: float | None = None,
+    max_turns: int | None = None,
 ) -> AgentReply:
     """Run one bounded agent session and return the final turn's text reply plus its cost.
 
@@ -146,6 +191,7 @@ async def run_agent(
         model=resolve_model(model),
         env=env_overrides or {},
         max_budget_usd=max_budget_usd,
+        max_turns=max_turns,
     )
 
     final_text = ""
@@ -181,5 +227,9 @@ async def run_agent(
                         entry["is_error"] = block.is_error
         elif isinstance(message, ResultMessage):
             cost_usd = message.total_cost_usd
+            if resolve_provider() == "openrouter":
+                real = _real_cost_usd(resolve_model(model), message.usage)
+                if real is not None:
+                    cost_usd = real
 
     return AgentReply(text=final_text, cost_usd=cost_usd, tool_trace=trace)
