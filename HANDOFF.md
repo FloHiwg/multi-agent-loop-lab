@@ -56,19 +56,30 @@ The full approved plan: `/Users/flohiwg/.claude/plans/twinkly-dazzling-twilight.
 - A Sonnet subagent had been driving implementation+validation; if its
   session is gone, everything needed is on disk — do not wait for it.
 
+## Smoke results (exp-20260710T062010Z, read after handoff was first written)
+
+4/6 correct, judge pattern confirmed (0-3 tool calls/claim):
+- OK: 0001 supported (3 calls), 0009 supported (3), 0023 ambiguous (2),
+  **0027 outdated (2) — the stale_quarter rubric fix works.**
+- MISS 0022 (got supported, 0 calls): the dossier DID contain the
+  13260000 prose occurrence — recall is solved — but the judge dismissed
+  it as a "forward snapshot, different measurement point" because of the
+  "entering the next quarter" phrasing (and leaned on authority_rank 1
+  of the finance packs). Fix candidate: one general DOSSIER_PROMPT line —
+  a quarter-end value phrased as "entering the next quarter" states the
+  SAME quarter-end fact, not a different period; treat it as competing.
+- FAILED 0028 (error, $0): **code bug in dossier assembly**:
+  `'<' not supported between instances of 'NoneType' and 'str'` — some
+  sort in dossier.py/mentions.py hits a None key (suspect: a labeled
+  mention's period or unit being None/odd type in a sorted()). Reproduce
+  with: build_dossier for claim-0028; fix; it's isolated to gathering.
+
 ## Next steps, in order
 
-1. **Read the smoke results** (free): per-claim got-vs-expected,
-   tool_calls, cost. Success = 0022 flips to ambiguous, 0027/0028 to
-   outdated, controls stay correct, tool calls low (judge pattern:
-   dossier + 0–3 confirmation calls). If 0022 still misses, check
-   whether the dossier contained the 13260000 prose occurrence
-   (`uv run python` → `proofbench.dossier.build_dossier`, async, Claim
-   from `audits/.../claims/claim-0022.json`) and whether the judge
-   dismissed it on the 2026-Q3 period label — that would mean the
-   temporal-semantics judgment needs a DOSSIER_PROMPT line ("a
-   quarter-end value phrased as 'entering next quarter' is the SAME
-   period statement"), which is general, not fixture-specific.
+1. **Fix the 0028 TypeError** in dossier assembly (traceback via
+   build_dossier for claim-0028), add the temporal-semantics line to
+   DOSSIER_PROMPT (general wording, not fixture-specific), then re-run
+   the same smoke with a fresh --experiment-id (~$0.30). Success = 6/6.
 2. **Full Vantage run** (~$1.2 real, key had ~$9 left):
    `uv run proofbench eval audit-2026-q2-vantage --variants baseline,graph,dossier --max-budget-usd 3.0 --max-concurrency 4`
    (drop rlm as separate variant — the researcher is inside dossier).

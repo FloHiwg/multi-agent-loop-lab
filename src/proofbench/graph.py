@@ -331,7 +331,9 @@ def entity_profile_data(conn: sqlite3.Connection, kind: str, name: str) -> dict 
             continue
         by_key.setdefault((period, role), {})[doc_id] = parsed
     conflicts = []
-    for (period, role), doc_values in sorted(by_key.items()):
+    # role can be None (untagged facts) -- coerce for the sort, tuples with
+    # None don't compare against strings
+    for (period, role), doc_values in sorted(by_key.items(), key=lambda kv: (kv[0][0], kv[0][1] or "")):
         distinct = list(doc_values.values())
         if len(doc_values) > 1 and any(not _close(v, distinct[0]) for v in distinct[1:]):
             conflicts.append(
