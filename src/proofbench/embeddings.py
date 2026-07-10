@@ -10,8 +10,8 @@ tools were built to replace. Lexical scoring can't bridge true synonyms
 
 - **Build once per index** (`proofbench embed`): every canonical entity
   name is embedded through OpenRouter's embeddings endpoint and stored in
-  the `entity_embeddings` table. Same trust posture as fact_aliases --
-  a vector can only help *find* a deterministically-extracted fact, never
+  the `entity_embeddings` table. A vector can only help *find* a
+  deterministically-extracted fact, never
   alter its value or provenance.
 - **Query only on miss**: when entity_profile fails to resolve a name, the
   incoming name is embedded (with the SAME model the table was built with,

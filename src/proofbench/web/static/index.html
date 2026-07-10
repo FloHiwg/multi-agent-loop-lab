@@ -764,7 +764,7 @@ function renderEval(detail, content) {
             <td>${s.failures}</td>
             <td>${s.avg_tool_calls != null ? s.avg_tool_calls.toFixed(1) : "–"}</td>
             <td>${fmtCost(s.avg_cost_usd)}</td>
-            <td>${fmtCost(s.total_cost_usd)}${s.enrichment_cost_usd != null ? ` <span class="muted">+ ${fmtCost(s.enrichment_cost_usd)} enrichment</span>` : ""}</td>
+            <td>${fmtCost(s.total_cost_usd)}</td>
           </tr>
         `).join("")}
       </tbody>

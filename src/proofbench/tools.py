@@ -111,16 +111,7 @@ def _search_vault_tool(audit_id: str, kind: str) -> SdkMcpTool:
     return search_vault
 
 
-def _has_fact_aliases(conn: sqlite3.Connection) -> bool:
-    # Guard for index DBs built before the fact_aliases table existed --
-    # index/ is rebuildable but may be stale on disk.
-    row = conn.execute(
-        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'fact_aliases'"
-    ).fetchone()
-    return row is not None
-
-
-def _search_facts_tool(audit_id: str, kind: str, use_aliases: bool) -> SdkMcpTool:
+def _search_facts_tool(audit_id: str, kind: str) -> SdkMcpTool:
     @tool(
         "search_facts",
         "Search the structured entity/attribute/value facts extracted from tables and "
@@ -145,20 +136,8 @@ def _search_facts_tool(audit_id: str, kind: str, use_aliases: bool) -> SdkMcpToo
             )
             params: list = [kind]
             if args.get("entity"):
-                # With aliases enabled, a query like "quarter-end cash" can
-                # still land on the fact whose canonical entity is "Cash and
-                # cash equivalents" -- the measured source of blind re-search
-                # (see catalog.py). Off by default until the eval harness
-                # shows it earns its indexing-time LLM call.
-                if use_aliases and _has_fact_aliases(conn):
-                    sql += (
-                        " AND (entity LIKE ? OR entity IN "
-                        "(SELECT entity FROM fact_aliases WHERE alias LIKE ?))"
-                    )
-                    params.extend([f"%{args['entity']}%", f"%{args['entity']}%"])
-                else:
-                    sql += " AND entity LIKE ?"
-                    params.append(f"%{args['entity']}%")
+                sql += " AND entity LIKE ?"
+                params.append(f"%{args['entity']}%")
             if args.get("attribute"):
                 sql += " AND attribute LIKE ?"
                 params.append(f"%{args['attribute']}%")
@@ -274,21 +253,18 @@ def build_server(
     kind: str,
     server_name: str,
     *,
-    use_aliases: bool = False,
     include_graph_tools: bool = False,
 ) -> McpSdkServerConfig:
     """Build an in-process MCP server exposing search/read tools scoped to one
     document kind ("master" or "vault") of one audit's index.
 
-    use_aliases makes search_facts also match LLM-generated entity aliases
-    (see catalog.py); include_graph_tools adds the pull-based graph tools
-    (list_entities, entity_profile -- see graph.py). Both are eval-harness
-    variants, not (yet) the default.
+    include_graph_tools adds the pull-based graph tools (list_entities,
+    entity_profile -- see graph.py).
     """
     tools = [
         _list_documents_tool(audit_id, kind),
         _search_vault_tool(audit_id, kind),
-        _search_facts_tool(audit_id, kind, use_aliases),
+        _search_facts_tool(audit_id, kind),
         _read_span_tool(audit_id, kind),
     ]
     if include_graph_tools:

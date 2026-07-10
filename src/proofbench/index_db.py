@@ -70,12 +70,6 @@ CREATE TABLE edges (
     detail_json TEXT NOT NULL
 );
 
-CREATE TABLE fact_aliases (
-    entity TEXT NOT NULL,
-    alias TEXT NOT NULL,
-    PRIMARY KEY (entity, alias)
-);
-
 CREATE TABLE entity_embeddings (
     entity_id INTEGER PRIMARY KEY,
     model TEXT NOT NULL,

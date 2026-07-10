@@ -13,8 +13,8 @@ already-indexed page/sheet spans:
 - **Lightweight labeling**: one bounded sub-model call per document
   (PROOFBENCH_SUB_MODEL, default gpt-5-nano) names each candidate's
   metric_phrase and period and drops non-metric numbers (dates, page
-  numbers). Pointer-only trust, same argument as fact_aliases and the
-  entity embeddings: a label can only help *find* the sentence, the
+  numbers). Pointer-only trust, like entity embeddings: a label can only
+  help *find* the sentence, the
   sentence itself is what gets cited, and every row carries extracted_by.
 - **Same-doc dedupe**: a candidate whose value already exists as a table
   fact of the same document is the table restated, not new evidence, and
@@ -22,7 +22,7 @@ already-indexed page/sheet spans:
   exactly the occurrences the dossier needs.
 
 Build with `proofbench mentions <audit-id>` after `proofbench index`
-(the index is recreated from scratch, like `embed`/`enrich`).
+(the index is recreated from scratch, like `embed`).
 """
 
 from __future__ import annotations

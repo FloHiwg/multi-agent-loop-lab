@@ -218,17 +218,14 @@ async def verify_claim_async(
     *,
     model: str | None = None,
     system_prompt: str | None = None,
-    use_aliases: bool = False,
     graph_tools: bool = False,
     rlm: bool = False,
     dossier: bool = False,
 ) -> tuple[list[EvidenceCandidate], Verdict, AgentReply]:
-    # system_prompt/use_aliases/graph_tools/rlm/dossier exist for the eval
+    # system_prompt/graph_tools/rlm/dossier exist for the eval
     # harness (eval.py), which runs prompt/retrieval variants against
     # gold.yaml -- production callers leave them at their defaults.
-    server = build_server(
-        audit_id, "vault", SERVER_NAME, use_aliases=use_aliases, include_graph_tools=graph_tools
-    )
+    server = build_server(audit_id, "vault", SERVER_NAME, include_graph_tools=graph_tools)
     mcp_servers = {SERVER_NAME: server}
     allowed_tools = allowed_tool_names(SERVER_NAME, graph_tools=graph_tools)
     sub_costs: list[float] = []

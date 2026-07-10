@@ -8,8 +8,7 @@ deterministically (no LLM calls) at `proofbench index` time:
 - **Entity resolution**: one canonical entity node per normalized name
   (whitespace-collapsed, casefolded), merged across documents. "Enterprise
   customers" in the ops review and the same label in another doc become
-  one node with two provenance links -- the principled version of what the
-  alias hack approximated.
+  one node with two provenance links.
 - **Period/role normalization**: attribute strings like "Q4 2025 actual"
   or "31 Dec 2025" parse into (period, role) columns on facts, so "same
   entity, same period, different value" -- the cross-document

@@ -18,12 +18,8 @@ Scoring: a claim is "correct" when the Verifier's verdict status equals
 gold.yaml's expected_status. Failures (unparseable replies) count as
 incorrect -- a variant that fails more is worse, not excluded.
 
-The first experiment's variants target the measured vocabulary-mismatch
-waste (avg 4.8 tool calls/claim, blind entity-name guessing):
-- baseline: the production prompt, unchanged.
-- catalog: + facts catalog (entity/attribute names) in the system prompt.
-- catalog_aliases: catalog + LLM-generated entity aliases in search_facts
-  (one enrichment call per audit, amortized -- see catalog.py).
+Current variants compare the production baseline with pull-based graph,
+researcher, and prepared-dossier retrieval strategies.
 """
 
 from __future__ import annotations
@@ -36,7 +32,6 @@ from pathlib import Path
 
 import yaml
 
-from proofbench.catalog import alias_count, catalog_prompt_section, enrich_aliases_async
 from proofbench.index_db import db_path
 from proofbench.llm import resolve_model
 from proofbench.models import Claim
@@ -56,8 +51,6 @@ EXPERIMENTS_DIR = REPO_ROOT / "runs" / "experiments"
 @dataclass(frozen=True)
 class Variant:
     name: str
-    inject_catalog: bool = False
-    use_aliases: bool = False
     graph_tools: bool = False
     rlm: bool = False
     dossier: bool = False
@@ -76,10 +69,6 @@ VARIANTS: dict[str, Variant] = {
     # researcher occurrences) is assembled and handed to the Verifier as
     # judge, instead of the Verifier gathering it itself -- see dossier.py
     "dossier": Variant("dossier", graph_tools=True, dossier=True),
-    # push-based (kept for comparison): catalog injected into the prompt,
-    # optionally with LLM-generated search aliases
-    "catalog": Variant("catalog", inject_catalog=True),
-    "catalog_aliases": Variant("catalog_aliases", inject_catalog=True, use_aliases=True),
 }
 
 
@@ -93,9 +82,8 @@ def load_gold(audit_id: str) -> dict[str, str]:
 
 
 class _Budget:
-    """Soft cap shared across the whole experiment (all variants plus the
-    alias-enrichment call): once total spend reaches the cap, no new claim
-    is started; in-flight claims finish. Same semantics as the Manager's."""
+    """Soft cap shared across the whole experiment: once total spend reaches
+    the cap, no new claim is started; in-flight claims finish."""
 
     def __init__(self, max_usd: float | None) -> None:
         self.max_usd = max_usd
@@ -155,7 +143,6 @@ async def _eval_claim(
                 run_id=f"eval/{variant.name}/{claim.claim_id}",
                 model=model,
                 system_prompt=system_prompt,
-                use_aliases=variant.use_aliases,
                 graph_tools=variant.graph_tools,
                 rlm=variant.rlm,
                 dossier=variant.dossier,
@@ -187,7 +174,7 @@ async def _eval_claim(
     return record
 
 
-def _summarize(variant: Variant, records: list[dict], enrichment_cost_usd: float | None) -> dict:
+def _summarize(variant: Variant, records: list[dict]) -> dict:
     scored = [r for r in records if r["error"] is None or r["tool_calls"] is not None]
     costs = [r["cost_usd"] for r in records if r["cost_usd"] is not None]
     tool_calls = [r["tool_calls"] for r in records if r["tool_calls"] is not None]
@@ -202,7 +189,6 @@ def _summarize(variant: Variant, records: list[dict], enrichment_cost_usd: float
         "avg_tool_calls": sum(tool_calls) / len(tool_calls) if tool_calls else None,
         "avg_cost_usd": sum(costs) / len(costs) if costs else None,
         "total_cost_usd": sum(costs) if costs else 0.0,
-        "enrichment_cost_usd": enrichment_cost_usd,
         "n_attempted": len(scored),
     }
 
@@ -245,9 +231,7 @@ async def run_eval_async(
     # noisy variant can't starve its siblings of budget mid-flight.
     for name in variant_names:
         variant = VARIANTS[name]
-        # Skip a whole variant (including its enrichment call) once the
-        # budget is gone -- otherwise enrichment would spend money preparing
-        # aliases for claims that are then all skipped anyway.
+        # Skip a whole variant once the budget is gone.
         if await budget.exhausted():
             summaries.append(
                 {
@@ -260,21 +244,12 @@ async def run_eval_async(
                     "avg_tool_calls": None,
                     "avg_cost_usd": None,
                     "total_cost_usd": 0.0,
-                    "enrichment_cost_usd": None,
                     "n_attempted": 0,
                 }
             )
             continue
 
-        enrichment_cost_usd: float | None = None
-        if variant.use_aliases and alias_count(audit_id) == 0:
-            written, reply = await enrich_aliases_async(audit_id, model=resolved_model)
-            enrichment_cost_usd = reply.cost_usd
-            await budget.add(reply.cost_usd)
-
         system_prompt = SYSTEM_PROMPT
-        if variant.inject_catalog:
-            system_prompt += catalog_prompt_section(audit_id)
         if variant.graph_tools:
             system_prompt += GRAPH_TOOLS_PROMPT
         if variant.rlm:
@@ -302,7 +277,7 @@ async def run_eval_async(
         )
         records = list(records)
 
-        summary = _summarize(variant, records, enrichment_cost_usd)
+        summary = _summarize(variant, records)
         (variant_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
         summaries.append(summary)
 

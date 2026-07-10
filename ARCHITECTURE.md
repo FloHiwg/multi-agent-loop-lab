@@ -212,7 +212,6 @@ proofbench init <audit-id>       # parse registered documents into index/parsed/
 proofbench index <audit-id>      # build index/search/<audit-id>.db from index/parsed/
 proofbench extract <audit-id> [--max-budget-usd X]
 proofbench verify <audit-id> [--max-concurrency N] [--max-budget-usd X]
-proofbench enrich <audit-id>     # LLM-generate entity aliases into the facts index (one call)
 proofbench eval <audit-id> [--variants a,b,c] [--max-concurrency N] [--max-budget-usd X] [--experiment-id ID]
 proofbench serve [--host H] [--port P]     # workbench UI at http://127.0.0.1:8420
 ```
@@ -412,15 +411,13 @@ whole run redone.
 
 ## Graph layer (`src/proofbench/graph.py`)
 
-**The direction decision.** After the catalog/alias experiments, the
-chosen path is deepening the retrieval architecture itself rather than
-prompt injection: first a real graph over the facts index (this section),
-then RLM-style recursive verification on top of it (see "What's still
-ahead"). The unifying stance is **pull-based context**: the agent asks
-for what it needs through tools, coding-agent style, instead of having
-digests pushed into its prompt. This supersedes the catalog-injection
-idea (the `catalog`/`catalog_aliases` eval variants remain in the
-registry for comparison, but they're the road not taken).
+**The direction decision.** The chosen path is deepening the retrieval
+architecture itself rather than prompt injection: first a real graph over
+the facts index (this section), then RLM-style recursive verification on
+top of it (see "What's still ahead"). The unifying stance is **pull-based
+context**: the agent asks for what it needs through tools, coding-agent
+style, instead of having digests pushed into its prompt. The earlier
+catalog-injection experiment is preserved only in the experiment protocol.
 
 **What it builds, all deterministically at `proofbench index` time** (no
 LLM calls -- buildable and testable for free):
@@ -428,7 +425,7 @@ LLM calls -- buildable and testable for free):
 - **Entity resolution** (`entities` table): one canonical node per
   normalized name (whitespace-collapsed, casefolded), merged across
   documents, with every fact linked via `facts.entity_id`. The
-  principled version of what LLM aliases approximated.
+  deterministic source of truth for entity names.
 - **Period/role normalization** (`facts.period`, `facts.role`):
   attribute strings parse into comparable forms -- "Q4 2025 actual" →
   ("2025-Q4", "actual"), "31 Dec 2025" → ("2025-12-31", None) -- so
@@ -470,15 +467,16 @@ failure mode this product exists to catch. The query-side embedding runs
 only on misses, uses the same model the table was built with, and is
 memoized per process; if embeddings aren't built or the call fails, the
 tool degrades to the old "try list_entities" note. Trust posture matches
-fact_aliases: similarity can only help *find* a deterministically
-extracted fact, never alter one. Measured on the five Meridian misses:
+  the retrieval trust boundary: similarity can only help *find* a
+  deterministically extracted fact, never alter one. Measured on the five
+  Meridian misses:
 "Net sales" and "New enterprise wins" resolve at rank 1, "closing
 workforce" and "monthly active product seats" surface the right entity
 in the top 8; bare "turnover" still misses (the embedding reads it as
 churn -- rank 13), though claim-scoped phrasings like "quarterly
 turnover" bring it back into range.
 
-## Eval harness (`src/proofbench/eval.py`, `src/proofbench/catalog.py`)
+## Eval harness (`src/proofbench/eval.py`)
 
 **Why it exists.** Verification runs are both expensive (real LLM spend
 per claim) and noisy (the intermittent JSON-shape failure above means two
@@ -503,38 +501,18 @@ experiment). They never touch `audits/<id>/results/`, `review_queue/`,
 reads a flat `runs/*.json` glob, so nothing in the experiments
 subdirectory can masquerade as a real audit run. All variants verify the
 identical already-extracted claim list, so extraction variance is held
-constant. A single soft budget spans the whole experiment (all variants
-plus any enrichment call), with the Manager's semantics: no new claim
-starts once the cap is hit, in-flight claims finish.
+constant. A single soft budget spans the whole experiment, with the
+Manager's semantics: no new claim starts once the cap is hit, in-flight
+claims finish.
 
-**First experiment: retrieval-context variants.** The measured cost
-problem was vocabulary mismatch, not over-searching -- e.g. claim-0004
-says "quarter-end cash", the vault fact's entity is "Cash and cash
-equivalents", and the Verifier burned 3 blind `search_facts` guesses
-bridging the gap (avg 4.8 tool calls/claim across a real batch). Two
-levers, both in `catalog.py`, attack that from opposite sides:
+**Variants.** The evaluator compares the production baseline with
+pull-based graph tools, a bounded researcher sub-agent, and the prepared
+Evidence Dossier. The retired push-catalogue experiment remains documented
+in `runs/experiments/PROTOCOL.md`; its code path is deliberately absent.
 
-- `catalog` variant: a facts **catalog** -- every distinct
-  entity/attribute name in the facts index, ~390 tokens for Northstar --
-  appended to the Verifier's system prompt, so it knows the vault's
-  vocabulary on turn one. Names only, not values: grounding still
-  requires a real tool call, so evidence provenance is unchanged. Built
-  with one SQL query, zero LLM cost.
-- `catalog_aliases` variant: the catalog **plus** LLM-generated entity
-  aliases (`proofbench enrich`, one plain call per index build) stored in
-  a `fact_aliases` table that `search_facts` additionally matches when
-  built with `use_aliases=True` (an explicit flag on `build_server`, off
-  in production until the eval shows it earns its call). This is the
-  deliberately-narrow form of "LLM-assisted preprocessing": an alias can
-  only make search *find* a deterministically-extracted fact more easily
-  -- it can never alter the fact's value or provenance, so it doesn't
-  put LLM output into the trust root the way LLM re-extraction would.
-  Its one-call cost amortizes over every claim in every later run.
-
-The harness itself was validated end-to-end with a mocked `run_agent`
-(scoring, failure handling, budget math, file isolation, alias matching)
-at zero API cost; the real three-variant comparison run is user-triggered
-via `proofbench eval`.
+The harness was validated end-to-end with a mocked `run_agent` (scoring,
+failure handling, budget math, and file isolation) at zero API cost; real
+comparisons are user-triggered via `proofbench eval`.
 
 ## What's still ahead
 

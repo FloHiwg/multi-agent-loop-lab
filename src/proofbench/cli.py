@@ -105,19 +105,6 @@ def verify(
 
 
 @app.command()
-def enrich(audit_id: str) -> None:
-    """Generate entity aliases for the facts index (one LLM call, stored in
-    the fact_aliases table). Used by the `catalog_aliases` eval variant."""
-    import asyncio
-
-    from proofbench.catalog import enrich_aliases_async
-
-    written, reply = asyncio.run(enrich_aliases_async(audit_id))
-    cost = f"${reply.cost_usd:.4f}" if reply.cost_usd is not None else "unknown"
-    typer.echo(f"wrote {written} aliases into index/search/{audit_id}.db (cost {cost})")
-
-
-@app.command()
 def embed(audit_id: str) -> None:
     """Embed entity names for semantic name resolution in entity_profile
     (one OpenRouter embeddings call, stored in the entity_embeddings table).
@@ -188,8 +175,6 @@ def eval_cmd(
         avg_tools = f"{s['avg_tool_calls']:.1f}" if s["avg_tool_calls"] is not None else "-"
         avg_cost = f"${s['avg_cost_usd']:.4f}" if s["avg_cost_usd"] is not None else "-"
         total = f"${s['total_cost_usd']:.4f}"
-        if s["enrichment_cost_usd"] is not None:
-            total += "+e"
         typer.echo(
             f"{s['variant']:<18} {accuracy:>9} {s['correct']:>5}/{s['n_claims']:<2} {s['failures']:>9} "
             f"{avg_tools:>10} {avg_cost:>10} {total:>11}"
