@@ -82,6 +82,24 @@ CREATE TABLE entity_embeddings (
     vector BLOB NOT NULL
 );
 
+CREATE TABLE prose_mentions (
+    mention_id INTEGER PRIMARY KEY,
+    doc_id TEXT NOT NULL,
+    location TEXT NOT NULL,
+    value REAL NOT NULL,
+    unit TEXT,
+    metric_phrase TEXT NOT NULL,
+    period TEXT,
+    quote TEXT NOT NULL,
+    extracted_by TEXT NOT NULL
+);
+
+CREATE TABLE mention_embeddings (
+    mention_id INTEGER PRIMARY KEY,
+    model TEXT NOT NULL,
+    vector BLOB NOT NULL
+);
+
 CREATE TABLE locations (
     doc_id TEXT NOT NULL,
     location TEXT NOT NULL,

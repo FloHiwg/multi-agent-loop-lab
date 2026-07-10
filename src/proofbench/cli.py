@@ -131,6 +131,22 @@ def embed(audit_id: str) -> None:
     )
 
 
+@app.command()
+def mentions(audit_id: str) -> None:
+    """Extract prose numeric mentions (narrative body text) into the
+    prose_mentions table: deterministic sentence/number candidates, one
+    lightweight-model labeling call per document, embedded metric phrases.
+    Rerun after `proofbench index` -- the index is rebuilt from scratch."""
+    import asyncio
+
+    from proofbench.mentions import extract_mentions_async
+
+    count, cost = asyncio.run(extract_mentions_async(audit_id))
+    typer.echo(
+        f"extracted {count} prose mentions into index/search/{audit_id}.db (cost ${cost:.4f})"
+    )
+
+
 @app.command("eval")
 def eval_cmd(
     audit_id: str,

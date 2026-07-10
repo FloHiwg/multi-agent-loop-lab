@@ -41,6 +41,7 @@ from proofbench.index_db import db_path
 from proofbench.llm import resolve_model
 from proofbench.models import Claim
 from proofbench.verification import (
+    DOSSIER_PROMPT,
     GRAPH_TOOLS_PROMPT,
     SYSTEM_PROMPT,
     VerifyClaimError,
@@ -59,6 +60,7 @@ class Variant:
     use_aliases: bool = False
     graph_tools: bool = False
     rlm: bool = False
+    dossier: bool = False
 
 
 VARIANTS: dict[str, Variant] = {
@@ -70,6 +72,10 @@ VARIANTS: dict[str, Variant] = {
     # graph tools plus a cheap researcher sub-agent for exhaustive sweeps
     # (absence proofs, competing-value scans) -- see rlm.py
     "rlm": Variant("rlm", graph_tools=True, rlm=True),
+    # brain/hands split: a prepared evidence dossier (table + prose +
+    # researcher occurrences) is assembled and handed to the Verifier as
+    # judge, instead of the Verifier gathering it itself -- see dossier.py
+    "dossier": Variant("dossier", graph_tools=True, dossier=True),
     # push-based (kept for comparison): catalog injected into the prompt,
     # optionally with LLM-generated search aliases
     "catalog": Variant("catalog", inject_catalog=True),
@@ -115,7 +121,17 @@ async def _eval_claim(
     budget: _Budget,
     semaphore: asyncio.Semaphore,
     gold: dict[str, str],
+    variant_dir: Path,
 ) -> dict:
+    # Checkpointing: a record file already on disk means a prior run of
+    # this same --experiment-id already paid for and completed this claim
+    # -- reuse it instead of re-paying, so a rerun after a mid-variant
+    # crash resumes rather than starting over.
+    suffix = claim.claim_id.split("/")[-1]
+    record_path = variant_dir / f"{suffix}.json"
+    if record_path.exists():
+        return json.loads(record_path.read_text())
+
     expected = gold.get(claim.claim_id)
     record: dict = {
         "claim_id": claim.claim_id,
@@ -142,6 +158,7 @@ async def _eval_claim(
                 use_aliases=variant.use_aliases,
                 graph_tools=variant.graph_tools,
                 rlm=variant.rlm,
+                dossier=variant.dossier,
             )
         except VerifyClaimError as e:
             record["error"] = str(e)
@@ -150,9 +167,11 @@ async def _eval_claim(
             record["tool_trace"] = e.tool_trace
             record["final_text"] = e.final_text
             await budget.add(e.cost_usd)
+            record_path.write_text(json.dumps(record, indent=2) + "\n")
             return record
         except Exception as e:
             record["error"] = str(e)
+            record_path.write_text(json.dumps(record, indent=2) + "\n")
             return record
 
     await budget.add(reply.cost_usd)
@@ -164,6 +183,7 @@ async def _eval_claim(
     record["evidence"] = [json.loads(ev.model_dump_json()) for ev in evidence]
     record["tool_trace"] = reply.tool_trace
     record["final_text"] = reply.text
+    record_path.write_text(json.dumps(record, indent=2) + "\n")
     return record
 
 
@@ -261,21 +281,26 @@ async def run_eval_async(
             from proofbench.rlm import RLM_PROMPT
 
             system_prompt += RLM_PROMPT
+        if variant.dossier:
+            system_prompt += DOSSIER_PROMPT
+
+        # Created before the gather (not after) so per-claim records can be
+        # checkpointed to disk as each claim finishes, rather than only
+        # after the whole variant completes -- a mid-variant crash no
+        # longer loses paid work on a rerun with the same --experiment-id.
+        variant_dir = experiment_dir / variant.name
+        variant_dir.mkdir(parents=True, exist_ok=True)
 
         semaphore = asyncio.Semaphore(max_concurrency)
         records = await asyncio.gather(
             *(
-                _eval_claim(variant, claim, audit_id, resolved_model, system_prompt, budget, semaphore, gold)
+                _eval_claim(
+                    variant, claim, audit_id, resolved_model, system_prompt, budget, semaphore, gold, variant_dir
+                )
                 for claim in claims
             )
         )
         records = list(records)
-
-        variant_dir = experiment_dir / variant.name
-        variant_dir.mkdir(parents=True, exist_ok=True)
-        for record in records:
-            suffix = record["claim_id"].split("/")[-1]
-            (variant_dir / f"{suffix}.json").write_text(json.dumps(record, indent=2) + "\n")
 
         summary = _summarize(variant, records, enrichment_cost_usd)
         (variant_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")

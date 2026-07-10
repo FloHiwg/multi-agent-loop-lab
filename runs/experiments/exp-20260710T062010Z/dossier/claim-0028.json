@@ -1,0 +1,10 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0028",
+  "variant": "dossier",
+  "expected_status": "outdated",
+  "status": null,
+  "correct": false,
+  "tool_calls": null,
+  "cost_usd": null,
+  "error": "'<' not supported between instances of 'NoneType' and 'str'"
+}

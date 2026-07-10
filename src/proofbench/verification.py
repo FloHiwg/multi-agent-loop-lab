@@ -87,12 +87,14 @@ Verdict status must be exactly one of:
 - "supported": at least one vault span confirms the claim's value
 - "contradicted": the vault's CURRENT authoritative value differs from the claim
 - "ambiguous": multiple vault spans disagree and neither is clearly authoritative
-- "outdated": the claim matches a figure that has since been superseded -- an
-  older document version, restatement, or earlier period that a newer
-  authoritative source explicitly replaces. A claim that agrees with the
-  superseded figure is "outdated", NOT "contradicted": contradicted means the
-  claim disagrees with the current value, outdated means it agrees with a
-  stale one.
+- "outdated": the claim matches a figure that is stale rather than wrong --
+  either (a) an older document version or restatement that a newer
+  authoritative source explicitly replaces, or (b) an EARLIER PERIOD's value
+  asserted as if it were current (e.g. the claim states last quarter's
+  actual for a current-quarter metric). A claim that agrees with the stale
+  figure is "outdated", NOT "contradicted": contradicted means the claim
+  disagrees with the current value, outdated means it agrees with a stale
+  one.
 - "missing_evidence": no vault span addresses this claim at all
 
 For each relevant span found, output an evidence object with:
@@ -132,6 +134,12 @@ You additionally have graph tools over the facts index -- prefer them first:
   list names similarly-named entities that may carry the same metric under
   different wording -- profile them too before concluding, they can hide a
   competing value.
+  IMPORTANT: "conflicts" covers STRUCTURED TABLE FACTS ONLY. Narrative
+  body text (commentary letters, quarterly updates, press-style briefs)
+  can state a different value for the same metric and will NOT appear
+  there. An empty conflicts list is not corpus-wide clearance: before
+  returning "supported", run one search_vault sweep on the metric's name
+  and check any prose mentions of it against the claim.
 - list_entities: every canonical entity name and its documents -- use it when
   entity_profile finds nothing, to see what vocabulary actually exists.
 Fall back to search_vault/search_facts/read_span for narrative text the facts
@@ -145,6 +153,37 @@ entity_profile, then decide. Only search further if the profile leaves the
 verdict genuinely open -- e.g. to check other documents for a competing
 value before declaring a contradiction, or to rule out narrative text when
 the profile finds nothing.
+"""
+
+
+DOSSIER_PROMPT = """\
+
+You are additionally given an EVIDENCE DOSSIER in the user message: every
+occurrence of this claim's fact that three gatherers (table facts, prose
+mentions, a research sweep) could find. You are now a JUDGE of that
+dossier, not a searcher -- the gathering has already been done for you.
+
+Your job:
+- Decide which occurrences are actually relevant: same entity, same period,
+  same scope as the claim. Not every occurrence in the dossier bears on it.
+- Decide what the documents establish about authority. authority_rank is
+  the audit's configured evidence priority (1 = highest) -- use it to break
+  ties, but an explicit supersession or restatement note in a quote always
+  outranks a bare priority number.
+- Table occurrences carry verbatim span_text -- cite them directly, no
+  read_span needed. Prose occurrences carry a verbatim quoted sentence, but
+  their metric_phrase label is model output -- sanity-check the sentence
+  itself reads as the metric it claims to be before relying on it.
+  Researcher occurrences are the least trusted tier: confirm any span you
+  plan to cite with read_span before using it.
+- cross_source_conflicts lists same-period disagreements across ALL
+  sources, prose included. Every conflict touching the claim's period must
+  be resolved from what the documents explicitly state, or the verdict is
+  "ambiguous" -- do not let an empty table-only conflicts list (if you also
+  call entity_profile) stand in for dossier-wide clearance.
+
+Expected pattern: read the dossier, judge it, make 0-3 tool calls only to
+confirm something doubtful, then answer.
 """
 
 
@@ -173,10 +212,11 @@ async def verify_claim_async(
     use_aliases: bool = False,
     graph_tools: bool = False,
     rlm: bool = False,
+    dossier: bool = False,
 ) -> tuple[list[EvidenceCandidate], Verdict, AgentReply]:
-    # system_prompt/use_aliases/graph_tools/rlm exist for the eval harness
-    # (eval.py), which runs prompt/retrieval variants against gold.yaml --
-    # production callers leave them at their defaults.
+    # system_prompt/use_aliases/graph_tools/rlm/dossier exist for the eval
+    # harness (eval.py), which runs prompt/retrieval variants against
+    # gold.yaml -- production callers leave them at their defaults.
     server = build_server(
         audit_id, "vault", SERVER_NAME, use_aliases=use_aliases, include_graph_tools=graph_tools
     )
@@ -197,11 +237,24 @@ async def verify_claim_async(
         system_prompt = SYSTEM_PROMPT + (GRAPH_TOOLS_PROMPT if graph_tools else "")
         if rlm:
             system_prompt += RLM_PROMPT
+        if dossier:
+            system_prompt += DOSSIER_PROMPT
     # The output contract is restated here, not just in the system prompt:
     # after a long tool-use session the system prompt is many turns away,
     # and hard claims (8-12 tool calls) were the ones losing the shape.
+    dossier_section = ""
+    if dossier:
+        from proofbench.dossier import build_dossier
+
+        dossier_data = await build_dossier(claim, audit_id, sub_costs=sub_costs)
+        dossier_section = (
+            "EVIDENCE DOSSIER -- every known occurrence of this claim's fact, gathered by "
+            "table facts, prose mentions, and a research sweep:\n"
+            f"{json.dumps(dossier_data)}\n\n"
+        )
     user_prompt = (
         f"CLAIM:\n{claim.model_dump_json(indent=2)}\n\n"
+        f"{dossier_section}"
         'Reply with ONLY one JSON object of the form {"evidence": [...], "verdict": {...}} '
         "-- never a bare array."
     )

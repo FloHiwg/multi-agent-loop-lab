@@ -225,10 +225,10 @@ def _list_entities_tool(audit_id: str, kind: str) -> SdkMcpTool:
 def _entity_profile_tool(audit_id: str, kind: str) -> SdkMcpTool:
     @tool(
         "entity_profile",
-        "Everything the facts graph knows about one entity: every value across all "
-        "documents and periods (with normalized period/role, exact location, and the "
-        "verbatim span_text to cite as evidence -- no read_span needed for these "
-        "facts), plus mined arithmetic relationships (which rows sum to it / derive "
+        "Everything the facts graph knows about one entity FROM TABLES: every value "
+        "across all documents and periods (with normalized period/role, exact location, "
+        "and the verbatim span_text to cite as evidence -- no read_span needed for "
+        "these facts), plus mined arithmetic relationships (which rows sum to it / derive "
         "from it, and on which columns that holds). The name is resolved fuzzily -- "
         "'cash' finds 'Cash and cash equivalents' -- and on a miss the reply lists "
         "the closest entity names by semantic similarity: retry with one of those "

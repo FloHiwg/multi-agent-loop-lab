@@ -1,0 +1,85 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0022",
+  "variant": "dossier",
+  "expected_status": "ambiguous",
+  "status": "supported",
+  "correct": false,
+  "tool_calls": 0,
+  "cost_usd": 0.02514709,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0022",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0022/evidence-001",
+      "audit-2026-q2-vantage/claim-0022/evidence-002",
+      "audit-2026-q2-vantage/claim-0022/evidence-003",
+      "audit-2026-q2-vantage/claim-0022/evidence-004"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "Two highest-authority finance pack documents (v1 and v2, both authority_rank 1) report Qualified pipeline Q2 2026 actual = 13.510 (EUR 13.51M), exactly matching the claim. The regional 13.053 is a narrower 'Qualified commercial pipeline' subset (different scope, not a competing value); the prose 13.26M is a lower-authority 'entering the next quarter' forward snapshot (different measurement point, period labeled 2026-Q3), not the Q2 2026 actual.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0022"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0022/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0022",
+      "doc_id": "vantage-finance-v1-2026q2",
+      "page": 1,
+      "span_text": "Qualified pipeline | 13.510 | 12.888 | 13.104",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 13510000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.98
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0022/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0022",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Qualified pipeline | 13.510 | 12.888 | 13.104",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 13510000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.98
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0022/evidence-003",
+      "claim_id": "audit-2026-q2-vantage/claim-0022",
+      "doc_id": "vantage-regional-2026q2",
+      "page": 1,
+      "span_text": "Qualified commercial pipeline | 13.053 | - | -",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 13053000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.9
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0022/evidence-004",
+      "claim_id": "audit-2026-q2-vantage/claim-0022",
+      "doc_id": "vantage-update-2026q2",
+      "page": 1,
+      "span_text": "The qualified pipeline stood at EUR 13.26 million entering the next quarter.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 13260000.0,
+      "unit": "EUR",
+      "role": "other",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.7
+    }
+  ],
+  "tool_trace": [],
+  "final_text": "Looking at the dossier, the claim is EUR 13.51M for \"Qualified pipeline\" at Q2 2026 (Vantage Industrial Group SE). The two highest-authority finance pack documents (v1 and v2, both authority_rank 1) report Q2 2026 actual = 13.510. Let me judge the competing signals.\n\nThe regional value (13.053) is a different entity (\"Qualified commercial pipeline\" \u2014 commercial subset, regional review, authority_rank 4), so it's a narrower scope, not a competing value. The prose 13.26M is labeled period 2026-Q3 (\"entering the next quarter\" \u2014 a forward snapshot) and is lower authority (rank 8), so it's a different measurement point, not the Q2 2026 actual. For the claim's exact scope (Qualified pipeline, Q2 2026 actual), two authoritative finance packs agree at 13.510.</think>{\"evidence\":[{\"doc_id\":\"vantage-finance-v1-2026q2\",\"page\":1,\"span_text\":\"Qualified pipeline | 13.510 | 12.888 | 13.104\",\"canonical_value\":13510000.0,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.98},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"page\":1,\"span_text\":\"Qualified pipeline | 13.510 | 12.888 | 13.104\",\"canonical_value\":13510000.0,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.98},{\"doc_id\":\"vantage-regional-2026q2\",\"page\":1,\"span_text\":\"Qualified commercial pipeline | 13.053 | - | -\",\"canonical_value\":13053000.0,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.9},{\"doc_id\":\"vantage-update-2026q2\",\"page\":1,\"span_text\":\"The qualified pipeline stood at EUR 13.26 million entering the next quarter.\",\"canonical_value\":13260000.0,\"unit\":\"EUR\",\"role\":\"other\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.7}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.95,\"rationale\":\"Two highest-authority finance pack documents (v1 and v2, both authority_rank 1) report Qualified pipeline Q2 2026 actual = 13.510 (EUR 13.51M), exactly matching the claim. The regional 13.053 is a narrower 'Qualified commercial pipeline' subset (different scope, not a competing value); the prose 13.26M is a lower-authority 'entering the next quarter' forward snapshot (different measurement point, period labeled 2026-Q3), not the Q2 2026 actual.\",\"suggested_action\":null}}"
+}
