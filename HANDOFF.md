@@ -102,19 +102,24 @@ The full approved plan: `/Users/flohiwg/.claude/plans/twinkly-dazzling-twilight.
   excluded run (31 baseline and 4 graph failures). It is not a measurement;
   the key was replaced and the valid 091036Z rerun succeeded. This makes
   the pre-flight credential check an immediate reliability task.
+- Meridian portability is now also validated: after `proofbench mentions`
+  populated 50 prose mentions, dossier passed its five-claim smoke **5/5**
+  at $0.166 accumulated claim cost. The initial shape failure on claim
+  0021 exposed spreadsheet facts whose exact row location has only an
+  enclosing sheet span; graph profiles now fall back to that citable sheet
+  span. This is a generic provenance repair. Dossier plus graph tools is
+  promoted as the `proofbench verify` production default; baseline and
+  graph remain eval controls.
 
 ## Next steps, in order
 
-1. **Validate dossier on Meridian** (`audit-2026-q1-meridian`) —
-   it needs `proofbench mentions audit-2026-q1-meridian` first (and has
-   embeddings already). Its smoke set: claims 0001,0018,0021,0024,0027.
-2. **Add evaluator credential preflight.** It must fail clearly before
+1. **Add evaluator credential preflight.** It must fail clearly before
    any claims start when the selected provider/key cannot authenticate;
    `exp-20260710T083949Z` is the regression incident.
-3. **PROTOCOL/HANDOFF commit** for this full run (commit style: see recent
+2. **PROTOCOL/HANDOFF commit** for this promotion (commit style: see recent
    git log; trailer "Co-Authored-By: Claude Fable 5
    <noreply@anthropic.com>").
-4. Parked: checklist-agent dataset (waiting on the real checklist).
+3. Parked: checklist-agent dataset (waiting on the real checklist).
 
 ## Standing constraints (from memory — respect these)
 

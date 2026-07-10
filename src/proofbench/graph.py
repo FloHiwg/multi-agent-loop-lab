@@ -284,11 +284,18 @@ def entity_profile_data(conn: sqlite3.Connection, kind: str, name: str) -> dict 
 
     # span_text rides along so the agent can cite evidence verbatim straight
     # from the profile instead of following up with read_span calls per fact
-    # (the measured tail of every verification trace).
+    # (the measured tail of every verification trace). PDF facts usually
+    # have an exact row span; spreadsheet facts live under their enclosing
+    # sheet span, so fall back to that when the row itself is not indexed.
     facts = conn.execute(
         "SELECT facts.doc_id, location, attribute, period, role, value, "
-        "(SELECT text FROM spans_fts WHERE spans_fts.doc_id = facts.doc_id "
-        " AND spans_fts.location = facts.location) AS span_text FROM facts "
+        "COALESCE("
+        " (SELECT text FROM spans_fts WHERE spans_fts.doc_id = facts.doc_id "
+        "  AND spans_fts.location = facts.location),"
+        " (SELECT text FROM spans_fts WHERE spans_fts.doc_id = facts.doc_id "
+        "  AND facts.location LIKE spans_fts.location || '!row%' "
+        "  ORDER BY LENGTH(spans_fts.location) DESC LIMIT 1)"
+        ") AS span_text FROM facts "
         "JOIN documents ON documents.doc_id = facts.doc_id "
         "WHERE documents.kind = ? AND entity_id = ? ORDER BY facts.id",
         (kind, entity_id),

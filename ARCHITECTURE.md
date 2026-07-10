@@ -505,10 +505,12 @@ constant. A single soft budget spans the whole experiment, with the
 Manager's semantics: no new claim starts once the cap is hit, in-flight
 claims finish.
 
-**Variants.** The evaluator compares the production baseline with
-pull-based graph tools, a bounded researcher sub-agent, and the prepared
-Evidence Dossier. The retired push-catalogue experiment remains documented
-in `runs/experiments/PROTOCOL.md`; its code path is deliberately absent.
+**Variants.** Production `proofbench verify` uses the prepared Evidence
+Dossier plus graph confirmation tools. The evaluator retains the baseline,
+graph, bounded researcher, and dossier variants as controls for measuring
+that default and future changes. The retired push-catalogue experiment
+remains documented in `runs/experiments/PROTOCOL.md`; its code path is
+deliberately absent.
 
 The harness was validated end-to-end with a mocked `run_agent` (scoring,
 failure handling, budget math, and file isolation) at zero API cost; real

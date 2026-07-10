@@ -196,6 +196,12 @@ confirm something doubtful, then answer.
 """
 
 
+# Production has promoted the prepared-dossier path after the Vantage full
+# run and Meridian portability smoke. Eval variants still pass their own
+# flags explicitly, so baseline and graph remain clean comparison controls.
+PRODUCTION_SYSTEM_PROMPT = SYSTEM_PROMPT + GRAPH_TOOLS_PROMPT + DOSSIER_PROMPT
+
+
 class VerifyClaimError(ValueError):
     """Raised when the agent's final reply doesn't parse into a valid
     verdict. Carries the AgentReply's tool_trace/final_text so the Manager
@@ -218,13 +224,12 @@ async def verify_claim_async(
     *,
     model: str | None = None,
     system_prompt: str | None = None,
-    graph_tools: bool = False,
+    graph_tools: bool = True,
     rlm: bool = False,
-    dossier: bool = False,
+    dossier: bool = True,
 ) -> tuple[list[EvidenceCandidate], Verdict, AgentReply]:
-    # system_prompt/graph_tools/rlm/dossier exist for the eval
-    # harness (eval.py), which runs prompt/retrieval variants against
-    # gold.yaml -- production callers leave them at their defaults.
+    # Eval variants override graph_tools/rlm/dossier explicitly against
+    # gold.yaml; production callers use the promoted graph+dossier defaults.
     server = build_server(audit_id, "vault", SERVER_NAME, include_graph_tools=graph_tools)
     mcp_servers = {SERVER_NAME: server}
     allowed_tools = allowed_tool_names(SERVER_NAME, graph_tools=graph_tools)
@@ -324,7 +329,15 @@ async def _process_claim(run_id: str, claim: Claim, audit_id: str, model: str) -
     """
     started_at = datetime.now(timezone.utc)
 
-    evidence, verdict, reply = await verify_claim_async(claim, audit_id, run_id, model=model)
+    evidence, verdict, reply = await verify_claim_async(
+        claim,
+        audit_id,
+        run_id,
+        model=model,
+        system_prompt=PRODUCTION_SYSTEM_PROMPT,
+        graph_tools=True,
+        dossier=True,
+    )
 
     write_run_manifest(
         RunManifest(
@@ -336,7 +349,7 @@ async def _process_claim(run_id: str, claim: Claim, audit_id: str, model: str) -
             finished_at=datetime.now(timezone.utc),
             input_refs=[claim.claim_id],
             output_refs=[verdict.claim_id] + [e.evidence_id for e in evidence],
-            prompt=SYSTEM_PROMPT,
+            prompt=PRODUCTION_SYSTEM_PROMPT,
             cost_usd=reply.cost_usd,
             tool_trace=reply.tool_trace,
             final_text=reply.text,

@@ -1,0 +1,71 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0018",
+  "variant": "dossier",
+  "expected_status": "contradicted",
+  "status": "contradicted",
+  "correct": true,
+  "tool_calls": 2,
+  "cost_usd": 0.027450128000000004,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0018",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0018/evidence-001"
+    ],
+    "delta": 1.0,
+    "confidence": 0.9,
+    "rationale": "The operations review table reports Q1 2026 period-end FTE as 142, not the 143 claimed; no vault document states 143 for closing workforce in Q1 2026.",
+    "suggested_action": "Reconcile the master document's 143 FTE against the operations review's 142; confirm which is correct (possible headcount reclassification or a rounding/entry error) and correct the master.",
+    "produced_by_run_id": "eval/dossier/audit-2026-q1-meridian/claim-0018"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0018/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0018",
+      "doc_id": "meridian-operations-q1-2026",
+      "page": 1,
+      "span_text": "FTE, period end | 142 | 136 | 130",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 142.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T10:38:40.073076+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "FTE, period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"FTE, period end\",\"conflicts\":[],\"see_also\":[{\"entity\":\"Product FTE\",\"similarity\":0.683},{\"entity\":\"Engineering FTE\",\"similarity\":0.644},{\"entity\":\"Customer success FTE\",\"similarity\":0.631}],\"facts\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"142\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"136\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"},{\"doc_id\":\"meridian-operations-q1-2026\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2025\",\"period\":\"2025-Q1\",\"role\":null,\"value\":\"130\",\"span_text\":\"FTE, period end | 142 | 136 | 130\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T10:38:40.713247+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "143 FTE workforce closing"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The vault's authoritative Q1 2026 period-end FTE figure is 142, with no document anywhere stating 143. The claim's value disagrees with the current authoritative value by 1.\n\n{\"evidence\":[{\"doc_id\":\"meridian-operations-q1-2026\",\"page\":1,\"span_text\":\"FTE, period end | 142 | 136 | 130\",\"canonical_value\":142.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"contradicted\",\"delta\":1.0,\"confidence\":0.9,\"rationale\":\"The operations review table reports Q1 2026 period-end FTE as 142, not the 143 claimed; no vault document states 143 for closing workforce in Q1 2026.\",\"suggested_action\":\"Reconcile the master document's 143 FTE against the operations review's 142; confirm which is correct (possible headcount reclassification or a rounding/entry error) and correct the master.\"}}"
+}

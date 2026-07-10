@@ -1,0 +1,148 @@
+{
+  "claim_id": "audit-2026-q1-meridian/claim-0001",
+  "variant": "dossier",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 2,
+  "cost_usd": 0.026643994,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q1-meridian/claim-0001",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q1-meridian/claim-0001/evidence-001",
+      "audit-2026-q1-meridian/claim-0001/evidence-002",
+      "audit-2026-q1-meridian/claim-0001/evidence-003",
+      "audit-2026-q1-meridian/claim-0001/evidence-004",
+      "audit-2026-q1-meridian/claim-0001/evidence-005",
+      "audit-2026-q1-meridian/claim-0001/evidence-006"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "The claim's EUR 12.48M matches the Q1 2026 actual Net revenue in Finance Pack v2 (12.480M), which is explicitly labeled the 'Final restatement' and 'Restated management accounts'; the only competing value (12.310M in v1) is in a 'Pre-close' pack that states it was 'Superseded on 15 April 2026 by restated v2,' so v2 is the current authoritative figure. The claim's 'Net sales' corresponds to the income-statement top-line 'Net revenue' (Services revenue is a separate line).",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/dossier/audit-2026-q1-meridian/claim-0001"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0001/evidence-001",
+      "claim_id": "audit-2026-q1-meridian/claim-0001",
+      "doc_id": "meridian-finance-v2-q1-2026",
+      "page": 1,
+      "span_text": "Net revenue | 12.480 | 10.960 | 11.900",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 12480000.0,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0001/evidence-002",
+      "claim_id": "audit-2026-q1-meridian/claim-0001",
+      "doc_id": "meridian-finance-v2-q1-2026",
+      "page": 1,
+      "span_text": "Q1 2026 Finance Pack v2\nRestated management accounts",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "EUR million",
+      "role": "restated",
+      "effective_date": "2026-04-15",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0001/evidence-003",
+      "claim_id": "audit-2026-q1-meridian/claim-0001",
+      "doc_id": "meridian-finance-v2-q1-2026",
+      "page": 1,
+      "span_text": "Final restatement. Gross margin = Gross profit / Net revenue = 61.5%.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "EUR million",
+      "role": "restated",
+      "effective_date": "2026-04-15",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0001/evidence-004",
+      "claim_id": "audit-2026-q1-meridian/claim-0001",
+      "doc_id": "meridian-finance-v1-q1-2026",
+      "page": 1,
+      "span_text": "Net revenue | 12.310 | 10.960 | 11.900",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 12310000.0,
+      "unit": "EUR million",
+      "role": "prior_period",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0001/evidence-005",
+      "claim_id": "audit-2026-q1-meridian/claim-0001",
+      "doc_id": "meridian-finance-v1-q1-2026",
+      "page": 1,
+      "span_text": "Q1 2026 Finance Pack v1\nPre-close management accounts",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "EUR million",
+      "role": "other",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q1-meridian/claim-0001/evidence-006",
+      "claim_id": "audit-2026-q1-meridian/claim-0001",
+      "doc_id": "meridian-finance-v1-q1-2026",
+      "page": 1,
+      "span_text": "Superseded on 15 April 2026 by restated v2.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "EUR million",
+      "role": "restated",
+      "effective_date": "2026-04-15",
+      "extractor_confidence": 1.0
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T10:38:57.914838+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-finance-v2-q1-2026",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"location\":\"page:1\",\"text\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Finance Pack v2\\nRestated management accounts\\nIncome statement\\nEUR million\\nQ1 2026 actual\\nQ4 2025 actual\\nQ1 2026 budget\\nNet revenue\\n12.480\\n10.960\\n11.900\\nCost of delivery\\n(4.805)\\n(4.385)\\n(4.641)\\nGross profit\\n7.675\\n6.575\\n7.259\\nAdjusted operating result\\n2.140\\n1.720\\n1.960\\nServices revenue\\n1.420\\n1.310\\n1.380\\nR&D expense\\n(2.110)\\n(1.980)\\n(2.020)\\nSales expense\\n(2.440)\\n(2.210)\\n(2.390)\\nAdmin expense\\n(1.180)\\n(1.090)\\n(1.120)\\nDeferred revenue\\n6.730\\n6.210\\n6.440\\nTrade receivables\\n4.810\\n4.120\\n4.500\\nFinal restatement. Gross margin = Gross profit / Net revenue = 61.5%.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T10:38:58.216189+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "meridian-finance-v1-q1-2026",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"location\":\"page:1\",\"text\":\"MERIDIAN CLOUD SYSTEMS\\nQ1 2026 Finance Pack v1\\nPre-close management accounts\\nIncome statement\\nEUR million\\nQ1 2026 actual\\nQ4 2025 actual\\nQ1 2026 budget\\nNet revenue\\n12.310\\n10.960\\n11.900\\nCost of delivery\\n(4.805)\\n(4.385)\\n(4.641)\\nGross profit\\n7.505\\n6.575\\n7.259\\nAdjusted operating result\\n2.050\\n1.720\\n1.960\\nServices revenue\\n1.420\\n1.310\\n1.380\\nR&D expense\\n(2.110)\\n(1.980)\\n(2.020)\\nSales expense\\n(2.440)\\n(2.210)\\n(2.390)\\nAdmin expense\\n(1.180)\\n(1.090)\\n(1.120)\\nDeferred revenue\\n6.730\\n6.210\\n6.440\\nTrade receivables\\n4.810\\n4.120\\n4.500\\nSuperseded on 15 April 2026 by restated v2.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "Both documents are explicit about the authority chain: v1 is \"Pre-close management accounts\" with the note \"Superseded on 15 April 2026 by restated v2,\" and v2 is \"Restated management accounts\" / \"Final restatement.\" The claim's 12.48M matches v2's current authoritative Net revenue (12.480), while v1's 12.310 is explicitly superseded. The prose/research mentions in the dossier all concern treasury cash flow, not net revenue, so no competing value remains.\n\n{\"evidence\":[{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"page\":1,\"span_text\":\"Net revenue | 12.480 | 10.960 | 11.900\",\"canonical_value\":12480000.0,\"unit\":\"EUR million\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":1.0},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"page\":1,\"span_text\":\"Q1 2026 Finance Pack v2\\nRestated management accounts\",\"canonical_value\":null,\"unit\":\"EUR million\",\"role\":\"restated\",\"effective_date\":\"2026-04-15\",\"extractor_confidence\":1.0},{\"doc_id\":\"meridian-finance-v2-q1-2026\",\"page\":1,\"span_text\":\"Final restatement. Gross margin = Gross profit / Net revenue = 61.5%.\",\"canonical_value\":null,\"unit\":\"EUR million\",\"role\":\"restated\",\"effective_date\":\"2026-04-15\",\"extractor_confidence\":1.0},{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"page\":1,\"span_text\":\"Net revenue | 12.310 | 10.960 | 11.900\",\"canonical_value\":12310000.0,\"unit\":\"EUR million\",\"role\":\"prior_period\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":1.0},{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"page\":1,\"span_text\":\"Q1 2026 Finance Pack v1\\nPre-close management accounts\",\"canonical_value\":null,\"unit\":\"EUR million\",\"role\":\"other\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":1.0},{\"doc_id\":\"meridian-finance-v1-q1-2026\",\"page\":1,\"span_text\":\"Superseded on 15 April 2026 by restated v2.\",\"canonical_value\":null,\"unit\":\"EUR million\",\"role\":\"restated\",\"effective_date\":\"2026-04-15\",\"extractor_confidence\":1.0}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.95,\"rationale\":\"The claim's EUR 12.48M matches the Q1 2026 actual Net revenue in Finance Pack v2 (12.480M), which is explicitly labeled the 'Final restatement' and 'Restated management accounts'; the only competing value (12.310M in v1) is in a 'Pre-close' pack that states it was 'Superseded on 15 April 2026 by restated v2,' so v2 is the current authoritative figure. The claim's 'Net sales' corresponds to the income-statement top-line 'Net revenue' (Services revenue is a separate line).\",\"suggested_action\":null}}"
+}

@@ -333,6 +333,31 @@ pack 8.4 vs regional review 8.1, gold `ambiguous`). Guards in every run:
   exp-20260710T083949Z run (excluded, not a measurement) before this
   valid rerun.
 
+## exp-20260710T103751Z — Dossier portability smoke (Meridian, 5 claims)
+
+- **Question:** does dossier preserve the Meridian smoke set's expected
+  verdicts across vocabulary mismatch, contradiction, conflict,
+  supersession, and absence cases?
+- **Change under test:** `proofbench mentions audit-2026-q1-meridian`
+  populated 50 prose mentions, then dossier evaluated claims
+  0001/0018/0021/0024/0027. The first pass made the correct ambiguity
+  judgment for 0021 but failed validation because a spreadsheet fact's
+  exact row location had no `spans_fts` row, yielding `span_text: null`.
+  `entity_profile_data` now falls back to the enclosing sheet span for
+  spreadsheet row facts; this is a generic provenance repair, not a
+  fixture rule. Claim 0021 was retried from its checkpoint and the
+  five-record summary rebuilt without repaying completed claims.
+- **Result:** **5/5, zero failures, 4.6 tools/claim, $0.166 accumulated
+  claim cost.** Claim 0021 is correctly `ambiguous` (46 customer-appendix
+  vs 49 operations-review) with both source spans available.
+- **Reading:** the Dossier's Vantage advantage survives a distinct fixture.
+  The only portability failure was a source-span shape gap exposed by an
+  XLSX fact, and the repaired fallback provides a citable enclosing sheet
+  span while preserving the exact fact location.
+- **Decision:** promote graph+dossier as the production `proofbench verify`
+  default; retain baseline and graph as eval controls. Credential preflight
+  remains the next operational reliability task.
+
 ---
 
 ## Non-experiment incident log
