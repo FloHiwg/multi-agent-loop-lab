@@ -1,0 +1,55 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0006",
+  "variant": "dossier",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 0,
+  "cost_usd": 0.02919244,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0006",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0006/evidence-001",
+      "audit-2026-q2-vantage/claim-0006/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.96,
+    "rationale": "Both Q2 2026 finance packs (v1 and v2) report Deferred revenue (synonymous with unearned revenue) at 9.685 million EUR for Q2 2026 actual, which equals the claim's canonical value of 9,685,000 exactly; the two versions agree on this metric so there is no competing value to resolve.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0006"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0006/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0006",
+      "doc_id": "vantage-finance-v1-2026q2",
+      "page": 1,
+      "span_text": "Deferred revenue | 9.685 | 9.620 | 9.394",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 9685000.0,
+      "unit": "currency (EUR millions)",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0006/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0006",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Deferred revenue | 9.685 | 9.620 | 9.394",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 9685000.0,
+      "unit": "currency (EUR millions)",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 1.0
+    }
+  ],
+  "tool_trace": [],
+  "final_text": "{\"evidence\": [{\"doc_id\": \"vantage-finance-v1-2026q2\", \"page\": 1, \"span_text\": \"Deferred revenue | 9.685 | 9.620 | 9.394\", \"canonical_value\": 9685000.0, \"unit\": \"currency (EUR millions)\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 1.0}, {\"doc_id\": \"vantage-finance-v2-2026q2\", \"page\": 1, \"span_text\": \"Deferred revenue | 9.685 | 9.620 | 9.394\", \"canonical_value\": 9685000.0, \"unit\": \"currency (EUR millions)\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 1.0}], \"verdict\": {\"status\": \"supported\", \"delta\": 0.0, \"confidence\": 0.96, \"rationale\": \"Both Q2 2026 finance packs (v1 and v2) report Deferred revenue (synonymous with unearned revenue) at 9.685 million EUR for Q2 2026 actual, which equals the claim's canonical value of 9,685,000 exactly; the two versions agree on this metric so there is no competing value to resolve.\", \"suggested_action\": null}}"
+}

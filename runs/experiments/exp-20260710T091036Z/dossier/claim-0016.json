@@ -1,0 +1,55 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0016",
+  "variant": "dossier",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 0,
+  "cost_usd": 0.0344222,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0016",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0016/evidence-001",
+      "audit-2026-q2-vantage/claim-0016/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The Q2 2026 treasury ledger reports 'Net operating cash outflow (1,520)' kEUR, i.e. -EUR 1.52 million, which exactly matches the claim's cash-burn-from-operations value of EUR 1.52 million; no other document states a competing figure for this same metric and period.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0016"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0016/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0016",
+      "doc_id": "vantage-treasury-2026q2",
+      "page": 1,
+      "span_text": "Net operating cash outflow | (1,520) | - | -",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": -1520000.0,
+      "unit": "kEUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0016/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0016",
+      "doc_id": "vantage-treasury-2026q2",
+      "page": 1,
+      "span_text": "VANTAGE INDUSTRIAL GROUP Q2 2026 Treasury and Cash ... Net operating cash outflow (1,520) - - All figures in thousands of euros.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": -1520000.0,
+      "unit": "kEUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [],
+  "final_text": "{\"evidence\": [{\"doc_id\": \"vantage-treasury-2026q2\", \"page\": 1, \"span_text\": \"Net operating cash outflow | (1,520) | - | -\", \"canonical_value\": -1520000, \"unit\": \"kEUR\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 1.0}, {\"doc_id\": \"vantage-treasury-2026q2\", \"page\": 1, \"span_text\": \"VANTAGE INDUSTRIAL GROUP Q2 2026 Treasury and Cash ... Net operating cash outflow (1,520) - - All figures in thousands of euros.\", \"canonical_value\": -1520000, \"unit\": \"kEUR\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.95}], \"verdict\": {\"status\": \"supported\", \"delta\": 0, \"confidence\": 0.97, \"rationale\": \"The Q2 2026 treasury ledger reports 'Net operating cash outflow (1,520)' kEUR, i.e. -EUR 1.52 million, which exactly matches the claim's cash-burn-from-operations value of EUR 1.52 million; no other document states a competing figure for this same metric and period.\", \"suggested_action\": null}}"
+}

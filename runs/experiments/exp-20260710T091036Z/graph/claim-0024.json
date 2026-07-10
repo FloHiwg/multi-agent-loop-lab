@@ -1,0 +1,85 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0024",
+  "variant": "graph",
+  "expected_status": "ambiguous",
+  "status": null,
+  "correct": false,
+  "tool_calls": 5,
+  "cost_usd": 0.0269274,
+  "error": "reply parsed but failed validation: 1 validation error for EvidenceCandidate\nspan_text\n  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]\n    For further information visit https://errors.pydantic.dev/2.13/v/string_type",
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:18:03.392138+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "new enterprise wins"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'new enterprise wins' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"New enterprise accounts\",\"similarity\":0.693},{\"entity\":\"Enterprise accounts\",\"similarity\":0.386},{\"entity\":\"Expansion bookings\",\"similarity\":0.349},{\"entity\":\"Net revenue\",\"similarity\":0.345},{\"entity\":\"Net dollar retention\",\"similarity\":0.34},{\"entity\":\"Qualified commercial pipeline\",\"similarity\":0.335},{\"entity\":\"Deferred revenue\",\"similarity\":0.332},{\"entity\":\"Open case inventory\",\"similarity\":0.303}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:18:03.567506+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "enterprise wins"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-update-2025q2\",\"location\":\"page:1\",\"snippet\":\"...million and 50 new [enterprise] account [wins].\\nThe qualified pipeline stood at...\"},{\"doc_id\":\"vantage-update-2025q3\",\"location\":\"page:1\",\"snippet\":\"...million and 45 new [enterprise] account [wins].\\nThe qualified pipeline stood at...\"},{\"doc_id\":\"vantage-update-2025q4\",\"location\":\"page:1\",\"snippet\":\"...million and 42 new [enterprise] account [wins].\\nThe qualified pipeline stood at...\"},{\"doc_id\":\"vantage-update-2026q1\",\"location\":\"page:1\",\"snippet\":\"...million and 40 new [enterprise] account [wins].\\nThe qualified pipeline stood at...\"},{\"doc_id\":\"vantage-update-2026q2\",\"location\":\"page:1\",\"snippet\":\"...million and 43 new [enterprise] account [wins].\\nThe qualified pipeline stood at...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:18:06.161614+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "New enterprise accounts"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"New enterprise accounts\",\"conflicts\":[{\"period\":\"2025-Q2\",\"role\":null,\"values\":[{\"doc_id\":\"vantage-customer-2025q2\",\"value\":48.0},{\"doc_id\":\"vantage-operations-2025q2\",\"value\":50.0}]},{\"period\":\"2025-Q3\",\"role\":null,\"values\":[{\"doc_id\":\"vantage-customer-2025q3\",\"value\":43.0},{\"doc_id\":\"vantage-operations-2025q3\",\"value\":45.0}]},{\"period\":\"2025-Q4\",\"role\":null,\"values\":[{\"doc_id\":\"vantage-customer-2025q4\",\"value\":38.0},{\"doc_id\":\"vantage-operations-2025q4\",\"value\":42.0}]},{\"period\":\"2026-Q1\",\"role\":null,\"values\":[{\"doc_id\":\"vantage-customer-2026q1\",\"value\":38.0},{\"doc_id\":\"vantage-operations-2026q1\",\"value\":40.0}]},{\"period\":\"2026-Q2\",\"role\":null,\"values\":[{\"doc_id\":\"vantage-customer-2026q2\",\"value\":41.0},{\"doc_id\":\"vantage-operations-2026q2\",\"value\":43.0}]}],\"see_also\":[{\"entity\":\"Enterprise accounts\",\"similarity\":0.688},{\"entity\":\"Operating accounts\",\"similarity\":0.518}],\"facts\":[{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"50\",\"span_text\":\"New enterprise accounts | 50 | - | 47\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"New enterprise accounts | 50 | - | 47\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"47\",\"span_text\":\"New enterprise accounts | 50 | - | 47\"},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"48\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"48\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"51\",\"span_text\":null},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"45\",\"span_text\":\"New enterprise accounts | 45 | - | 42\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"New enterprise accounts | 45 | - | 42\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"42\",\"span_text\":\"New enterprise accounts | 45 | - | 42\"},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"43\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"48\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"46\",\"span_text\":null},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"42\",\"span_text\":\"New enterprise accounts | 42 | - | 39\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"New enterprise accounts | 42 | - | 39\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"39\",\"span_text\":\"New enterprise accounts | 42 | - | 39\"},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"38\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"43\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"41\",\"span_text\":null},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"40\",\"span_text\":\"New enterprise accounts | 40 | - | 37\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"New enterprise accounts | 40 | - | 37\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"37\",\"span_text\":\"New enterprise accounts | 40 | - | 37\"},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"38\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"38\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"41\",\"span_text\":null},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"43\",\"span_text\":\"New enterprise accounts | 43 | - | 40\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"New enterprise accounts | 43 | - | 40\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:New enterprise accounts\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"40\",\"span_text\":\"New enterprise accounts | 43 | - | 40\"},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"41\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"38\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row7\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"44\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:18:06.423310+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-update-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-update-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Quarterly Update\\nInvestor and staff brief\\nVantage Industrial Group SE closed Q2 2026 with revenue of EUR 21.89 million and 43 new enterprise account wins.\\nThe qualified pipeline stood at EUR 13.26 million entering the next quarter.\\nAnnualized subscription value reached EUR 34.78 million, with licensed seats at 10,231.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-10T09:18:22.041330+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-customer-2026q2",
+        "location": "sheet:Metrics!row7"
+      },
+      "output": "no span found at that doc_id/location",
+      "is_error": true
+    }
+  ],
+  "final_text": "{\"evidence\": [\n  {\n    \"doc_id\": \"vantage-operations-2026q2\",\n    \"page\": 1,\n    \"span_text\": \"New enterprise accounts | 43 | - | 40\",\n    \"canonical_value\": 43.0,\n    \"unit\": \"count\",\n    \"role\": \"actual\",\n    \"effective_date\": \"2026-06-30\",\n    \"extractor_confidence\": 0.95\n  },\n  {\n    \"doc_id\": \"vantage-update-2026q2\",\n    \"page\": 1,\n    \"span_text\": \"Vantage Industrial Group SE closed Q2 2026 with revenue of EUR 21.89 million and 43 new enterprise account wins.\",\n    \"canonical_value\": 43.0,\n    \"unit\": \"count\",\n    \"role\": \"actual\",\n    \"effective_date\": \"2026-06-30\",\n    \"extractor_confidence\": 0.95\n  },\n  {\n    \"doc_id\": \"vantage-customer-2026q2\",\n    \"page\": null,\n    \"span_text\": null,\n    \"canonical_value\": 41.0,\n    \"unit\": \"count\",\n    \"role\": \"actual\",\n    \"effective_date\": \"2026-06-30\",\n    \"extractor_confidence\": 0.9\n  }\n],\n\"verdict\": {\n  \"status\": \"ambiguous\",\n  \"delta\": 0,\n  \"confidence\": 0.85,\n  \"rationale\": \"The claim's 43 matches the Q2 2026 operations review and the quarterly investor brief, but the customer appendix records 41 new enterprise accounts for the same entity and period with no document establishing which source is authoritative, so the competing value cannot be resolved.\",\n  \"suggested_action\": \"Reconcile the operations-review figure (43) against the customer-appendix figure (41) for new enterprise accounts in Q2 2026 and determine which source is authoritative before relying on the 43.\"\n}}"
+}

@@ -1,0 +1,48 @@
+{
+  "experiment_id": "exp-20260710T091036Z",
+  "audit_id": "audit-2026-q2-vantage",
+  "model": "z-ai/glm-5.2",
+  "max_concurrency": 3,
+  "max_budget_usd": 0.5,
+  "started_variants": [
+    "baseline",
+    "graph",
+    "dossier"
+  ],
+  "total_cost_usd": 0.172252372,
+  "summaries": [
+    {
+      "variant": "baseline",
+      "n_claims": 31,
+      "correct": 30,
+      "accuracy": 0.967741935483871,
+      "failures": 0,
+      "avg_tool_calls": 8.258064516129032,
+      "avg_cost_usd": 0.03091818,
+      "total_cost_usd": 0.95846358,
+      "n_attempted": 31
+    },
+    {
+      "variant": "graph",
+      "n_claims": 31,
+      "correct": 30,
+      "accuracy": 0.967741935483871,
+      "failures": 1,
+      "avg_tool_calls": 7.935483870967742,
+      "avg_cost_usd": 0.03366728806451613,
+      "total_cost_usd": 1.04368593,
+      "n_attempted": 31
+    },
+    {
+      "variant": "dossier",
+      "n_claims": 31,
+      "correct": 31,
+      "accuracy": 1.0,
+      "failures": 0,
+      "avg_tool_calls": 3.064516129032258,
+      "avg_cost_usd": 0.0432869549032258,
+      "total_cost_usd": 1.341895602,
+      "n_attempted": 31
+    }
+  ]
+}

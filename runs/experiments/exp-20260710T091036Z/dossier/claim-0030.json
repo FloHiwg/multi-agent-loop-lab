@@ -1,0 +1,109 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0030",
+  "variant": "dossier",
+  "expected_status": "missing_evidence",
+  "status": "missing_evidence",
+  "correct": true,
+  "tool_calls": 6,
+  "cost_usd": 0.058677638000000004,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0030",
+    "status": "missing_evidence",
+    "matched_evidence_ids": [],
+    "delta": null,
+    "confidence": 0.92,
+    "rationale": "No vault document mentions 'Weighted services backlog' (or 'backlog'/'weighted') at all; entity_profile found no matching entity and full-text search returned zero hits. Every dossier occurrence concerns unrelated metrics (Deferred revenue, Net revenue, Trade receivables, Annualized subscription value, etc.) with no value near EUR 5.30 million for Q2 2026.",
+    "suggested_action": "Identify the source document behind the master's EUR 5.30M 'Weighted services backlog' figure; it is not substantiated by any basis/support document in the vault and may be an unsupported or mislabeled metric.",
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0030"
+  },
+  "evidence": [],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:34:06.813914+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "backlog"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'backlog' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Open case inventory\",\"similarity\":0.332},{\"entity\":\"Expansion bookings\",\"similarity\":0.314},{\"entity\":\"Operating accounts\",\"similarity\":0.3},{\"entity\":\"Deposit accounts\",\"similarity\":0.294},{\"entity\":\"Gross account attrition\",\"similarity\":0.285},{\"entity\":\"Qualified pipeline\",\"similarity\":0.284},{\"entity\":\"Deferred revenue\",\"similarity\":0.283},{\"entity\":\"Production incidents\",\"similarity\":0.282}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:34:06.952339+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "backlog"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:34:10.793363+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "weighted services"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:34:11.149766+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "5.30 OR 5.3 million weighted"
+      },
+      "output": "search error: fts5: syntax error near \".\"",
+      "is_error": true
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-10T09:34:13.038102+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "weighted"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-10T09:34:13.161614+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "backlog"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\": [], \"verdict\": {\"status\": \"missing_evidence\", \"delta\": null, \"confidence\": 0.92, \"rationale\": \"No vault document mentions 'Weighted services backlog' (or 'backlog'/'weighted') at all; entity_profile found no matching entity and full-text search returned zero hits. Every dossier occurrence concerns unrelated metrics (Deferred revenue, Net revenue, Trade receivables, Annualized subscription value, etc.) with no value near EUR 5.30 million for Q2 2026.\", \"suggested_action\": \"Identify the source document behind the master's EUR 5.30M 'Weighted services backlog' figure; it is not substantiated by any basis/support document in the vault and may be an unsupported or mislabeled metric.\"}}"
+}

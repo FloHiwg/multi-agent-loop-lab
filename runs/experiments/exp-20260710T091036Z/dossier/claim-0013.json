@@ -1,0 +1,179 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0013",
+  "variant": "dossier",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 3,
+  "cost_usd": 0.050341540000000004,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0013",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0013/evidence-001",
+      "audit-2026-q2-vantage/claim-0013/evidence-002",
+      "audit-2026-q2-vantage/claim-0013/evidence-003",
+      "audit-2026-q2-vantage/claim-0013/evidence-004",
+      "audit-2026-q2-vantage/claim-0013/evidence-005",
+      "audit-2026-q2-vantage/claim-0013/evidence-006",
+      "audit-2026-q2-vantage/claim-0013/evidence-007"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The restated v2 finance pack (approved 15 July 2026, explicitly superseding v1) gives Q2 2026 actual gross profit 13.032 and net revenue 21.895, yielding a gross margin of 13.032/21.895 = 0.5952 = 59.5%, matching the claim exactly. The v1 preliminary figures (12.849/21.712 = 59.18%) are explicitly superseded and do not compete.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0013"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0013/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0013",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Gross profit\n13.032\n12.718\n12.641",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 13.032,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0013/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0013",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Net revenue\n21.895\n21.529\n21.238",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 21.895,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0013/evidence-003",
+      "claim_id": "audit-2026-q2-vantage/claim-0013",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Final restatement, approved 15 July 2026.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": null,
+      "role": "restated",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0013/evidence-004",
+      "claim_id": "audit-2026-q2-vantage/claim-0013",
+      "doc_id": "vantage-finance-v1-2026q2",
+      "page": 1,
+      "span_text": "Gross profit\n12.849\n12.718\n12.641",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 12.849,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0013/evidence-005",
+      "claim_id": "audit-2026-q2-vantage/claim-0013",
+      "doc_id": "vantage-finance-v1-2026q2",
+      "page": 1,
+      "span_text": "PRELIMINARY - superseded on 15 July 2026 by restated v2.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": null,
+      "role": "other",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0013/evidence-006",
+      "claim_id": "audit-2026-q2-vantage/claim-0013",
+      "doc_id": "vantage-finance-v1-2026q2",
+      "page": 1,
+      "span_text": "Net revenue\n21.712\n21.529\n21.238",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 21.712,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0013/evidence-007",
+      "claim_id": "audit-2026-q2-vantage/claim-0013",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "Net revenue reached EUR 21.89 million, with the gross result at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 13.03,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.6
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:25:23.965568+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "restated restate revision supersede v2 corrected",
+        "tag": "finance_pack"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:25:25.343136+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-finance-v2-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Finance Pack v2\\nManagement accounts\\nIncome statement\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nNet revenue\\n21.895\\n21.529\\n21.238\\nCost of delivery\\n(8.863)\\n(8.811)\\n(8.597)\\nGross profit\\n13.032\\n12.718\\n12.641\\nAdjusted operating result\\n5.755\\n5.519\\n5.582\\nDeferred revenue\\n9.685\\n9.620\\n9.394\\nTrade receivables\\n6.697\\n6.530\\n6.496\\nCommercial indicators\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nQualified pipeline\\n13.510\\n12.888\\n13.104\\nExpansion bookings\\n4.110\\n3.965\\n3.986\\nFinal restatement, approved 15 July 2026.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:25:29.205952+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-finance-v1-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Finance Pack v1\\nPre-close management accounts\\nIncome statement\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nNet revenue\\n21.712\\n21.529\\n21.238\\nCost of delivery\\n(8.863)\\n(8.811)\\n(8.597)\\nGross profit\\n12.849\\n12.718\\n12.641\\nAdjusted operating result\\n5.572\\n5.519\\n5.582\\nDeferred revenue\\n9.685\\n9.620\\n9.394\\nTrade receivables\\n6.697\\n6.530\\n6.496\\nCommercial indicators\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nQualified pipeline\\n13.510\\n12.888\\n13.104\\nExpansion bookings\\n4.110\\n3.965\\n3.986\\nPRELIMINARY - superseded on 15 July 2026 by restated v2.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "I now have everything I need. The documents explicitly establish the authority ordering:\n\n- **v1** (vantage-finance-v1-2026q2): \"PRELIMINARY - superseded on 15 July 2026 by restated v2.\" \u2192 explicitly superseded (outdated)\n- **v2** (vantage-finance-v2-2026q2): \"Final restatement, approved 15 July 2026.\" \u2192 current authoritative\n\nUsing v2's authoritative Q2 2026 actuals: Gross profit = 13.032, Net revenue = 21.895 \u2192 gross margin = 13.032 / 21.895 = 0.59520 = 59.52% \u2248 59.5%, matching the claim's canonical value 0.5952 exactly. The v1 figures (12.849 / 21.712 = 59.18%) are explicitly superseded, so they don't create ambiguity. The prose commentary also aligns with v2 (EUR 13.03m / EUR 21.89m).\n\n```json\n{\"evidence\": [\n  {\"doc_id\": \"vantage-finance-v2-2026q2\", \"page\": 1, \"span_text\": \"Gross profit\\n13.032\\n12.718\\n12.641\", \"canonical_value\": 13.032, \"unit\": \"EUR million\", \"role\": \"actual\", \"effective_date\": \"2026-07-15\", \"extractor_confidence\": 0.95},\n  {\"doc_id\": \"vantage-finance-v2-2026q2\", \"page\": 1, \"span_text\": \"Net revenue\\n21.895\\n21.529\\n21.238\", \"canonical_value\": 21.895, \"unit\": \"EUR million\", \"role\": \"actual\", \"effective_date\": \"2026-07-15\", \"extractor_confidence\": 0.95},\n  {\"doc_id\": \"vantage-finance-v2-2026q2\", \"page\": 1, \"span_text\": \"Final restatement, approved 15 July 2026.\", \"canonical_value\": null, \"unit\": null, \"role\": \"restated\", \"effective_date\": \"2026-07-15\", \"extractor_confidence\": 0.95},\n  {\"doc_id\": \"vantage-finance-v1-2026q2\", \"page\": 1, \"span_text\": \"Gross profit\\n12.849\\n12.718\\n12.641\", \"canonical_value\": 12.849, \"unit\": \"EUR million\", \"role\": \"actual\", \"effective_date\": null, \"extractor_confidence\": 0.95},\n  {\"doc_id\": \"vantage-finance-v1-2026q2\", \"page\": 1, \"span_text\": \"PRELIMINARY - superseded on 15 July 2026 by restated v2.\", \"canonical_value\": null, \"unit\": null, \"role\": \"other\", \"effective_date\": \"2026-07-15\", \"extractor_confidence\": 0.95},\n  {\"doc_id\": \"vantage-finance-v1-2026q2\", \"page\": 1, \"span_text\": \"Net revenue\\n21.712\\n21.529\\n21.238\", \"canonical_value\": 21.712, \"unit\": \"EUR million\", \"role\": \"actual\", \"effective_date\": null, \"extractor_confidence\": 0.95},\n  {\"doc_id\": \"vantage-commentary-2026q2\", \"page\": 1, \"span_text\": \"Net revenue reached EUR 21.89 million, with the gross result at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\", \"canonical_value\": 13.03, \"unit\": \"EUR million\", \"role\": \"actual\", \"effective_date\": null, \"extractor_confidence\": 0.6}\n],\n\"verdict\": {\n  \"status\": \"supported\",\n  \"delta\": 0.0,\n  \"confidence\": 0.97,\n  \"rationale\": \"The restated v2 finance pack (approved 15 July 2026, explicitly superseding v1) gives Q2 2026 actual gross profit 13.032 and net revenue 21.895, yielding a gross margin of 13.032/21.895 = 0.5952 = 59.5%, matching the claim exactly. The v1 preliminary figures (12.849/21.712 = 59.18%) are explicitly superseded and do not compete.\",\n  \"suggested_action\": null\n}}\n```"
+}

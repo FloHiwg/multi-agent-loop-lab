@@ -1,0 +1,163 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0014",
+  "variant": "dossier",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.049666669999999996,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0014",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0014/evidence-001",
+      "audit-2026-q2-vantage/claim-0014/evidence-002",
+      "audit-2026-q2-vantage/claim-0014/evidence-003",
+      "audit-2026-q2-vantage/claim-0014/evidence-004",
+      "audit-2026-q2-vantage/claim-0014/evidence-005"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "Q2 2026 net revenue of EUR 21.895M (v2 finance pack, explicitly the final restatement that supersedes the preliminary v1 of 21.712M, approved 15 July 2026) divided by period-end FTE of 224 (operations pack) equals EUR 97,745.54, matching the claim exactly within the 0.2% formula tolerance; the Q2 commentary prose independently cites EUR 21.89M, corroborating the v2 figure.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0014"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0014/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0014",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Net revenue | 21.895 | 21.529 | 21.238",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 21895000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0014/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0014",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Final restatement, approved 15 July 2026.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": null,
+      "role": "restated",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0014/evidence-003",
+      "claim_id": "audit-2026-q2-vantage/claim-0014",
+      "doc_id": "vantage-finance-v1-2026q2",
+      "page": 1,
+      "span_text": "PRELIMINARY - superseded on 15 July 2026 by restated v2.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": null,
+      "role": "other",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0014/evidence-004",
+      "claim_id": "audit-2026-q2-vantage/claim-0014",
+      "doc_id": "vantage-operations-2026q2",
+      "page": 1,
+      "span_text": "FTE, period end | 224 | 221 | 228",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 224.0,
+      "unit": "FTE",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0014/evidence-005",
+      "claim_id": "audit-2026-q2-vantage/claim-0014",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "Net revenue reached EUR 21.89 million, with the gross result at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 21890000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.6
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:25:17.199422+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "fte"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"FTE, period end\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"213\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"217\",\"span_text\":\"FTE, period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"214\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"213\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"218\",\"span_text\":\"FTE, period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"216\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"214\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"220\",\"span_text\":\"FTE, period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"221\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"216\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"225\",\"span_text\":\"FTE, period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"224\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"221\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"228\",\"span_text\":\"FTE, period end | 224 | 221 | 228\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:25:17.388605+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "employee OR headcount OR FTE OR staff"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1\",\"snippet\":\"...Q2 2025\\nPrior quarter\\nPlan\\n[FTE], period end\\n213\\n-\\n217\\nP1 response...\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 213 | - | 217\"},{\"doc_id\":\"vantage-commentary-2025q2\",\"location\":\"page:1\",\"snippet\":\"...supported by 26 external contract [staff].\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"},{\"doc_id\":\"vantage-update-2025q2\",\"location\":\"page:1\",\"snippet\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2025 Quarterly Update\\nInvestor and [staff] brief\\nVantage...\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1\",\"snippet\":\"...Q3 2025\\nPrior quarter\\nPlan\\n[FTE], period end\\n214\\n213\\n218\\nP1...\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-commentary-2025q3\",\"location\":\"page:1\",\"snippet\":\"...supported by 26 external contract [staff].\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"},{\"doc_id\":\"vantage-update-2025q3\",\"location\":\"page:1\",\"snippet\":\"VANTAGE INDUSTRIAL GROUP\\nQ3 2025 Quarterly Update\\nInvestor and [staff] brief\\nVantage...\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1\",\"snippet\":\"...Q4 2025\\nPrior quarter\\nPlan\\n[FTE], period end\\n216\\n214\\n220\\nP1...\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...supported by 26 external contract [staff].\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"},{\"doc_id\":\"vantage-update-2025q4\",\"location\":\"page:1\",\"snippet\":\"VANTAGE INDUSTRIAL GROUP\\nQ4 2025 Quarterly Update\\nInvestor and [staff] brief\\nVantage...\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1\",\"snippet\":\"...Q1 2026\\nPrior quarter\\nPlan\\n[FTE], period end\\n221\\n216\\n225\\nP1...\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"snippet\":\"...supported by 26 external contract [staff].\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"},{\"doc_id\":\"vantage-update-2026q1\",\"location\":\"page:1\",\"snippet\":\"VANTAGE INDUSTRIAL GROUP\\nQ1 2026 Quarterly Update\\nInvestor and [staff] brief\\nVantage...\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1\",\"snippet\":\"...Q2 2026\\nPrior quarter\\nPlan\\n[FTE], period end\\n224\\n221\\n228\\nP1...\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 224 | 221 | 228\"},{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"snippet\":\"...supported by 26 external contract [staff].\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"},{\"doc_id\":\"vantage-update-2026q2\",\"location\":\"page:1\",\"snippet\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Quarterly Update\\nInvestor and [staff] brief\\nVantage...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:25:30.703695+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-finance-v2-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Finance Pack v2\\nManagement accounts\\nIncome statement\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nNet revenue\\n21.895\\n21.529\\n21.238\\nCost of delivery\\n(8.863)\\n(8.811)\\n(8.597)\\nGross profit\\n13.032\\n12.718\\n12.641\\nAdjusted operating result\\n5.755\\n5.519\\n5.582\\nDeferred revenue\\n9.685\\n9.620\\n9.394\\nTrade receivables\\n6.697\\n6.530\\n6.496\\nCommercial indicators\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nQualified pipeline\\n13.510\\n12.888\\n13.104\\nExpansion bookings\\n4.110\\n3.965\\n3.986\\nFinal restatement, approved 15 July 2026.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:25:30.977024+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-finance-v1-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Finance Pack v1\\nPre-close management accounts\\nIncome statement\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nNet revenue\\n21.712\\n21.529\\n21.238\\nCost of delivery\\n(8.863)\\n(8.811)\\n(8.597)\\nGross profit\\n12.849\\n12.718\\n12.641\\nAdjusted operating result\\n5.572\\n5.519\\n5.582\\nDeferred revenue\\n9.685\\n9.620\\n9.394\\nTrade receivables\\n6.697\\n6.530\\n6.496\\nCommercial indicators\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nQualified pipeline\\n13.510\\n12.888\\n13.104\\nExpansion bookings\\n4.110\\n3.965\\n3.986\\nPRELIMINARY - superseded on 15 July 2026 by restated v2.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "Explicit supersession confirmed:\n- v1: \"PRELIMINARY - superseded on 15 July 2026 by restated v2.\"\n- v2: \"Final restatement, approved 15 July 2026.\"\n\nSo v2 net revenue (21.895M) is current authoritative; v1 (21.712M) is outdated. Formula check: 21,895,000 \u00f7 224 FTE = 97,745.54, matching the claim exactly (within 0.2% tolerance). The commentary prose also cites 21.89M, corroborating v2.\n\n{\"evidence\":[{\"doc_id\":\"vantage-finance-v2-2026q2\",\"page\":1,\"span_text\":\"Net revenue | 21.895 | 21.529 | 21.238\",\"canonical_value\":21895000,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":\"2026-07-15\",\"extractor_confidence\":1.0},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"page\":1,\"span_text\":\"Final restatement, approved 15 July 2026.\",\"canonical_value\":null,\"unit\":null,\"role\":\"restated\",\"effective_date\":\"2026-07-15\",\"extractor_confidence\":1.0},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"page\":1,\"span_text\":\"PRELIMINARY - superseded on 15 July 2026 by restated v2.\",\"canonical_value\":null,\"unit\":null,\"role\":\"other\",\"effective_date\":\"2026-07-15\",\"extractor_confidence\":1.0},{\"doc_id\":\"vantage-operations-2026q2\",\"page\":1,\"span_text\":\"FTE, period end | 224 | 221 | 228\",\"canonical_value\":224,\"unit\":\"FTE\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":1.0},{\"doc_id\":\"vantage-commentary-2026q2\",\"page\":1,\"span_text\":\"Net revenue reached EUR 21.89 million, with the gross result at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\",\"canonical_value\":21890000,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.6}],\"verdict\":{\"status\":\"supported\",\"delta\":0,\"confidence\":0.97,\"rationale\":\"Q2 2026 net revenue of EUR 21.895M (v2 finance pack, explicitly the final restatement that supersedes the preliminary v1 of 21.712M, approved 15 July 2026) divided by period-end FTE of 224 (operations pack) equals EUR 97,745.54, matching the claim exactly within the 0.2% formula tolerance; the Q2 commentary prose independently cites EUR 21.89M, corroborating the v2 figure.\",\"suggested_action\":null}}"
+}

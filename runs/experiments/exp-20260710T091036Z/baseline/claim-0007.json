@@ -1,0 +1,103 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0007",
+  "variant": "baseline",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.01662549,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0007",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0007/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "The Q2 2026 regional breakdown lists DACH actual sales as EUR 6.631 million, which equals the claimed EUR 6.63 million (6,631,000) after unit normalization; no other vault document states a competing Q2 2026 DACH figure.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/baseline/audit-2026-q2-vantage/claim-0007"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0007/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0007",
+      "doc_id": "vantage-regional-2026q2",
+      "page": 1,
+      "span_text": "DACH | 6.631 | 6.579 | 6.432",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 6631000.0,
+      "unit": "EUR (millions)",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:11:33.545068+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "DACH",
+        "attribute": "Q2 2026"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q2 2026 actual\",\"value\":\"6.631\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"entity\":\"DACH\",\"attribute\":\"Q2 2026 budget\",\"value\":\"6.432\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:11:33.774698+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "DACH quarterly sales"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:11:36.354306+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-regional-2026q2",
+        "location": "page:1/table:1/row:DACH"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"text\":\"DACH | 6.631 | 6.579 | 6.432\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:11:36.463584+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "DACH"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1\",\"snippet\":\"...Prior actual\\nQ2 2025 budget\\n[DACH]\\n6.200\\n-\\n6.014\\nFrance\\n3...\"},{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:DACH\",\"snippet\":\"[DACH] | 6.200 | - | 6.014\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1\",\"snippet\":\"...Prior actual\\nQ3 2025 budget\\n[DACH]\\n6.311\\n6.200\\n6.121...\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:DACH\",\"snippet\":\"[DACH] | 6.311 | 6.200 | 6.121\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1\",\"snippet\":\"...Prior actual\\nQ4 2025 budget\\n[DACH]\\n6.381\\n6.311\\n6.189...\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:DACH\",\"snippet\":\"[DACH] | 6.381 | 6.311 | 6.189\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1\",\"snippet\":\"...Prior actual\\nQ1 2026 budget\\n[DACH]\\n6.579\\n6.381\\n6.381...\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:DACH\",\"snippet\":\"[DACH] | 6.579 | 6.381 | 6.381\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1\",\"snippet\":\"...Prior actual\\nQ2 2026 budget\\n[DACH]\\n6.631\\n6.579\\n6.432...\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:DACH\",\"snippet\":\"[DACH] | 6.631 | 6.579 | 6.432\"}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"vantage-regional-2026q2\",\"page\":1,\"span_text\":\"DACH | 6.631 | 6.579 | 6.432\",\"canonical_value\":6631000.0,\"unit\":\"EUR (millions)\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.95,\"rationale\":\"The Q2 2026 regional breakdown lists DACH actual sales as EUR 6.631 million, which equals the claimed EUR 6.63 million (6,631,000) after unit normalization; no other vault document states a competing Q2 2026 DACH figure.\",\"suggested_action\":null}}"
+}

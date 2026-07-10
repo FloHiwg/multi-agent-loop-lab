@@ -302,6 +302,37 @@ pack 8.4 vs regional review 8.1, gold `ambiguous`). Guards in every run:
 - **Decision / next:** run the full Vantage baseline-vs-graph-vs-dossier
   comparison, sliced by `failure_class`, before drawing a scale conclusion.
 
+## exp-20260710T091036Z — Evidence Dossier at full Vantage scale (31 claims, 41 docs)
+
+- **Question:** does the six-claim dossier smoke result hold over the whole
+  Vantage fixture, and what does it cost relative to baseline and graph?
+- **Change under test:** baseline and graph against the prepared Evidence
+  Dossier (table facts + prose mentions + one bounded researcher gap sweep,
+  then judge). All variants used `z-ai/glm-5.2`, four-way claim
+  concurrency, and the same gold claims. The initial $3 invocation ran
+  baseline and graph plus 28 dossier claims; a same-id checkpoint resume
+  ran the three budget-skipped dossier claims only. Accumulated actual cost
+  is $3.344 across the three variants.
+- **Result:** baseline **30/31**, 8.26 tools/claim, $0.958; graph
+  **30/31**, 7.94 tools/claim, $1.044, with one shape failure; dossier
+  **31/31**, zero failures, 3.06 tools/claim, $1.342. By failure class,
+  all variants passed prose_table_clash (1/1), stale_quarter (2/2), and
+  every non-conflict class; baseline and graph still missed one of the two
+  regional_clash claims (claim-0024), while dossier passed **2/2**.
+- **Reading:** compared with exp-20260709T185721Z's three-way 28/31 tie,
+  shared rubric/context improvements lifted baseline and graph to 30/31;
+  that means this single run does not attribute the prose-table-clash win
+  solely to the dossier. The dossier's distinct win is complete regional
+  conflict handling and the only perfect run. It used **63% fewer tool
+  calls than baseline**, but its prepared payload and researcher work made
+  it **40% more expensive** per full run. Graph's lone miss is a
+  span_text-null response-shape failure, not an evidence judgment.
+- **Decision / next:** keep dossier as the leading production candidate,
+  but validate it on Meridian before promotion. Add the credential
+  preflight: an expired OpenRouter key first produced an invalid zero-cost
+  exp-20260710T083949Z run (excluded, not a measurement) before this
+  valid rerun.
+
 ---
 
 ## Non-experiment incident log

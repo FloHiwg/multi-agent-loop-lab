@@ -1,0 +1,101 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0003",
+  "variant": "dossier",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.04302571,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0003",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0003/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The Q2 2026 operations review states FTE at period end as 224, exactly matching the claim; no competing headcount value for Q2 2026 exists in any vault document (FTE appears only in the operations series, and the only Q2 2026 value is 224).",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0003"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0003/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0003",
+      "doc_id": "vantage-operations-2026q2",
+      "page": 1,
+      "span_text": "FTE, period end | 224 | 221 | 228",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 224.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:21:21.980291+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "headcount FTE period end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:21:22.128026+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "224 headcount quarter end"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:21:24.596320+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "headcount"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:21:24.658790+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "FTE"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1\",\"snippet\":\"...Q2 2025\\nPrior quarter\\nPlan\\n[FTE], period end\\n213\\n-\\n217\\nP1 response...\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 213 | - | 217\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1\",\"snippet\":\"...Q3 2025\\nPrior quarter\\nPlan\\n[FTE], period end\\n214\\n213\\n218\\nP1...\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 214 | 213 | 218\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1\",\"snippet\":\"...Q4 2025\\nPrior quarter\\nPlan\\n[FTE], period end\\n216\\n214\\n220\\nP1...\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 216 | 214 | 220\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1\",\"snippet\":\"...Q1 2026\\nPrior quarter\\nPlan\\n[FTE], period end\\n221\\n216\\n225\\nP1...\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 221 | 216 | 225\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1\",\"snippet\":\"...Q2 2026\\nPrior quarter\\nPlan\\n[FTE], period end\\n224\\n221\\n228\\nP1...\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:FTE, period end\",\"snippet\":\"[FTE], period end | 224 | 221 | 228\"}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\": [{\"doc_id\": \"vantage-operations-2026q2\", \"page\": 1, \"span_text\": \"FTE, period end | 224 | 221 | 228\", \"canonical_value\": 224, \"unit\": \"count\", \"role\": \"actual\", \"effective_date\": null, \"extractor_confidence\": 0.95}], \"verdict\": {\"status\": \"supported\", \"delta\": 0, \"confidence\": 0.97, \"rationale\": \"The Q2 2026 operations review states FTE at period end as 224, exactly matching the claim; no competing headcount value for Q2 2026 exists in any vault document (FTE appears only in the operations series, and the only Q2 2026 value is 224).\", \"suggested_action\": null}}"
+}

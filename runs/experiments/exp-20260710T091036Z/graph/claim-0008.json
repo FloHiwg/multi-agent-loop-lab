@@ -1,0 +1,144 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0008",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 6,
+  "cost_usd": 0.02789931,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0008",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0008/evidence-001",
+      "audit-2026-q2-vantage/claim-0008/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "Both the Q2 2026 management commentary ('supported by 26 external contract staff') and the Q2 2026 People Review sheet ('Contract personnel' = 26 for Q2 2026) confirm the external delivery/contract workforce numbered 26, with no conflicting values in the vault.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q2-vantage/claim-0008"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0008/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0008",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "The workforce closed at 224 full-time equivalents, supported by 26 external contract staff.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 26.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0008/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0008",
+      "doc_id": "vantage-people-2026q2",
+      "page": null,
+      "span_text": "A6: Contract personnel  B6: 26  C6: 26  D6: 27",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 26.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:16:06.043263+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "external delivery workforce"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'external delivery workforce' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Contract personnel\",\"similarity\":0.532},{\"entity\":\"Cost of delivery\",\"similarity\":0.422},{\"entity\":\"Qualified pipeline\",\"similarity\":0.373},{\"entity\":\"FTE, period end\",\"similarity\":0.346},{\"entity\":\"Enterprise accounts\",\"similarity\":0.341},{\"entity\":\"Deferred revenue\",\"similarity\":0.284},{\"entity\":\"Qualified commercial pipeline\",\"similarity\":0.282},{\"entity\":\"Scope 2 location based\",\"similarity\":0.281}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:16:06.227007+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "external delivery workforce"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-commentary-2025q2\",\"location\":\"page:1\",\"snippet\":\"...The [workforce] closed at 213 full-time equivalents, supported by 26 [external]...\"},{\"doc_id\":\"vantage-commentary-2025q3\",\"location\":\"page:1\",\"snippet\":\"...The [workforce] closed at 214 full-time equivalents, supported by 26 [external]...\"},{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...The [workforce] closed at 216 full-time equivalents, supported by 26 [external]...\"},{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"snippet\":\"...The [workforce] closed at 221 full-time equivalents, supported by 26 [external]...\"},{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"snippet\":\"...The [workforce] closed at 224 full-time equivalents, supported by 26 [external]...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:16:09.155170+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-commentary-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Management Commentary\\nLetter to the supervisory board\\nTrading in Q2 2026 developed in line with the restated plan. Net revenue reached EUR 21.89 million, with the gross\\nresult at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\\nCustomer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the\\ngross renewal rate held at 91.4% across the installed base.\\nDelivery efficiency improved. The median onboarding cycle for new enterprise customers was 27 days, and the\\ncertified implementation partner network grew to 80 partners at quarter end.\\nThe workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:16:09.274841+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Contract personnel"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Contract personnel\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-10T09:16:15.228947+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-people-2026q2",
+        "location": "sheet:People!row6"
+      },
+      "output": "no span found at that doc_id/location",
+      "is_error": true
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-10T09:16:17.482923+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-people-2026q2",
+        "location": "sheet:People"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People\",\"text\":\"A1: Q2 2026 People Review\\nA4: Workforce\\nA5: Metric\\nB5: Q2 2026\\nC5: Prior\\nD5: Plan\\nA6: Contract personnel\\nB6: 26\\nC6: 26\\nD6: 27\\nA7: Structured learning hours\\nB7: 1757\\nC7: 1673\\nD7: 1857\\nA8: Scope 2 location based\\nB8: 563\\nC8: 575\\nD8: 553\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"vantage-commentary-2026q2\",\"page\":1,\"span_text\":\"The workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\",\"canonical_value\":26,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95},{\"doc_id\":\"vantage-people-2026q2\",\"page\":null,\"span_text\":\"A6: Contract personnel  B6: 26  C6: 26  D6: 27\",\"canonical_value\":26,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0,\"confidence\":0.97,\"rationale\":\"Both the Q2 2026 management commentary ('supported by 26 external contract staff') and the Q2 2026 People Review sheet ('Contract personnel' = 26 for Q2 2026) confirm the external delivery/contract workforce numbered 26, with no conflicting values in the vault.\",\"suggested_action\":null}}"
+}

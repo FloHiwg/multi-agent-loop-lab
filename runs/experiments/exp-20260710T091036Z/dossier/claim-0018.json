@@ -1,0 +1,147 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0018",
+  "variant": "dossier",
+  "expected_status": "contradicted",
+  "status": "contradicted",
+  "correct": true,
+  "tool_calls": 6,
+  "cost_usd": 0.03376759,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0018",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0018/evidence-001",
+      "audit-2026-q2-vantage/claim-0018/evidence-002"
+    ],
+    "delta": -12.0,
+    "confidence": 0.7,
+    "rationale": "The operations review's case-inventory/queue metric for Q2 2026 is 434, not 422; the claim's 422 matches no vault figure (current or historical) and no source mentions '422' or 'support queue' at all, so the claim disagrees with the current authoritative value.",
+    "suggested_action": "Confirm whether 'unresolved support queue' and 'Open case inventory' are the same metric in the master document, and reconcile the master's 422 against the operations review's 434.",
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0018"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0018/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0018",
+      "doc_id": "vantage-operations-2026q2",
+      "page": 1,
+      "span_text": "Open case inventory | 434 | - | 390",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 434.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0018/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0018",
+      "doc_id": "vantage-operations-2026q1",
+      "page": 1,
+      "span_text": "Open case inventory | 426 | - | 383",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 426.0,
+      "unit": "count",
+      "role": "prior_period",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:26:46.070179+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "support queue 422"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:26:46.335229+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "unresolved support queue"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:26:46.469981+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Open case inventory"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Open case inventory\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"410\",\"span_text\":\"Open case inventory | 410 | - | 369\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Open case inventory | 410 | - | 369\"},{\"doc_id\":\"vantage-operations-2025q2\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"369\",\"span_text\":\"Open case inventory | 410 | - | 369\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"405\",\"span_text\":\"Open case inventory | 405 | - | 364\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Open case inventory | 405 | - | 364\"},{\"doc_id\":\"vantage-operations-2025q3\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"364\",\"span_text\":\"Open case inventory | 405 | - | 364\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"408\",\"span_text\":\"Open case inventory | 408 | - | 367\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Open case inventory | 408 | - | 367\"},{\"doc_id\":\"vantage-operations-2025q4\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"367\",\"span_text\":\"Open case inventory | 408 | - | 367\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"426\",\"span_text\":\"Open case inventory | 426 | - | 383\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Open case inventory | 426 | - | 383\"},{\"doc_id\":\"vantage-operations-2026q1\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"383\",\"span_text\":\"Open case inventory | 426 | - | 383\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"434\",\"span_text\":\"Open case inventory | 434 | - | 390\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Prior quarter\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Open case inventory | 434 | - | 390\"},{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:Open case inventory\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"390\",\"span_text\":\"Open case inventory | 434 | - | 390\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:26:49.146871+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "422"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-10T09:26:49.264854+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "queue"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-10T09:27:06.708803+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-operations-2026q2",
+        "location": "page:1/table:1/row:Open case inventory"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-operations-2026q2\",\"location\":\"page:1/table:1/row:Open case inventory\",\"text\":\"Open case inventory | 434 | - | 390\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"vantage-operations-2026q2\",\"page\":1,\"span_text\":\"Open case inventory | 434 | - | 390\",\"canonical_value\":434,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95},{\"doc_id\":\"vantage-operations-2026q1\",\"page\":1,\"span_text\":\"Open case inventory | 426 | - | 383\",\"canonical_value\":426,\"unit\":\"count\",\"role\":\"prior_period\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"contradicted\",\"delta\":-12,\"confidence\":0.7,\"rationale\":\"The operations review's case-inventory/queue metric for Q2 2026 is 434, not 422; the claim's 422 matches no vault figure (current or historical) and no source mentions '422' or 'support queue' at all, so the claim disagrees with the current authoritative value.\",\"suggested_action\":\"Confirm whether 'unresolved support queue' and 'Open case inventory' are the same metric in the master document, and reconcile the master's 422 against the operations review's 434.\"}}"
+}

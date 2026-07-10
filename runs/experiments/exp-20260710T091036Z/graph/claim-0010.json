@@ -1,0 +1,164 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0010",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 8,
+  "cost_usd": 0.03133971,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0010",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0010/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "The Q2 2026 management commentary states verbatim that the gross renewal rate held at 91.4% across the installed base, matching the claim exactly; no vault document states a different gross renewal rate for Q2 2026 (the customer appendix's 'Gross account attrition' is a separately named metric, not a competing renewal-rate value).",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q2-vantage/claim-0010"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0010/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0010",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "Customer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 0.914,
+      "unit": "percent",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.98
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:16:13.598058+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "gross renewal rate"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'gross renewal rate' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Net dollar retention\",\"similarity\":0.515},{\"entity\":\"Gross account attrition\",\"similarity\":0.489},{\"entity\":\"Net revenue\",\"similarity\":0.44},{\"entity\":\"Annualized subscription value\",\"similarity\":0.417},{\"entity\":\"Gross profit\",\"similarity\":0.402},{\"entity\":\"Deferred revenue\",\"similarity\":0.314},{\"entity\":\"Adjusted operating result\",\"similarity\":0.314},{\"entity\":\"Net operating cash outflow\",\"similarity\":0.31}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:16:13.701300+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "gross renewal rate"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-commentary-2025q2\",\"location\":\"page:1\",\"snippet\":\"...the quarter, and the\\n[gross] [renewal] [rate] held at 90.9% across...\"},{\"doc_id\":\"vantage-commentary-2025q3\",\"location\":\"page:1\",\"snippet\":\"...the quarter, and the\\n[gross] [renewal] [rate] held at 91.8% across...\"},{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...the quarter, and the\\n[gross] [renewal] [rate] held at 94.4% across...\"},{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"snippet\":\"...the quarter, and the\\n[gross] [renewal] [rate] held at 92.9% across...\"},{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"snippet\":\"...the quarter, and the\\n[gross] [renewal] [rate] held at 91.4% across...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:16:17.344360+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-commentary-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Management Commentary\\nLetter to the supervisory board\\nTrading in Q2 2026 developed in line with the restated plan. Net revenue reached EUR 21.89 million, with the gross\\nresult at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\\nCustomer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the\\ngross renewal rate held at 91.4% across the installed base.\\nDelivery efficiency improved. The median onboarding cycle for new enterprise customers was 27 days, and the\\ncertified implementation partner network grew to 80 partners at quarter end.\\nThe workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:16:17.468593+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Gross account attrition"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Gross account attrition\",\"conflicts\":[],\"see_also\":[{\"entity\":\"Net dollar retention\",\"similarity\":0.533}],\"facts\":[{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"0.036\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"0.036\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"0.03\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"0.025\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"0.036\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"0.03\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"0.03\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"0.025\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"0.03\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"0.026\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"0.03\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"0.03\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"0.03\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"0.026\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row8\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"0.03\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-10T09:16:23.329568+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "renewal",
+        "tag": "customer_appendix"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-10T09:16:23.617010+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "renewal"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-10T09:16:26.443607+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-customer-2026q2",
+        "location": "sheet:Metrics"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics\",\"text\":\"A1: Q2 2026 Customer Metrics\\nA4: Customer base\\nA5: Metric\\nB5: Q2 2026\\nC5: Prior\\nD5: Plan\\nA6: Enterprise accounts\\nB6: 329\\nC6: 320\\nD6: 327\\nA7: New enterprise accounts\\nB7: 41\\nC7: 38\\nD7: 44\\nA8: Gross account attrition\\nB8: 0.03\\nC8: 0.026\\nD8: 0.03\\nA11: Recurring value\\nA12: Metric\\nB12: Q2 2026\\nC12: Prior\\nD12: Plan\\nA13: Annualized subscription value\\nB13: 34778000\\nC13: 33483000\\nD13: 34378000\\nA14: Net dollar retention\\nB14: 1.136\\nC14: 1.103\\nD14: 1.1\\nA15: Licensed seats\\nB15: 10231\\nC15: 10128\\nD15: 10431\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 8,
+      "at": "2026-07-10T09:16:26.524844+00:00",
+      "tool": "mcp__proofbench_vault__list_documents",
+      "input": {
+        "tag": "customer_appendix"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-customer-2025q2\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-customer-2025q3\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-customer-2025q4\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-customer-2026q1\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]},{\"doc_id\":\"vantage-customer-2026q2\",\"tag\":\"customer_appendix\",\"format\":\"xlsx\",\"locations\":[\"sheet:Metrics\"]}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The Q2 2026 management commentary directly states the gross renewal rate at 91.4%, matching the claim. I checked the customer appendix for a competing value \u2014 it carries a distinct \"Gross account attrition\" metric (3.0%), not a \"gross renewal rate\" figure, so no same-named competing value exists for Q2 2026.\n\n{\"evidence\":[{\"doc_id\":\"vantage-commentary-2026q2\",\"page\":1,\"span_text\":\"Customer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.\",\"canonical_value\":0.914,\"unit\":\"percent\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.98}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.95,\"rationale\":\"The Q2 2026 management commentary states verbatim that the gross renewal rate held at 91.4% across the installed base, matching the claim exactly; no vault document states a different gross renewal rate for Q2 2026 (the customer appendix's 'Gross account attrition' is a separately named metric, not a competing renewal-rate value).\",\"suggested_action\":null}}"
+}

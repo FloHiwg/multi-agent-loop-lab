@@ -1,0 +1,71 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0008",
+  "variant": "dossier",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 1,
+  "cost_usd": 0.02711178,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0008",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0008/evidence-001",
+      "audit-2026-q2-vantage/claim-0008/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.95,
+    "rationale": "Both the Q2 2026 people-review table (Contract personnel = 26 for Q2 2026) and the Q2 2026 management commentary (\"supported by 26 external contract staff\") independently confirm a headcount of 26. The finance-pack \"Cost of delivery\" figures (\u2248EUR 8.863m) are a different metric entirely \u2014 a financial cost line, not a workforce count \u2014 so they do not compete with this claim.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0008"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0008/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0008",
+      "doc_id": "vantage-people-2026q2",
+      "page": null,
+      "span_text": "Contract personnel | Q2 2026 | 26",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 26.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0008/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0008",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "The workforce closed at 224 full-time equivalents, supported by 26 external contract staff.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 26.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.8
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:24:14.032746+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Contract personnel"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Contract personnel\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"26\",\"span_text\":null},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row6\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"27\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\": [{\"doc_id\": \"vantage-people-2026q2\", \"page\": null, \"span_text\": \"Contract personnel | Q2 2026 | 26\", \"canonical_value\": 26, \"unit\": \"count\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.95}, {\"doc_id\": \"vantage-commentary-2026q2\", \"page\": 1, \"span_text\": \"The workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\", \"canonical_value\": 26, \"unit\": \"count\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.8}], \"verdict\": {\"status\": \"supported\", \"delta\": 0.0, \"confidence\": 0.95, \"rationale\": \"Both the Q2 2026 people-review table (Contract personnel = 26 for Q2 2026) and the Q2 2026 management commentary (\\\"supported by 26 external contract staff\\\") independently confirm a headcount of 26. The finance-pack \\\"Cost of delivery\\\" figures (\u2248EUR 8.863m) are a different metric entirely \u2014 a financial cost line, not a workforce count \u2014 so they do not compete with this claim.\", \"suggested_action\": null}}"
+}

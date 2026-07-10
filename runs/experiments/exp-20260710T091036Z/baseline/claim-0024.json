@@ -1,0 +1,87 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0024",
+  "variant": "baseline",
+  "expected_status": "ambiguous",
+  "status": "supported",
+  "correct": false,
+  "tool_calls": 3,
+  "cost_usd": 0.01570119,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0024",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0024/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The Q2 2026 quarterly update explicitly states Vantage Industrial Group SE closed Q2 2026 with 43 new enterprise account wins, exactly matching the claim's value of 43; no other vault document reports a different figure for the same entity and period.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/baseline/audit-2026-q2-vantage/claim-0024"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0024/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0024",
+      "doc_id": "vantage-update-2026q2",
+      "page": 1,
+      "span_text": "Vantage Industrial Group SE closed Q2 2026 with revenue of EUR 21.89 million and 43 new enterprise account wins.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 43.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.98
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:13:42.363068+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "enterprise wins"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-update-2025q2\",\"location\":\"page:1\",\"snippet\":\"...million and 50 new [enterprise] account [wins].\\nThe qualified pipeline stood at...\"},{\"doc_id\":\"vantage-update-2025q3\",\"location\":\"page:1\",\"snippet\":\"...million and 45 new [enterprise] account [wins].\\nThe qualified pipeline stood at...\"},{\"doc_id\":\"vantage-update-2025q4\",\"location\":\"page:1\",\"snippet\":\"...million and 42 new [enterprise] account [wins].\\nThe qualified pipeline stood at...\"},{\"doc_id\":\"vantage-update-2026q1\",\"location\":\"page:1\",\"snippet\":\"...million and 40 new [enterprise] account [wins].\\nThe qualified pipeline stood at...\"},{\"doc_id\":\"vantage-update-2026q2\",\"location\":\"page:1\",\"snippet\":\"...million and 43 new [enterprise] account [wins].\\nThe qualified pipeline stood at...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:13:42.448276+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "enterprise wins"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:13:44.435471+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-update-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-update-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Quarterly Update\\nInvestor and staff brief\\nVantage Industrial Group SE closed Q2 2026 with revenue of EUR 21.89 million and 43 new enterprise account wins.\\nThe qualified pipeline stood at EUR 13.26 million entering the next quarter.\\nAnnualized subscription value reached EUR 34.78 million, with licensed seats at 10,231.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"vantage-update-2026q2\",\"page\":1,\"span_text\":\"Vantage Industrial Group SE closed Q2 2026 with revenue of EUR 21.89 million and 43 new enterprise account wins.\",\"canonical_value\":43.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.98}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.97,\"rationale\":\"The Q2 2026 quarterly update explicitly states Vantage Industrial Group SE closed Q2 2026 with 43 new enterprise account wins, exactly matching the claim's value of 43; no other vault document reports a different figure for the same entity and period.\",\"suggested_action\":null}}"
+}

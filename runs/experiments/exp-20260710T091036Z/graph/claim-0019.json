@@ -1,0 +1,118 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0019",
+  "variant": "graph",
+  "expected_status": "contradicted",
+  "status": "contradicted",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.018447540000000002,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0019",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0019/evidence-001",
+      "audit-2026-q2-vantage/claim-0019/evidence-002"
+    ],
+    "delta": 150.0,
+    "confidence": 0.95,
+    "rationale": "Both Q2 2026 authoritative sources (the customer metrics sheet and the quarterly update brief) report licensed seats of 10,231; the claim's 10,381 matches neither the actual (10,231) nor the plan (10,431) nor the prior period (10,128).",
+    "suggested_action": "Confirm the source of the 10,381 figure; the current authoritative Q2 2026 actual is 10,231 per vantage-customer-2026q2 and vantage-update-2026q2.",
+    "produced_by_run_id": "eval/graph/audit-2026-q2-vantage/claim-0019"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0019/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0019",
+      "doc_id": "vantage-customer-2026q2",
+      "page": null,
+      "span_text": "A15: Licensed seats\nB15: 10231\nC15: 10128\nD15: 10431",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 10231.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0019/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0019",
+      "doc_id": "vantage-update-2026q2",
+      "page": 1,
+      "span_text": "Annualized subscription value reached EUR 34.78 million, with licensed seats at 10,231.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 10231.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:17:22.100706+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Licensed seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Licensed seats\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"9450\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"9450\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"9650\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"9682\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"9450\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"9882\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"9950\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"9682\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"10150\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"10128\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"9950\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"10328\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"10231\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"10128\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"10431\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:17:22.163258+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "licensed seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Licensed] [seats]\\nB15: 9450\\nC15: 9450\\nD15: 9650\"},{\"doc_id\":\"vantage-update-2025q2\",\"location\":\"page:1\",\"snippet\":\"...Annualized subscription value reached EUR 30.40 million, with [licensed] [seats] at...\"},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Licensed] [seats]\\nB15: 9682\\nC15: 9450\\nD15: 9882\"},{\"doc_id\":\"vantage-update-2025q3\",\"location\":\"page:1\",\"snippet\":\"...Annualized subscription value reached EUR 31.41 million, with [licensed] [seats] at...\"},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Licensed] [seats]\\nB15: 9950\\nC15: 9682\\nD15: 10150\"},{\"doc_id\":\"vantage-update-2025q4\",\"location\":\"page:1\",\"snippet\":\"...Annualized subscription value reached EUR 32.58 million, with [licensed] [seats] at...\"},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Licensed] [seats]\\nB15: 10128\\nC15: 9950\\nD15: 10328\"},{\"doc_id\":\"vantage-update-2026q1\",\"location\":\"page:1\",\"snippet\":\"...Annualized subscription value reached EUR 33.48 million, with [licensed] [seats] at...\"},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Licensed] [seats]\\nB15: 10231\\nC15: 10128\\nD15: 10431\"},{\"doc_id\":\"vantage-update-2026q2\",\"location\":\"page:1\",\"snippet\":\"...Annualized subscription value reached EUR 34.78 million, with [licensed] [seats] at...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:17:25.973379+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-update-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-update-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Quarterly Update\\nInvestor and staff brief\\nVantage Industrial Group SE closed Q2 2026 with revenue of EUR 21.89 million and 43 new enterprise account wins.\\nThe qualified pipeline stood at EUR 13.26 million entering the next quarter.\\nAnnualized subscription value reached EUR 34.78 million, with licensed seats at 10,231.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:17:26.255974+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-customer-2026q2",
+        "location": "sheet:Metrics"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics\",\"text\":\"A1: Q2 2026 Customer Metrics\\nA4: Customer base\\nA5: Metric\\nB5: Q2 2026\\nC5: Prior\\nD5: Plan\\nA6: Enterprise accounts\\nB6: 329\\nC6: 320\\nD6: 327\\nA7: New enterprise accounts\\nB7: 41\\nC7: 38\\nD7: 44\\nA8: Gross account attrition\\nB8: 0.03\\nC8: 0.026\\nD8: 0.03\\nA11: Recurring value\\nA12: Metric\\nB12: Q2 2026\\nC12: Prior\\nD12: Plan\\nA13: Annualized subscription value\\nB13: 34778000\\nC13: 33483000\\nD13: 34378000\\nA14: Net dollar retention\\nB14: 1.136\\nC14: 1.103\\nD14: 1.1\\nA15: Licensed seats\\nB15: 10231\\nC15: 10128\\nD15: 10431\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "Both Q2 2026 authoritative sources \u2014 the customer metrics sheet and the quarterly update brief \u2014 state licensed seats = 10,231, not the claimed 10,381. The claim disagrees with the current authoritative value.\n\n{\"evidence\":[{\"doc_id\":\"vantage-customer-2026q2\",\"page\":null,\"span_text\":\"A15: Licensed seats\\nB15: 10231\\nC15: 10128\\nD15: 10431\",\"canonical_value\":10231,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95},{\"doc_id\":\"vantage-update-2026q2\",\"page\":1,\"span_text\":\"Annualized subscription value reached EUR 34.78 million, with licensed seats at 10,231.\",\"canonical_value\":10231,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"contradicted\",\"delta\":150,\"confidence\":0.95,\"rationale\":\"Both Q2 2026 authoritative sources (the customer metrics sheet and the quarterly update brief) report licensed seats of 10,231; the claim's 10,381 matches neither the actual (10,231) nor the plan (10,431) nor the prior period (10,128).\",\"suggested_action\":\"Confirm the source of the 10,381 figure; the current authoritative Q2 2026 actual is 10,231 per vantage-customer-2026q2 and vantage-update-2026q2.\"}}"
+}

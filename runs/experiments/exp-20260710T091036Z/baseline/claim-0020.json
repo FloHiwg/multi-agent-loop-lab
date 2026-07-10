@@ -1,0 +1,178 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0020",
+  "variant": "baseline",
+  "expected_status": "contradicted",
+  "status": "contradicted",
+  "correct": true,
+  "tool_calls": 7,
+  "cost_usd": 0.02866752,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0020",
+    "status": "contradicted",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0020/evidence-001",
+      "audit-2026-q2-vantage/claim-0020/evidence-002",
+      "audit-2026-q2-vantage/claim-0020/evidence-003"
+    ],
+    "delta": 6.0,
+    "confidence": 0.95,
+    "rationale": "The authoritative Q2 2026 management commentary states the group-wide net promoter score was 38 for the quarter, not 44; the figure 44 in the vault is the Plan value for 'New enterprise accounts,' a different metric entirely.",
+    "suggested_action": "Confirm with the preparer whether the master document's 44 was mistakenly pulled from the customer metrics 'New enterprise accounts' Plan column (D7) rather than the NPS line, and correct it to 38 to match the Q2 2026 commentary.",
+    "produced_by_run_id": "eval/baseline/audit-2026-q2-vantage/claim-0020"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0020/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0020",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "Customer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 38.0,
+      "unit": "score",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.98
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0020/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0020",
+      "doc_id": "vantage-customer-2026q2",
+      "page": null,
+      "span_text": "A7: New enterprise accounts | B7: 41 | C7: 38 | D7: 44   (column headers: B5=Q2 2026, C5=Prior, D5=Plan)",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 44.0,
+      "unit": "accounts",
+      "role": "budget",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0020/evidence-003",
+      "claim_id": "audit-2026-q2-vantage/claim-0020",
+      "doc_id": "vantage-commentary-2026q1",
+      "page": 1,
+      "span_text": "...the group-wide net promoter score came in at 57 for the...",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 57.0,
+      "unit": "score",
+      "role": "prior_period",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:13:09.424484+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "net promoter score"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:13:09.499604+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "net promoter score"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-commentary-2025q2\",\"location\":\"page:1\",\"snippet\":\"...the group-wide [net] [promoter] [score] came in at 55 for the...\"},{\"doc_id\":\"vantage-commentary-2025q3\",\"location\":\"page:1\",\"snippet\":\"...the group-wide [net] [promoter] [score] came in at 41 for the...\"},{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...the group-wide [net] [promoter] [score] came in at 49 for the...\"},{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"snippet\":\"...the group-wide [net] [promoter] [score] came in at 57 for the...\"},{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"snippet\":\"...the group-wide [net] [promoter] [score] came in at 38 for the...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:13:12.811629+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-commentary-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Management Commentary\\nLetter to the supervisory board\\nTrading in Q2 2026 developed in line with the restated plan. Net revenue reached EUR 21.89 million, with the gross\\nresult at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\\nCustomer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the\\ngross renewal rate held at 91.4% across the installed base.\\nDelivery efficiency improved. The median onboarding cycle for new enterprise customers was 27 days, and the\\ncertified implementation partner network grew to 80 partners at quarter end.\\nThe workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:13:12.948380+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "NPS 44"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-10T09:13:16.794086+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "promoter"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-commentary-2025q2\",\"location\":\"page:1\",\"snippet\":\"...the group-wide net [promoter] score came in at 55 for the...\"},{\"doc_id\":\"vantage-commentary-2025q3\",\"location\":\"page:1\",\"snippet\":\"...the group-wide net [promoter] score came in at 41 for the...\"},{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...the group-wide net [promoter] score came in at 49 for the...\"},{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"snippet\":\"...the group-wide net [promoter] score came in at 57 for the...\"},{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"snippet\":\"...the group-wide net [promoter] score came in at 38 for the...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-10T09:13:16.858913+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "\"44\""
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics\",\"snippet\":\"...B7: 41\\nC7: 38\\nD7: [44]\\nA8: Gross account attrition\\nB8: 0...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-10T09:13:19.661348+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-customer-2026q2",
+        "location": "sheet:Metrics"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics\",\"text\":\"A1: Q2 2026 Customer Metrics\\nA4: Customer base\\nA5: Metric\\nB5: Q2 2026\\nC5: Prior\\nD5: Plan\\nA6: Enterprise accounts\\nB6: 329\\nC6: 320\\nD6: 327\\nA7: New enterprise accounts\\nB7: 41\\nC7: 38\\nD7: 44\\nA8: Gross account attrition\\nB8: 0.03\\nC8: 0.026\\nD8: 0.03\\nA11: Recurring value\\nA12: Metric\\nB12: Q2 2026\\nC12: Prior\\nD12: Plan\\nA13: Annualized subscription value\\nB13: 34778000\\nC13: 33483000\\nD13: 34378000\\nA14: Net dollar retention\\nB14: 1.136\\nC14: 1.103\\nD14: 1.1\\nA15: Licensed seats\\nB15: 10231\\nC15: 10128\\nD15: 10431\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "I have found the key evidence. The Q2 2026 management commentary (the authoritative current source) states the group-wide net promoter score was 38, while the claim asserts 44. The value 44 does appear in the vault \u2014 but in the customer metrics sheet as the *Plan* for \"New enterprise accounts,\" a completely different metric. Let me confirm the full context is captured before finalizing.\n\nThe verdict is clear: the current authoritative NPS for Q2 2026 is 38, contradicting the claim's 44.\n\n```json\n{\"evidence\":[{\"doc_id\":\"vantage-commentary-2026q2\",\"page\":1,\"span_text\":\"Customer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.\",\"canonical_value\":38.0,\"unit\":\"score\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.98},{\"doc_id\":\"vantage-customer-2026q2\",\"page\":null,\"span_text\":\"A7: New enterprise accounts | B7: 41 | C7: 38 | D7: 44   (column headers: B5=Q2 2026, C5=Prior, D5=Plan)\",\"canonical_value\":44.0,\"unit\":\"accounts\",\"role\":\"budget\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95},{\"doc_id\":\"vantage-commentary-2026q1\",\"page\":1,\"span_text\":\"...the group-wide net promoter score came in at 57 for the...\",\"canonical_value\":57.0,\"unit\":\"score\",\"role\":\"prior_period\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"contradicted\",\"delta\":6.0,\"confidence\":0.95,\"rationale\":\"The authoritative Q2 2026 management commentary states the group-wide net promoter score was 38 for the quarter, not 44; the figure 44 in the vault is the Plan value for 'New enterprise accounts,' a different metric entirely.\",\"suggested_action\":\"Confirm with the preparer whether the master document's 44 was mistakenly pulled from the customer metrics 'New enterprise accounts' Plan column (D7) rather than the NPS line, and correct it to 38 to match the Q2 2026 commentary.\"}}\n```"
+}

@@ -1,0 +1,109 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0031",
+  "variant": "dossier",
+  "expected_status": "missing_evidence",
+  "status": "missing_evidence",
+  "correct": true,
+  "tool_calls": 6,
+  "cost_usd": 0.059228383999999995,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0031",
+    "status": "missing_evidence",
+    "matched_evidence_ids": [],
+    "delta": null,
+    "confidence": 0.95,
+    "rationale": "No vault document \u2014 table facts, prose, or research sweep \u2014 mentions an 'Employee engagement index' or any value of 7.9 for Q2 2026; the metric does not appear in the operations, finance, customer, treasury, or commentary corpus at all.",
+    "suggested_action": "Locate the source of the 7.9 figure in the master document's HR/operations inputs; the vault has no supporting basis document for an employee engagement index, so confirm whether the underlying survey report was omitted from the evidence pack.",
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0031"
+  },
+  "evidence": [],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:37:46.019916+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "employee engagement index"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:37:46.151786+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "engagement"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:37:48.488456+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "engagement"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:37:48.594195+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "7.9"
+      },
+      "output": "search error: fts5: syntax error near \".\"",
+      "is_error": true
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-10T09:37:50.389623+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "engagement score"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-10T09:37:50.532157+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "employee"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\": [], \"verdict\": {\"status\": \"missing_evidence\", \"delta\": null, \"confidence\": 0.95, \"rationale\": \"No vault document \u2014 table facts, prose, or research sweep \u2014 mentions an 'Employee engagement index' or any value of 7.9 for Q2 2026; the metric does not appear in the operations, finance, customer, treasury, or commentary corpus at all.\", \"suggested_action\": \"Locate the source of the 7.9 figure in the master document's HR/operations inputs; the vault has no supporting basis document for an employee engagement index, so confirm whether the underlying survey report was omitted from the evidence pack.\"}}"
+}

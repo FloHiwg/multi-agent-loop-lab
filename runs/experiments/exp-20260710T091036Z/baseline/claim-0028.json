@@ -1,0 +1,117 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0028",
+  "variant": "baseline",
+  "expected_status": "outdated",
+  "status": "outdated",
+  "correct": true,
+  "tool_calls": 3,
+  "cost_usd": 0.01870653,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0028",
+    "status": "outdated",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0028/evidence-001",
+      "audit-2026-q2-vantage/claim-0028/evidence-002",
+      "audit-2026-q2-vantage/claim-0028/evidence-003"
+    ],
+    "delta": -84.0,
+    "confidence": 0.97,
+    "rationale": "The 1,673 figure matches the Q1 2026 actual (shown as the 'Prior' column in the Q2 2026 People Review and as the Q1 2026 actual in the Q1 2026 sheet), not the current Q2 2026 actual of 1,757; the claim asserts a prior period's value as the current quarter's metric.",
+    "suggested_action": "Update the master document to the current Q2 2026 actual of 1,757 structured learning hours, or clarify whether a prior-period comparison was intended.",
+    "produced_by_run_id": "eval/baseline/audit-2026-q2-vantage/claim-0028"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0028/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0028",
+      "doc_id": "vantage-people-2026q2",
+      "page": null,
+      "span_text": "A7: Structured learning hours\nB7: 1757\nC7: 1673\nD7: 1857",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 1757.0,
+      "unit": "hours",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.98
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0028/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0028",
+      "doc_id": "vantage-people-2026q2",
+      "page": null,
+      "span_text": "A7: Structured learning hours\nB7: 1757\nC7: 1673\nD7: 1857",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 1673.0,
+      "unit": "hours",
+      "role": "prior_period",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.98
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0028/evidence-003",
+      "claim_id": "audit-2026-q2-vantage/claim-0028",
+      "doc_id": "vantage-people-2026q1",
+      "page": null,
+      "span_text": "B7: 1673\nC7: 1733\nD7: 1773",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 1673.0,
+      "unit": "hours",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.97
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:14:20.594383+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "structured learning hours"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People\",\"snippet\":\"...[Structured] [learning] [hours]\\nB7: 1650\\nC7: 1650\\nD7: 1750\\nA8: Scope 2...\"},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People\",\"snippet\":\"...[Structured] [learning] [hours]\\nB7: 1686\\nC7: 1650\\nD7: 1786\\nA8: Scope 2...\"},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People\",\"snippet\":\"...[Structured] [learning] [hours]\\nB7: 1733\\nC7: 1686\\nD7: 1833\\nA8: Scope 2...\"},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People\",\"snippet\":\"...[Structured] [learning] [hours]\\nB7: 1673\\nC7: 1733\\nD7: 1773\\nA8: Scope 2...\"},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People\",\"snippet\":\"...[Structured] [learning] [hours]\\nB7: 1757\\nC7: 1673\\nD7: 1857\\nA8: Scope 2...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:14:21.032536+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "Structured learning hours"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Q2 2025\",\"value\":\"1650\"},{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Prior\",\"value\":\"1650\"},{\"doc_id\":\"vantage-people-2025q2\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Plan\",\"value\":\"1750\"},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Q3 2025\",\"value\":\"1686\"},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Prior\",\"value\":\"1650\"},{\"doc_id\":\"vantage-people-2025q3\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Plan\",\"value\":\"1786\"},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Q4 2025\",\"value\":\"1733\"},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Prior\",\"value\":\"1686\"},{\"doc_id\":\"vantage-people-2025q4\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Plan\",\"value\":\"1833\"},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Q1 2026\",\"value\":\"1673\"},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Prior\",\"value\":\"1733\"},{\"doc_id\":\"vantage-people-2026q1\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Plan\",\"value\":\"1773\"},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Q2 2026\",\"value\":\"1757\"},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Prior\",\"value\":\"1673\"},{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People!row7\",\"entity\":\"Structured learning hours\",\"attribute\":\"Plan\",\"value\":\"1857\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:14:27.203852+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-people-2026q2",
+        "location": "sheet:People"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-people-2026q2\",\"location\":\"sheet:People\",\"text\":\"A1: Q2 2026 People Review\\nA4: Workforce\\nA5: Metric\\nB5: Q2 2026\\nC5: Prior\\nD5: Plan\\nA6: Contract personnel\\nB6: 26\\nC6: 26\\nD6: 27\\nA7: Structured learning hours\\nB7: 1757\\nC7: 1673\\nD7: 1857\\nA8: Scope 2 location based\\nB8: 563\\nC8: 575\\nD8: 553\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "Based on my research, here's my analysis:\n\nThe claim states \"Structured learning hours totalled 1,673\" for Q2 2026. The vault's authoritative Q2 2026 People Review shows the actual Q2 2026 value as **1,757**, while 1,673 is explicitly the \"Prior\" column value (i.e., the Q1 2026 actual, confirmed in the Q1 2026 sheet). The claim matches the prior period's figure asserted as the current quarter's value.\n\n```json\n{\"evidence\":[{\"doc_id\":\"vantage-people-2026q2\",\"page\":null,\"span_text\":\"A7: Structured learning hours\\nB7: 1757\\nC7: 1673\\nD7: 1857\",\"canonical_value\":1757,\"unit\":\"hours\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.98},{\"doc_id\":\"vantage-people-2026q2\",\"page\":null,\"span_text\":\"A7: Structured learning hours\\nB7: 1757\\nC7: 1673\\nD7: 1857\",\"canonical_value\":1673,\"unit\":\"hours\",\"role\":\"prior_period\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.98},{\"doc_id\":\"vantage-people-2026q1\",\"page\":null,\"span_text\":\"B7: 1673\\nC7: 1733\\nD7: 1773\",\"canonical_value\":1673,\"unit\":\"hours\",\"role\":\"actual\",\"effective_date\":\"2026-03-31\",\"extractor_confidence\":0.97}],\"verdict\":{\"status\":\"outdated\",\"delta\":-84,\"confidence\":0.97,\"rationale\":\"The 1,673 figure matches the Q1 2026 actual (shown as the 'Prior' column in the Q2 2026 People Review and as the Q1 2026 actual in the Q1 2026 sheet), not the current Q2 2026 actual of 1,757; the claim asserts a prior period's value as the current quarter's metric.\",\"suggested_action\":\"Update the master document to the current Q2 2026 actual of 1,757 structured learning hours, or clarify whether a prior-period comparison was intended.\"}}\n```"
+}

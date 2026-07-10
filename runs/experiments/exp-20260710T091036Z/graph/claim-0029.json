@@ -1,0 +1,190 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0029",
+  "variant": "graph",
+  "expected_status": "missing_evidence",
+  "status": "missing_evidence",
+  "correct": true,
+  "tool_calls": 10,
+  "cost_usd": 0.03506334,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0029",
+    "status": "missing_evidence",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0029/evidence-001"
+    ],
+    "delta": null,
+    "confidence": 0.85,
+    "rationale": "No vault span mentions \"monthly active platform seats\" (or 8,912) under any phrasing; the only related metric, \"Licensed seats\", is a different measure (licensed vs. active usage) and reports 10,231 for Q2 2026, so it does not address the claim.",
+    "suggested_action": "Confirm whether \"monthly active platform seats\" is a tracked metric in a vault source not indexed here, or whether the claim should have referenced Licensed seats (10,231).",
+    "produced_by_run_id": "eval/graph/audit-2026-q2-vantage/claim-0029"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0029/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0029",
+      "doc_id": "vantage-customer-2026q2",
+      "page": null,
+      "span_text": "Licensed seats \u2014 Q2 2026: 10231 (sheet:Metrics!row15)",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 10231.0,
+      "unit": "count",
+      "role": "other",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:19:22.010111+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Monthly active platform seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'Monthly active platform seats' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Licensed seats\",\"similarity\":0.575},{\"entity\":\"Expansion bookings\",\"similarity\":0.411},{\"entity\":\"Annualized subscription value\",\"similarity\":0.398},{\"entity\":\"Enterprise accounts\",\"similarity\":0.336},{\"entity\":\"Gross account attrition\",\"similarity\":0.31},{\"entity\":\"New enterprise accounts\",\"similarity\":0.305},{\"entity\":\"Qualified pipeline\",\"similarity\":0.298},{\"entity\":\"Scope 2 location based\",\"similarity\":0.29}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:19:25.028714+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "monthly active platform seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:19:25.117549+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Licensed seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Licensed seats\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"9450\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"9450\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"9650\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"9682\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"9450\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"9882\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"9950\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"9682\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"10150\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"10128\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"9950\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"10328\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"10231\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"10128\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row15\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"10431\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:19:28.434228+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "active platform seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-10T09:19:28.759568+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "attribute": "Q2 2026",
+        "entity": "seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row15\",\"entity\":\"Licensed seats\",\"attribute\":\"Q2 2026\",\"value\":\"10231\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-10T09:19:30.112383+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "8912"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-10T09:19:30.507428+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "active seats"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 8,
+      "at": "2026-07-10T09:19:30.590941+00:00",
+      "tool": "mcp__proofbench_vault__list_entities",
+      "input": {},
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"entity\":\"Net revenue\",\"doc_ids\":[\"vantage-finance-2025q2\",\"vantage-finance-2025q3\",\"vantage-finance-2025q4\",\"vantage-finance-2026q1\",\"vantage-finance-v1-2026q2\",\"vantage-finance-v2-2026q2\"]},{\"entity\":\"Cost of delivery\",\"doc_ids\":[\"vantage-finance-2025q2\",\"vantage-finance-2025q3\",\"vantage-finance-2025q4\",\"vantage-finance-2026q1\",\"vantage-finance-v1-2026q2\",\"vantage-finance-v2-2026q2\"]},{\"entity\":\"Gross profit\",\"doc_ids\":[\"vantage-finance-2025q2\",\"vantage-finance-2025q3\",\"vantage-finance-2025q4\",\"vantage-finance-2026q1\",\"vantage-finance-v1-2026q2\",\"vantage-finance-v2-2026q2\"]},{\"entity\":\"Adjusted operating result\",\"doc_ids\":[\"vantage-finance-2025q2\",\"vantage-finance-2025q3\",\"vantage-finance-2025q4\",\"vantage-finance-2026q1\",\"vantage-finance-v1-2026q2\",\"vantage-finance-v2-2026q2\"]},{\"entity\":\"Deferred revenue\",\"doc_ids\":[\"vantage-finance-2025q2\",\"vantage-finance-2025q3\",\"vantage-finance-2025q4\",\"vantage-finance-2026q1\",\"vantage-finance-v1-2026q2\",\"vantage-finance-v2-2026q2\"]},{\"entity\":\"Trade receivables\",\"doc_ids\":[\"vantage-finance-2025q2\",\"vantage-finance-2025q3\",\"vantage-finance-2025q4\",\"vantage-finance-2026q1\",\"vantage-finance-v1-2026q2\",\"vantage-finance-v2-2026q2\"]},{\"entity\":\"Qualified pipeline\",\"doc_ids\":[\"vantage-finance-2025q2\",\"vantage-finance-2025q3\",\"vantage-finance-2025q4\",\"vantage-finance-2026q1\",\"vantage-finance-v1-2026q2\",\"vantage-finance-v2-2026q2\"]},{\"entity\":\"Expansion bookings\",\"doc_ids\":[\"vantage-finance-2025q2\",\"vantage-finance-2025q3\",\"vantage-finance-2025q4\",\"vantage-finance-2026q1\",\"vantage-finance-v1-2026q2\",\"vantage-finance-v2-2026q2\"]},{\"entity\":\"FTE, period end\",\"doc_ids\":[\"vantage-operations-2025q2\",\"vantage-operations-2025q3\",\"vantage-operations-2025q4\",\"vantage-operations-2026q1\",\"vantage-operations-2026q2\"]},{\"entity\":\"P1 response SLA attainment\",\"doc_ids\":[\"vantage-operations-2025q2\",\"vantage-operations-2025q3\",\"vantage-operations-2025q4\",\"vantage-operations-2026q1\",\"vantage-operations-2026q2\"]},{\"entity\":\"Open case inventory\",\"doc_ids\":[\"vantage-operations-2025q2\",\"vantage-operations-2025q3\",\"vantage-operations-2025q4\",\"vantage-operations-2026q1\",\"vantage-operations-2026q2\"]},{\"entity\":\"New enterprise accounts\",\"doc_ids\":[\"vantage-operations-2025q2\",\"vantage-customer-2025q2\",\"vantage-operations-2025q3\",\"vantage-customer-2025q3\",\"vantage-operations-2025q4\",\"vantage-customer-2025q4\",\"vantage-operations-2026q1\",\"vantage-customer-2026q1\",\"vantage-operations-2026q2\",\"vantage-customer-2026q2\"]},{\"entity\":\"Production incidents\",\"doc_ids\":[\"vantage-operations-2025q2\",\"vantage-operations-2025q3\",\"vantage-operations-2025q4\",\"vantage-operations-2026q1\",\"vantage-operations-2026q2\"]},{\"entity\":\"Enterprise accounts\",\"doc_ids\":[\"vantage-customer-2025q2\",\"vantage-customer-2025q3\",\"vantage-customer-2025q4\",\"vantage-customer-2026q1\",\"vantage-customer-2026q2\"]},{\"entity\":\"Gross account attrition\",\"doc_ids\":[\"vantage-customer-2025q2\",\"vantage-customer-2025q3\",\"vantage-customer-2025q4\",\"vantage-customer-2026q1\",\"vantage-customer-2026q2\"]},{\"entity\":\"Annualized subscription value\",\"doc_ids\":[\"vantage-customer-2025q2\",\"vantage-customer-2025q3\",\"vantage-customer-2025q4\",\"vantage-customer-2026q1\",\"vantage-customer-2026q2\"]},{\"entity\":\"Net dollar retention\",\"doc_ids\":[\"vantage-customer-2025q2\",\"vantage-customer-2025q3\",\"vantage-customer-2025q4\",\"vantage-customer-2026q1\",\"vantage-customer-2026q2\"]},{\"entity\":\"Licensed seats\",\"doc_ids\":[\"vantage-customer-2025q2\",\"vantage-customer-2025q3\",\"vantage-customer-2025q4\",\"vantage-customer-2026q1\",\"vantage-customer-2026q2\"]},{\"entity\":\"DACH\",\"doc_ids\":[\"vantage-regional-2025q2\",\"vantage-regional-2025q3\",\"vantage-regional-2025q4\",\"vantage-regional-2026q1\",\"vantage-regional-2026q2\"]},{\"entity\":\"France\",\"doc_ids\":[\"vantage-regional-2025q2\",\"vantage-regional-2025q3\",\"vantage-regional-2025q4\",\"vantage-regional-2026q1\",\"vantage-regional-2026q2\"]},{\"entity\":\"Nordics\",\"doc_ids\":[\"vantage-regional-2025q2\",\"vantage-regional-2025q3\",\"vantage-regional-2025q4\",\"vantage-regional-2026q1\",\"vantage-regional-2026q2\"]},{\"entity\":\"UK and Ireland\",\"doc_ids\":[\"vantage-regional-2025q2\",\"vantage-regional-2025q3\",\"vantage-regional-2025q4\",\"vantage-regional-2026q1\",\"vantage-regional-2026q2\"]},{\"entity\":\"Iberia\",\"doc_ids\":[\"vantage-regional-2025q2\",\"vantage-regional-2025q3\",\"vantage-regional-2025q4\",\"vantage-regional-2026q1\",\"vantage-regional-2026q2\"]},{\"entity\":\"Benelux\",\"doc_ids\":[\"vantage-regional-2025q2\",\"vantage-regional-2025q3\",\"vantage-regional-2025q4\",\"vantage-regional-2026q1\",\"vantage-regional-2026q2\"]},{\"entity\":\"Total\",\"doc_ids\":[\"vantage-regional-2025q2\",\"vantage-treasury-2025q2\",\"vantage-regional-2025q3\",\"vantage-treasury-2025q3\",\"vantage-regional-2025q4\",\"vantage-treasury-2025q4\",\"vantage-regional-2026q1\",\"vantage-treasury-2026q1\",\"vantage-regional-2026q2\",\"vantage-treasury-2026q2\"]},{\"entity\":\"Qualified commercial pipeline\",\"doc_ids\":[\"vantage-regional-2025q2\",\"vantage-regional-2025q3\",\"vantage-regional-2025q4\",\"vantage-regional-2026q1\",\"vantage-regional-2026q2\"]},{\"entity\":\"Operating accounts\",\"doc_ids\":[\"vantage-treasury-2025q2\",\"vantage-treasury-2025q3\",\"vantage-treasury-2025q4\",\"vantage-treasury-2026q1\",\"vantage-treasury-2026q2\"]},{\"entity\":\"Deposit accounts\",\"doc_ids\":[\"vantage-treasury-2025q2\",\"vantage-treasury-2025q3\",\"vantage-treasury-2025q4\",\"vantage-treasury-2026q1\",\"vantage-treasury-2026q2\"]},{\"entity\":\"Net operating cash outflow\",\"doc_ids\":[\"vantage-treasury-2025q2\",\"vantage-treasury-2025q3\",\"vantage-treasury-2025q4\",\"vantage-treasury-2026q1\",\"vantage-treasury-2026q2\"]},{\"entity\":\"Contract personnel\",\"doc_ids\":[\"vantage-people-2025q2\",\"vantage-people-2025q3\",\"vantage-people-2025q4\",\"vantage-people-2026q1\",\"vantage-people-2026q2\"]},{\"entity\":\"Structured learning hours\",\"doc_ids\":[\"vantage-people-2025q2\",\"vantage-people-2025q3\",\"vantage-people-2025q4\",\"vantage-people-2026q1\",\"vantage-people-2026q2\"]},{\"entity\":\"Scope 2 location based\",\"doc_ids\":[\"vantage-people-2025q2\",\"vantage-people-2025q3\",\"vantage-people-2025q4\",\"vantage-people-2026q1\",\"vantage-people-2026q2\"]}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 9,
+      "at": "2026-07-10T09:19:34.184910+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "platform"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 10,
+      "at": "2026-07-10T09:19:34.324652+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "monthly active"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"vantage-customer-2026q2\",\"page\":null,\"span_text\":\"Licensed seats \u2014 Q2 2026: 10231 (sheet:Metrics!row15)\",\"canonical_value\":10231,\"unit\":\"count\",\"role\":\"other\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"missing_evidence\",\"delta\":null,\"confidence\":0.85,\"rationale\":\"No vault span mentions \\\"monthly active platform seats\\\" (or 8,912) under any phrasing; the only related metric, \\\"Licensed seats\\\", is a different measure (licensed vs. active usage) and reports 10,231 for Q2 2026, so it does not address the claim.\",\"suggested_action\":\"Confirm whether \\\"monthly active platform seats\\\" is a tracked metric in a vault source not indexed here, or whether the claim should have referenced Licensed seats (10,231).\"}}"
+}

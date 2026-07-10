@@ -1,0 +1,187 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0016",
+  "variant": "graph",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 9,
+  "cost_usd": 0.029602499999999997,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0016",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0016/evidence-001",
+      "audit-2026-q2-vantage/claim-0016/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The Q2 2026 treasury report lists Net operating cash outflow of (1,520) kEUR, and states all figures are in thousands of euros, i.e. EUR 1,520,000 = EUR 1.52 million cash burn from operations, matching the claim exactly. No competing value for Q2 2026 exists in the vault.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/graph/audit-2026-q2-vantage/claim-0016"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0016/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0016",
+      "doc_id": "vantage-treasury-2026q2",
+      "page": 1,
+      "span_text": "Net operating cash outflow | (1,520) | - | -",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": -1520000.0,
+      "unit": "kEUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0016/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0016",
+      "doc_id": "vantage-treasury-2026q2",
+      "page": 1,
+      "span_text": "All figures in thousands of euros.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "kEUR",
+      "role": "other",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:16:53.479727+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "cash burn from operations"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":null,\"note\":\"no entity matching 'cash burn from operations' -- closest entities by name similarity below; call entity_profile again with one exact name\",\"closest\":[{\"entity\":\"Net operating cash outflow\",\"similarity\":0.581},{\"entity\":\"Adjusted operating result\",\"similarity\":0.421},{\"entity\":\"Operating accounts\",\"similarity\":0.414},{\"entity\":\"Gross account attrition\",\"similarity\":0.401},{\"entity\":\"Net revenue\",\"similarity\":0.401},{\"entity\":\"Net dollar retention\",\"similarity\":0.381},{\"entity\":\"Deferred revenue\",\"similarity\":0.378},{\"entity\":\"Trade receivables\",\"similarity\":0.365}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:16:53.617860+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "cash burn operations"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:16:56.361371+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Net operating cash outflow"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Net operating cash outflow\",\"conflicts\":[],\"see_also\":[{\"entity\":\"Net revenue\",\"similarity\":0.523},{\"entity\":\"Net dollar retention\",\"similarity\":0.504}],\"facts\":[{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Q2 2025 close\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"(1,450)\",\"span_text\":\"Net operating cash outflow | (1,450) | - | -\"},{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net operating cash outflow | (1,450) | - | -\"},{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net operating cash outflow | (1,450) | - | -\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Q3 2025 close\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"(1,534)\",\"span_text\":\"Net operating cash outflow | (1,534) | - | -\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net operating cash outflow | (1,534) | - | -\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net operating cash outflow | (1,534) | - | -\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Q4 2025 close\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"(1,477)\",\"span_text\":\"Net operating cash outflow | (1,477) | - | -\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net operating cash outflow | (1,477) | - | -\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net operating cash outflow | (1,477) | - | -\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Q1 2026 close\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"(1,471)\",\"span_text\":\"Net operating cash outflow | (1,471) | - | -\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net operating cash outflow | (1,471) | - | -\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net operating cash outflow | (1,471) | - | -\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Q2 2026 close\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"(1,520)\",\"span_text\":\"Net operating cash outflow | (1,520) | - | -\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Prior close\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net operating cash outflow | (1,520) | - | -\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net operating cash outflow | (1,520) | - | -\"}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T09:16:56.646071+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "cash burn"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 5,
+      "at": "2026-07-10T09:16:56.784506+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "operating cash flow"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 6,
+      "at": "2026-07-10T09:17:02.636102+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-treasury-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Treasury and Cash\\nCash position\\nTreasury ledger\\nkEUR\\nQ2 2026 close\\nPrior close\\nPlan\\nOperating accounts\\n4,424\\n-\\n-\\nDeposit accounts\\n2,857\\n-\\n-\\nTotal\\n7,281\\n-\\n-\\nNet operating cash outflow\\n(1,520)\\n-\\n-\\nAll figures in thousands of euros.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 7,
+      "at": "2026-07-10T09:17:02.806584+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "1.52"
+      },
+      "output": "search error: fts5: syntax error near \".\"",
+      "is_error": true
+    },
+    {
+      "seq": 8,
+      "at": "2026-07-10T09:17:06.951442+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "cash outflow"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1\",\"snippet\":\"...Total\\n6,700\\n-\\n-\\nNet operating [cash] [outflow]\\n(1,450)\\n-\\n-\\nAll figures in...\"},{\"doc_id\":\"vantage-treasury-2025q2\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"snippet\":\"Net operating [cash] [outflow] | (1,450) | - | -\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1\",\"snippet\":\"...Total\\n6,797\\n-\\n-\\nNet operating [cash] [outflow]\\n(1,534)\\n-\\n-\\nAll figures in...\"},{\"doc_id\":\"vantage-treasury-2025q3\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"snippet\":\"Net operating [cash] [outflow] | (1,534) | - | -\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1\",\"snippet\":\"...Total\\n6,844\\n-\\n-\\nNet operating [cash] [outflow]\\n(1,477)\\n-\\n-\\nAll figures in...\"},{\"doc_id\":\"vantage-treasury-2025q4\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"snippet\":\"Net operating [cash] [outflow] | (1,477) | - | -\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1\",\"snippet\":\"...Total\\n7,083\\n-\\n-\\nNet operating [cash] [outflow]\\n(1,471)\\n-\\n-\\nAll figures in...\"},{\"doc_id\":\"vantage-treasury-2026q1\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"snippet\":\"Net operating [cash] [outflow] | (1,471) | - | -\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1\",\"snippet\":\"...Total\\n7,281\\n-\\n-\\nNet operating [cash] [outflow]\\n(1,520)\\n-\\n-\\nAll figures in...\"},{\"doc_id\":\"vantage-treasury-2026q2\",\"location\":\"page:1/table:1/row:Net operating cash outflow\",\"snippet\":\"Net operating [cash] [outflow] | (1,520) | - | -\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 9,
+      "at": "2026-07-10T09:17:07.074718+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "burn"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "All checks confirm. The Q2 2026 treasury document reports \"Net operating cash outflow (1,520)\" kEUR = EUR 1,520,000, matching the claim of EUR 1.52 million cash burn. No competing values exist for Q2 2026 (other figures are for different quarters).\n\n{\"evidence\":[{\"doc_id\":\"vantage-treasury-2026q2\",\"page\":1,\"span_text\":\"Net operating cash outflow | (1,520) | - | -\",\"canonical_value\":-1520000.0,\"unit\":\"kEUR\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95},{\"doc_id\":\"vantage-treasury-2026q2\",\"page\":1,\"span_text\":\"All figures in thousands of euros.\",\"canonical_value\":null,\"unit\":\"kEUR\",\"role\":\"other\",\"effective_date\":null,\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.97,\"rationale\":\"The Q2 2026 treasury report lists Net operating cash outflow of (1,520) kEUR, and states all figures are in thousands of euros, i.e. EUR 1,520,000 = EUR 1.52 million cash burn from operations, matching the claim exactly. No competing value for Q2 2026 exists in the vault.\",\"suggested_action\":null}}"
+}

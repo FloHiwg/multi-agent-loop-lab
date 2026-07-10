@@ -1,0 +1,55 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0009",
+  "variant": "dossier",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 0,
+  "cost_usd": 0.02668874,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0009",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0009/evidence-001",
+      "audit-2026-q2-vantage/claim-0009/evidence-002"
+    ],
+    "delta": 0.0,
+    "confidence": 0.92,
+    "rationale": "The Q2 2026 management commentary states the group-wide net promoter score came in at 38 for the quarter, matching the claim exactly; no other vault source states a competing NPS value for Q2 2026.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0009"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0009/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0009",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "Customer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 38.0,
+      "unit": "score",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.9
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0009/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0009",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "Customer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 38.0,
+      "unit": "score",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.9
+    }
+  ],
+  "tool_trace": [],
+  "final_text": "{\"evidence\": [{\"doc_id\": \"vantage-commentary-2026q2\", \"page\": 1, \"span_text\": \"Customer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.\", \"canonical_value\": 38.0, \"unit\": \"score\", \"role\": \"actual\", \"effective_date\": null, \"extractor_confidence\": 0.9}, {\"doc_id\": \"vantage-commentary-2026q2\", \"page\": 1, \"span_text\": \"Customer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the gross renewal rate held at 91.4% across the installed base.\", \"canonical_value\": 38.0, \"unit\": \"score\", \"role\": \"actual\", \"effective_date\": null, \"extractor_confidence\": 0.9}], \"verdict\": {\"status\": \"supported\", \"delta\": 0.0, \"confidence\": 0.92, \"rationale\": \"The Q2 2026 management commentary states the group-wide net promoter score came in at 38 for the quarter, matching the claim exactly; no other vault source states a competing NPS value for Q2 2026.\", \"suggested_action\": null}}"
+}

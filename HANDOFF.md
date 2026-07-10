@@ -91,27 +91,30 @@ The full approved plan: `/Users/flohiwg/.claude/plans/twinkly-dazzling-twilight.
   restatement, scope distinction, or reconciliation. The targeted claim
   0022 regression passed (065923Z), then the fresh complete smoke
   `exp-20260710T070219Z` passed **6/6** at $0.3271.
+- Full Vantage validation (`exp-20260710T091036Z`, 31 claims) is complete:
+  baseline 30/31 ($0.958, 8.26 tools/claim), graph 30/31 with one shape
+  failure ($1.044, 7.94), and dossier **31/31, zero failures** ($1.342,
+  3.06). Dossier is the only variant to pass both regional-clash claims;
+  it makes 63% fewer tool calls than baseline but costs 40% more because
+  of its prepared dossier and researcher work. See PROTOCOL.md for the
+  class slice and the checkpoint-resume cost detail.
+- An expired OpenRouter key created `exp-20260710T083949Z`, a zero-cost
+  excluded run (31 baseline and 4 graph failures). It is not a measurement;
+  the key was replaced and the valid 091036Z rerun succeeded. This makes
+  the pre-flight credential check an immediate reliability task.
 
 ## Next steps, in order
 
-1. **Full Vantage run** (~$1.2 real, key had ~$9 left):
-   `uv run proofbench eval audit-2026-q2-vantage --variants baseline,graph,dossier --max-budget-usd 3.0 --max-concurrency 4`
-   (drop rlm as separate variant — the researcher is inside dossier).
-   Per Florian's standing preference (see memory:
-   delegate-basic-work-to-cheaper-agents): run + tabulation via a
-   Sonnet subagent; analysis in the main session. Slice by
-   failure_class; compare against exp-20260709T185721Z (three-way tie
-   at 28/31, per-class table in PROTOCOL.md).
-2. **PROTOCOL.md entry** for the full run (format: question /
-   change under test / numbers / reading / decision), then commit
-   (commit style: see recent git log; trailer
-   "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>").
-3. Also validate on Meridian (`audit-2026-q1-meridian`) eventually —
+1. **Validate dossier on Meridian** (`audit-2026-q1-meridian`) —
    it needs `proofbench mentions audit-2026-q1-meridian` first (and has
    embeddings already). Its smoke set: claims 0001,0018,0021,0024,0027.
-4. Parked: checklist-agent dataset (waiting on the real checklist);
-   Verifier pre-flight credential check (a dead provider still burns a
-   run with 0% rows, see PROTOCOL.md incident log).
+2. **Add evaluator credential preflight.** It must fail clearly before
+   any claims start when the selected provider/key cannot authenticate;
+   `exp-20260710T083949Z` is the regression incident.
+3. **PROTOCOL/HANDOFF commit** for this full run (commit style: see recent
+   git log; trailer "Co-Authored-By: Claude Fable 5
+   <noreply@anthropic.com>").
+4. Parked: checklist-agent dataset (waiting on the real checklist).
 
 ## Standing constraints (from memory — respect these)
 

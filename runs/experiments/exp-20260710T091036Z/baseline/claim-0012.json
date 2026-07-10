@@ -1,0 +1,88 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0012",
+  "variant": "baseline",
+  "expected_status": "supported",
+  "status": "supported",
+  "correct": true,
+  "tool_calls": 3,
+  "cost_usd": 0.01570143,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0012",
+    "status": "supported",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0012/evidence-001"
+    ],
+    "delta": 0.0,
+    "confidence": 0.97,
+    "rationale": "The Q2 2026 Management Commentary explicitly states the certified implementation partner network grew to 80 partners at quarter end, matching the claim's value and time scope exactly.",
+    "suggested_action": null,
+    "produced_by_run_id": "eval/baseline/audit-2026-q2-vantage/claim-0012"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0012/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0012",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "the certified implementation partner network grew to 80 partners at quarter end.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 80.0,
+      "unit": "count",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:11:58.228557+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "certified implementation partner network"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-commentary-2025q2\",\"location\":\"page:1\",\"snippet\":\"...32 days, and the\\n[certified] [implementation] [partner] [network] grew to 57 partners...\"},{\"doc_id\":\"vantage-commentary-2025q3\",\"location\":\"page:1\",\"snippet\":\"...35 days, and the\\n[certified] [implementation] [partner] [network] grew to 81 partners...\"},{\"doc_id\":\"vantage-commentary-2025q4\",\"location\":\"page:1\",\"snippet\":\"...35 days, and the\\n[certified] [implementation] [partner] [network] grew to 79 partners...\"},{\"doc_id\":\"vantage-commentary-2026q1\",\"location\":\"page:1\",\"snippet\":\"...39 days, and the\\n[certified] [implementation] [partner] [network] grew to 80 partners...\"},{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"snippet\":\"...27 days, and the\\n[certified] [implementation] [partner] [network] grew to 80 partners...\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:11:58.593085+00:00",
+      "tool": "mcp__proofbench_vault__search_facts",
+      "input": {
+        "entity": "partner",
+        "attribute": "certified"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:12:00.705624+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-commentary-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-commentary-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Management Commentary\\nLetter to the supervisory board\\nTrading in Q2 2026 developed in line with the restated plan. Net revenue reached EUR 21.89 million, with the gross\\nresult at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\\nCustomer sentiment strengthened again: the group-wide net promoter score came in at 38 for the quarter, and the\\ngross renewal rate held at 91.4% across the installed base.\\nDelivery efficiency improved. The median onboarding cycle for new enterprise customers was 27 days, and the\\ncertified implementation partner network grew to 80 partners at quarter end.\\nThe workforce closed at 224 full-time equivalents, supported by 26 external contract staff.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "{\"evidence\":[{\"doc_id\":\"vantage-commentary-2026q2\",\"page\":1,\"span_text\":\"the certified implementation partner network grew to 80 partners at quarter end.\",\"canonical_value\":80.0,\"unit\":\"count\",\"role\":\"actual\",\"effective_date\":\"2026-06-30\",\"extractor_confidence\":0.95}],\"verdict\":{\"status\":\"supported\",\"delta\":0.0,\"confidence\":0.97,\"rationale\":\"The Q2 2026 Management Commentary explicitly states the certified implementation partner network grew to 80 partners at quarter end, matching the claim's value and time scope exactly.\",\"suggested_action\":null}}"
+}

@@ -1,0 +1,163 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0025",
+  "variant": "dossier",
+  "expected_status": "outdated",
+  "status": "outdated",
+  "correct": true,
+  "tool_calls": 3,
+  "cost_usd": 0.03980454,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0025",
+    "status": "outdated",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0025/evidence-001",
+      "audit-2026-q2-vantage/claim-0025/evidence-002",
+      "audit-2026-q2-vantage/claim-0025/evidence-003",
+      "audit-2026-q2-vantage/claim-0025/evidence-004",
+      "audit-2026-q2-vantage/claim-0025/evidence-005",
+      "audit-2026-q2-vantage/claim-0025/evidence-006"
+    ],
+    "delta": -183000.0,
+    "confidence": 0.96,
+    "rationale": "The claim's EUR 21.71M matches the v1 pre-close finance pack (21.712M), but v1 is explicitly marked 'PRELIMINARY - superseded on 15 July 2026 by restated v2', and the restated v2 finance pack reports Net revenue Q2 2026 actual at 21.895M, corroborated by both the Q2 2026 management commentary and quarterly update citing EUR 21.89M. The claim therefore agrees with a stale, explicitly superseded figure rather than the current authoritative value.",
+    "suggested_action": "Update the master document's Q2 2026 quarterly revenue to EUR 21.895 million per the final restated v2 finance pack approved 15 July 2026, and retire the 21.712M preliminary figure.",
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0025"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0025/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0025",
+      "doc_id": "vantage-finance-v1-2026q2",
+      "page": 1,
+      "span_text": "Net revenue | 21.712 | 21.529 | 21.238",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 21712000.0,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0025/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0025",
+      "doc_id": "vantage-finance-v1-2026q2",
+      "page": 1,
+      "span_text": "PRELIMINARY - superseded on 15 July 2026 by restated v2.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "EUR million",
+      "role": "other",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0025/evidence-003",
+      "claim_id": "audit-2026-q2-vantage/claim-0025",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Net revenue | 21.895 | 21.529 | 21.238",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 21895000.0,
+      "unit": "EUR million",
+      "role": "restated",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0025/evidence-004",
+      "claim_id": "audit-2026-q2-vantage/claim-0025",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Final restatement, approved 15 July 2026.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": "EUR million",
+      "role": "restated",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 1.0
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0025/evidence-005",
+      "claim_id": "audit-2026-q2-vantage/claim-0025",
+      "doc_id": "vantage-commentary-2026q2",
+      "page": 1,
+      "span_text": "Net revenue reached EUR 21.89 million, with the gross result at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 21890000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.7
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0025/evidence-006",
+      "claim_id": "audit-2026-q2-vantage/claim-0025",
+      "doc_id": "vantage-update-2026q2",
+      "page": 1,
+      "span_text": "VANTAGE INDUSTRIAL GROUP Q2 2026 Quarterly Update Investor and staff brief Vantage Industrial Group SE closed Q2 2026 with revenue of EUR 21.89 million and 43 new enterprise account wins.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 21890000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": null,
+      "extractor_confidence": 0.7
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T09:29:02.748711+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Net revenue"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Net revenue\",\"conflicts\":[{\"period\":\"2026-Q2\",\"role\":\"actual\",\"values\":[{\"doc_id\":\"vantage-finance-v1-2026q2\",\"value\":21.712},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"value\":21.895}]}],\"see_also\":[{\"entity\":\"Deferred revenue\",\"similarity\":0.622},{\"entity\":\"Net dollar retention\",\"similarity\":0.563},{\"entity\":\"Gross profit\",\"similarity\":0.557}],\"facts\":[{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q2 2025 actual\",\"period\":\"2025-Q2\",\"role\":\"actual\",\"value\":\"20.200\",\"span_text\":\"Net revenue | 20.200 | - | 19.594\"},{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"n/a\",\"period\":null,\"role\":null,\"value\":\"-\",\"span_text\":\"Net revenue | 20.200 | - | 19.594\"},{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q2 2025 budget\",\"period\":\"2025-Q2\",\"role\":\"budget\",\"value\":\"19.594\",\"span_text\":\"Net revenue | 20.200 | - | 19.594\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q3 2025 actual\",\"period\":\"2025-Q3\",\"role\":\"actual\",\"value\":\"20.558\",\"span_text\":\"Net revenue | 20.558 | 20.200 | 19.941\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q2 2025 actual\",\"period\":\"2025-Q2\",\"role\":\"actual\",\"value\":\"20.200\",\"span_text\":\"Net revenue | 20.558 | 20.200 | 19.941\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q3 2025 budget\",\"period\":\"2025-Q3\",\"role\":\"budget\",\"value\":\"19.941\",\"span_text\":\"Net revenue | 20.558 | 20.200 | 19.941\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"20.851\",\"span_text\":\"Net revenue | 20.851 | 20.558 | 20.225\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q3 2025 actual\",\"period\":\"2025-Q3\",\"role\":\"actual\",\"value\":\"20.558\",\"span_text\":\"Net revenue | 20.851 | 20.558 | 20.225\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q4 2025 budget\",\"period\":\"2025-Q4\",\"role\":\"budget\",\"value\":\"20.225\",\"span_text\":\"Net revenue | 20.851 | 20.558 | 20.225\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"21.529\",\"span_text\":\"Net revenue | 21.529 | 20.851 | 20.883\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q4 2025 actual\",\"period\":\"2025-Q4\",\"role\":\"actual\",\"value\":\"20.851\",\"span_text\":\"Net revenue | 21.529 | 20.851 | 20.883\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q1 2026 budget\",\"period\":\"2026-Q1\",\"role\":\"budget\",\"value\":\"20.883\",\"span_text\":\"Net revenue | 21.529 | 20.851 | 20.883\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q2 2026 actual\",\"period\":\"2026-Q2\",\"role\":\"actual\",\"value\":\"21.712\",\"span_text\":\"Net revenue | 21.712 | 21.529 | 21.238\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"21.529\",\"span_text\":\"Net revenue | 21.712 | 21.529 | 21.238\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q2 2026 budget\",\"period\":\"2026-Q2\",\"role\":\"budget\",\"value\":\"21.238\",\"span_text\":\"Net revenue | 21.712 | 21.529 | 21.238\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q2 2026 actual\",\"period\":\"2026-Q2\",\"role\":\"actual\",\"value\":\"21.895\",\"span_text\":\"Net revenue | 21.895 | 21.529 | 21.238\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q1 2026 actual\",\"period\":\"2026-Q1\",\"role\":\"actual\",\"value\":\"21.529\",\"span_text\":\"Net revenue | 21.895 | 21.529 | 21.238\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:1/row:Net revenue\",\"attribute\":\"Q2 2026 budget\",\"period\":\"2026-Q2\",\"role\":\"budget\",\"value\":\"21.238\",\"span_text\":\"Net revenue | 21.895 | 21.529 | 21.238\"}],\"edges\":[{\"kind\":\"aggregates\",\"doc_id\":\"vantage-finance-2025q2\",\"op\":\"sum\",\"target\":\"Gross profit\",\"inputs\":[\"Net revenue\",\"Cost of delivery\"],\"holds_for\":[\"Q2 2025 actual\",\"Q2 2025 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-finance-2025q3\",\"op\":\"sum\",\"target\":\"Gross profit\",\"inputs\":[\"Net revenue\",\"Cost of delivery\"],\"holds_for\":[\"Q3 2025 actual\",\"Q2 2025 actual\",\"Q3 2025 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-finance-2025q4\",\"op\":\"sum\",\"target\":\"Gross profit\",\"inputs\":[\"Net revenue\",\"Cost of delivery\"],\"holds_for\":[\"Q4 2025 actual\",\"Q3 2025 actual\",\"Q4 2025 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-finance-2026q1\",\"op\":\"sum\",\"target\":\"Gross profit\",\"inputs\":[\"Net revenue\",\"Cost of delivery\"],\"holds_for\":[\"Q1 2026 actual\",\"Q4 2025 actual\",\"Q1 2026 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-finance-v1-2026q2\",\"op\":\"sum\",\"target\":\"Gross profit\",\"inputs\":[\"Net revenue\",\"Cost of delivery\"],\"holds_for\":[\"Q2 2026 actual\",\"Q1 2026 actual\",\"Q2 2026 budget\"]},{\"kind\":\"aggregates\",\"doc_id\":\"vantage-finance-v2-2026q2\",\"op\":\"sum\",\"target\":\"Gross profit\",\"inputs\":[\"Net revenue\",\"Cost of delivery\"],\"holds_for\":[\"Q2 2026 actual\",\"Q1 2026 actual\",\"Q2 2026 budget\"]}]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T09:29:03.221858+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-finance-v2-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Finance Pack v2\\nManagement accounts\\nIncome statement\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nNet revenue\\n21.895\\n21.529\\n21.238\\nCost of delivery\\n(8.863)\\n(8.811)\\n(8.597)\\nGross profit\\n13.032\\n12.718\\n12.641\\nAdjusted operating result\\n5.755\\n5.519\\n5.582\\nDeferred revenue\\n9.685\\n9.620\\n9.394\\nTrade receivables\\n6.697\\n6.530\\n6.496\\nCommercial indicators\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nQualified pipeline\\n13.510\\n12.888\\n13.104\\nExpansion bookings\\n4.110\\n3.965\\n3.986\\nFinal restatement, approved 15 July 2026.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T09:29:03.656003+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-finance-v1-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Finance Pack v1\\nPre-close management accounts\\nIncome statement\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nNet revenue\\n21.712\\n21.529\\n21.238\\nCost of delivery\\n(8.863)\\n(8.811)\\n(8.597)\\nGross profit\\n12.849\\n12.718\\n12.641\\nAdjusted operating result\\n5.572\\n5.519\\n5.582\\nDeferred revenue\\n9.685\\n9.620\\n9.394\\nTrade receivables\\n6.697\\n6.530\\n6.496\\nCommercial indicators\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nQualified pipeline\\n13.510\\n12.888\\n13.104\\nExpansion bookings\\n4.110\\n3.965\\n3.986\\nPRELIMINARY - superseded on 15 July 2026 by restated v2.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "I now have everything I need. The evidence is decisive:\n\n- **v1** (vantage-finance-v1-2026q2): \"Pre-close management accounts,\" Net revenue Q2 2026 actual = **21.712**. Footer explicitly states: \"PRELIMINARY - superseded on 15 July 2026 by restated v2.\"\n- **v2** (vantage-finance-v2-2026q2): \"Management accounts,\" Net revenue Q2 2026 actual = **21.895**. Footer: \"Final restatement, approved 15 July 2026.\"\n- Prose commentary and quarterly update for Q2 2026 both cite **EUR 21.89 million**, matching v2.\n\nThe claim's 21.71M matches the stale v1 figure, which v2 explicitly supersedes. This is a textbook \"outdated\" verdict.\n\n{\"evidence\":[{\"doc_id\":\"vantage-finance-v1-2026q2\",\"page\":1,\"span_text\":\"Net revenue | 21.712 | 21.529 | 21.238\",\"canonical_value\":21712000.0,\"unit\":\"EUR million\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.95},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"page\":1,\"span_text\":\"PRELIMINARY - superseded on 15 July 2026 by restated v2.\",\"canonical_value\":null,\"unit\":\"EUR million\",\"role\":\"other\",\"effective_date\":\"2026-07-15\",\"extractor_confidence\":1.0},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"page\":1,\"span_text\":\"Net revenue | 21.895 | 21.529 | 21.238\",\"canonical_value\":21895000.0,\"unit\":\"EUR million\",\"role\":\"restated\",\"effective_date\":\"2026-07-15\",\"extractor_confidence\":0.95},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"page\":1,\"span_text\":\"Final restatement, approved 15 July 2026.\",\"canonical_value\":null,\"unit\":\"EUR million\",\"role\":\"restated\",\"effective_date\":\"2026-07-15\",\"extractor_confidence\":1.0},{\"doc_id\":\"vantage-commentary-2026q2\",\"page\":1,\"span_text\":\"Net revenue reached EUR 21.89 million, with the gross result at EUR 13.03 million and an adjusted operating result of EUR 5.75 million.\",\"canonical_value\":21890000.0,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.7},{\"doc_id\":\"vantage-update-2026q2\",\"page\":1,\"span_text\":\"VANTAGE INDUSTRIAL GROUP Q2 2026 Quarterly Update Investor and staff brief Vantage Industrial Group SE closed Q2 2026 with revenue of EUR 21.89 million and 43 new enterprise account wins.\",\"canonical_value\":21890000.0,\"unit\":\"EUR\",\"role\":\"actual\",\"effective_date\":null,\"extractor_confidence\":0.7}],\"verdict\":{\"status\":\"outdated\",\"delta\":-183000.0,\"confidence\":0.96,\"rationale\":\"The claim's EUR 21.71M matches the v1 pre-close finance pack (21.712M), but v1 is explicitly marked 'PRELIMINARY - superseded on 15 July 2026 by restated v2', and the restated v2 finance pack reports Net revenue Q2 2026 actual at 21.895M, corroborated by both the Q2 2026 management commentary and quarterly update citing EUR 21.89M. The claim therefore agrees with a stale, explicitly superseded figure rather than the current authoritative value.\",\"suggested_action\":\"Update the master document's Q2 2026 quarterly revenue to EUR 21.895 million per the final restated v2 finance pack approved 15 July 2026, and retire the 21.712M preliminary figure.\"}}"
+}
