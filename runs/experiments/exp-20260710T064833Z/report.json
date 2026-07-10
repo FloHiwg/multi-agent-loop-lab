@@ -1,5 +1,5 @@
 {
-  "experiment_id": "exp-20260710T062010Z",
+  "experiment_id": "exp-20260710T064833Z",
   "audit_id": "audit-2026-q2-vantage",
   "model": "z-ai/glm-5.2",
   "max_concurrency": 2,
@@ -7,7 +7,7 @@
   "started_variants": [
     "dossier"
   ],
-  "total_cost_usd": 0.2444275,
+  "total_cost_usd": 0.30797455,
   "summaries": [
     {
       "variant": "dossier",
@@ -15,9 +15,9 @@
       "correct": 5,
       "accuracy": 0.8333333333333334,
       "failures": 0,
-      "avg_tool_calls": 2.0,
-      "avg_cost_usd": 0.040737916666666665,
-      "total_cost_usd": 0.2444275,
+      "avg_tool_calls": 1.6666666666666667,
+      "avg_cost_usd": 0.05132909166666666,
+      "total_cost_usd": 0.30797454999999996,
       "enrichment_cost_usd": null,
       "n_attempted": 6
     }

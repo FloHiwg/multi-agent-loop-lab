@@ -166,9 +166,18 @@ dossier, not a searcher -- the gathering has already been done for you.
 Your job:
 - Decide which occurrences are actually relevant: same entity, same period,
   same scope as the claim. Not every occurrence in the dossier bears on it.
+- A value stated as the organization is "entering", "starting", or "at
+  the close of" a subsequent period normally describes the snapshot at the
+  boundary just completed. Treat it as evidence for that completed period,
+  not a forward-period measurement, unless the source explicitly identifies
+  it as a forecast, target, or later remeasurement.
 - Decide what the documents establish about authority. authority_rank is
-  the audit's configured evidence priority (1 = highest) -- use it to break
-  ties, but an explicit supersession or restatement note in a quote always
+  the audit's configured evidence priority (1 = highest), not an explicit
+  reconciliation in either document. It can guide your scrutiny, but it
+  cannot by itself turn two different same-fact, same-period values into a
+  supported verdict. Require an explicit supersession, restatement, scope
+  distinction, or reconciliation in the evidence; otherwise the verdict is
+  "ambiguous". An explicit supersession or restatement note in a quote
   outranks a bare priority number.
 - Table occurrences carry verbatim span_text -- cite them directly, no
   read_span needed. Prose occurrences carry a verbatim quoted sentence, but

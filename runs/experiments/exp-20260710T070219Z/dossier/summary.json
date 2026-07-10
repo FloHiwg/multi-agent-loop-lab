@@ -1,0 +1,12 @@
+{
+  "variant": "dossier",
+  "n_claims": 6,
+  "correct": 6,
+  "accuracy": 1.0,
+  "failures": 0,
+  "avg_tool_calls": 3.1666666666666665,
+  "avg_cost_usd": 0.054512008333333334,
+  "total_cost_usd": 0.32707205,
+  "enrichment_cost_usd": null,
+  "n_attempted": 6
+}

@@ -74,13 +74,27 @@ The full approved plan: `/Users/flohiwg/.claude/plans/twinkly-dazzling-twilight.
   mention's period or unit being None/odd type in a sorted()). Reproduce
   with: build_dossier for claim-0028; fix; it's isolated to gathering.
 
+## Post-handoff update — validated 2026-07-10
+
+- The graph `None`-safe sorting fix made a checkpoint-only retry of 0028
+  correctly `outdated`, bringing `exp-20260710T062010Z` to 5/6 at an
+  accumulated $0.2444.
+- A temporal-semantics instruction says that values phrased as
+  entering/starting/closing a subsequent period are normally snapshots of
+  the just-completed period unless explicitly identified as a forecast,
+  target, or later remeasurement. It made the judge recognize the 13.26m
+  quarterly-update sentence as Q2 evidence, but the judge initially still
+  let authority_rank resolve the conflict (064833Z: 5/6).
+- The final clarification distinguishes audit-configured evidence priority
+  from a source's explicit reconciliation. A same-fact, same-period
+  disagreement is `ambiguous` without an explicit supersession,
+  restatement, scope distinction, or reconciliation. The targeted claim
+  0022 regression passed (065923Z), then the fresh complete smoke
+  `exp-20260710T070219Z` passed **6/6** at $0.3271.
+
 ## Next steps, in order
 
-1. **Fix the 0028 TypeError** in dossier assembly (traceback via
-   build_dossier for claim-0028), add the temporal-semantics line to
-   DOSSIER_PROMPT (general wording, not fixture-specific), then re-run
-   the same smoke with a fresh --experiment-id (~$0.30). Success = 6/6.
-2. **Full Vantage run** (~$1.2 real, key had ~$9 left):
+1. **Full Vantage run** (~$1.2 real, key had ~$9 left):
    `uv run proofbench eval audit-2026-q2-vantage --variants baseline,graph,dossier --max-budget-usd 3.0 --max-concurrency 4`
    (drop rlm as separate variant — the researcher is inside dossier).
    Per Florian's standing preference (see memory:
@@ -88,14 +102,14 @@ The full approved plan: `/Users/flohiwg/.claude/plans/twinkly-dazzling-twilight.
    Sonnet subagent; analysis in the main session. Slice by
    failure_class; compare against exp-20260709T185721Z (three-way tie
    at 28/31, per-class table in PROTOCOL.md).
-3. **PROTOCOL.md entries** for the smoke and full run (format: question /
+2. **PROTOCOL.md entry** for the full run (format: question /
    change under test / numbers / reading / decision), then commit
    (commit style: see recent git log; trailer
    "Co-Authored-By: Claude Fable 5 <noreply@anthropic.com>").
-4. Also validate on Meridian (`audit-2026-q1-meridian`) eventually —
+3. Also validate on Meridian (`audit-2026-q1-meridian`) eventually —
    it needs `proofbench mentions audit-2026-q1-meridian` first (and has
    embeddings already). Its smoke set: claims 0001,0018,0021,0024,0027.
-5. Parked: checklist-agent dataset (waiting on the real checklist);
+4. Parked: checklist-agent dataset (waiting on the real checklist);
    Verifier pre-flight credential check (a dead provider still burns a
    run with 0% rows, see PROTOCOL.md incident log).
 

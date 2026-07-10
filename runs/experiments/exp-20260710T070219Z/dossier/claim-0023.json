@@ -1,0 +1,164 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0023",
+  "variant": "dossier",
+  "expected_status": "ambiguous",
+  "status": "ambiguous",
+  "correct": true,
+  "tool_calls": 4,
+  "cost_usd": 0.05823868,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0023",
+    "status": "ambiguous",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0023/evidence-001",
+      "audit-2026-q2-vantage/claim-0023/evidence-002",
+      "audit-2026-q2-vantage/claim-0023/evidence-003",
+      "audit-2026-q2-vantage/claim-0023/evidence-004",
+      "audit-2026-q2-vantage/claim-0023/evidence-005"
+    ],
+    "delta": -457000.0,
+    "confidence": 0.72,
+    "rationale": "The claim's EUR 13.053M matches the regional review's 'Qualified commercial pipeline' (Q2 2026 actual, local-CRM basis), but the higher-authority finance pack v2 reports the same commercial-pipeline metric at EUR 13.510M under 'Commercial indicators' and is marked 'Final restatement, approved 15 July 2026.' The regional 'uses local CRM' note is a methodology difference (a competing value, not a scope distinction), and the finance restatement only orders v1->v2 within the finance-pack lineage without explicitly superseding or reconciling the regional figure; authority_rank alone cannot resolve the conflict.",
+    "suggested_action": "Determine whether management's restated finance-pack figure (EUR 13.510M) or the regional local-CRM figure (EUR 13.053M) is the authoritative commercial-pipeline value for Q2 2026, and confirm whether the regional figure is intended as a non-comparable local-system view or a competing consolidated number.",
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0023"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0023/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0023",
+      "doc_id": "vantage-regional-2026q2",
+      "page": 1,
+      "span_text": "Qualified commercial pipeline | 13.053 | - | -",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 13053000.0,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0023/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0023",
+      "doc_id": "vantage-regional-2026q2",
+      "page": 1,
+      "span_text": "Regional pipeline uses local CRM",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": null,
+      "role": "other",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.8
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0023/evidence-003",
+      "claim_id": "audit-2026-q2-vantage/claim-0023",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Qualified pipeline | 13.510 | 12.888 | 13.104",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 13510000.0,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0023/evidence-004",
+      "claim_id": "audit-2026-q2-vantage/claim-0023",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Final restatement, approved 15 July 2026.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": null,
+      "unit": null,
+      "role": "restated",
+      "effective_date": "2026-07-15",
+      "extractor_confidence": 0.9
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0023/evidence-005",
+      "claim_id": "audit-2026-q2-vantage/claim-0023",
+      "doc_id": "vantage-finance-v2-2026q2",
+      "page": 1,
+      "span_text": "Commercial indicators\nEUR million\nQ2 2026 actual\nQ1 2026 actual\nQ2 2026 budget\nQualified pipeline\n13.510\n12.888\n13.104",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 13510000.0,
+      "unit": "EUR million",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.9
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T07:07:21.137330+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-regional-2026q2",
+        "location": "page:1/table:1/row:Qualified commercial pipeline"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"text\":\"Qualified commercial pipeline | 13.053 | - | -\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T07:07:21.633039+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-finance-v2-2026q2",
+        "location": "page:1/table:2/row:Qualified pipeline"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1/table:2/row:Qualified pipeline\",\"text\":\"Qualified pipeline | 13.510 | 12.888 | 13.104\"}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 3,
+      "at": "2026-07-10T07:07:21.742895+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "commercial pipeline"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-finance-2025q2\",\"location\":\"page:1\",\"snippet\":\"...receivables\\n6.300\\n-\\n6.111\\n[Commercial] indicators\\nEUR million\\nQ2 2025 actual...\"},{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1\",\"snippet\":\"...19.594\\nQualified [commercial] [pipeline]\\n11.296\\n-\\n-\\nRegional [pipeline] uses local CRM...\"},{\"doc_id\":\"vantage-regional-2025q2\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"snippet\":\"Qualified [commercial] [pipeline] | 11.296 | - | -\"},{\"doc_id\":\"vantage-finance-2025q3\",\"location\":\"page:1\",\"snippet\":\"...360\\n6.300\\n6.169\\n[Commercial] indicators\\nEUR million\\nQ3 2025 actual...\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1\",\"snippet\":\"...19.938\\nQualified [commercial] [pipeline]\\n11.717\\n-\\n-\\nRegional [pipeline] uses local CRM...\"},{\"doc_id\":\"vantage-regional-2025q3\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"snippet\":\"Qualified [commercial] [pipeline] | 11.717 | - | -\"},{\"doc_id\":\"vantage-finance-2025q4\",\"location\":\"page:1\",\"snippet\":\"...515\\n6.360\\n6.319\\n[Commercial] indicators\\nEUR million\\nQ4 2025 actual...\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1\",\"snippet\":\"...20.222\\nQualified [commercial] [pipeline]\\n11.992\\n-\\n-\\nRegional [pipeline] uses local CRM...\"},{\"doc_id\":\"vantage-regional-2025q4\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"snippet\":\"Qualified [commercial] [pipeline] | 11.992 | - | -\"},{\"doc_id\":\"vantage-finance-2026q1\",\"location\":\"page:1\",\"snippet\":\"...530\\n6.515\\n6.334\\n[Commercial] indicators\\nEUR million\\nQ1 2026 actual...\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1\",\"snippet\":\"...20.880\\nQualified [commercial] [pipeline]\\n12.521\\n-\\n-\\nRegional [pipeline] uses local CRM...\"},{\"doc_id\":\"vantage-regional-2026q1\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"snippet\":\"Qualified [commercial] [pipeline] | 12.521 | - | -\"},{\"doc_id\":\"vantage-finance-v1-2026q2\",\"location\":\"page:1\",\"snippet\":\"...697\\n6.530\\n6.496\\n[Commercial] indicators\\nEUR million\\nQ2 2026 actual...\"},{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1\",\"snippet\":\"...697\\n6.530\\n6.496\\n[Commercial] indicators\\nEUR million\\nQ2 2026 actual...\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1\",\"snippet\":\"...21.235\\nQualified [commercial] [pipeline]\\n13.053\\n-\\n-\\nRegional [pipeline] uses local CRM...\"},{\"doc_id\":\"vantage-regional-2026q2\",\"location\":\"page:1/table:1/row:Qualified commercial pipeline\",\"snippet\":\"Qualified [commercial] [pipeline] | 13.053 | - | -\"}]"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 4,
+      "at": "2026-07-10T07:08:33.098879+00:00",
+      "tool": "mcp__proofbench_vault__read_span",
+      "input": {
+        "doc_id": "vantage-finance-v2-2026q2",
+        "location": "page:1"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"doc_id\":\"vantage-finance-v2-2026q2\",\"location\":\"page:1\",\"text\":\"VANTAGE INDUSTRIAL GROUP\\nQ2 2026 Finance Pack v2\\nManagement accounts\\nIncome statement\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nNet revenue\\n21.895\\n21.529\\n21.238\\nCost of delivery\\n(8.863)\\n(8.811)\\n(8.597)\\nGross profit\\n13.032\\n12.718\\n12.641\\nAdjusted operating result\\n5.755\\n5.519\\n5.582\\nDeferred revenue\\n9.685\\n9.620\\n9.394\\nTrade receivables\\n6.697\\n6.530\\n6.496\\nCommercial indicators\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nQualified pipeline\\n13.510\\n12.888\\n13.104\\nExpansion bookings\\n4.110\\n3.965\\n3.986\\nFinal restatement, approved 15 July 2026.\\nConfidential | Synthetic Proofbench fixture\\nPage 1\\n\"}"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The full finance pack page is now clear. It contains \"Commercial indicators\" as a section header immediately above the \"Qualified pipeline | 13.510\" row, and ends with \"Final restatement, approved 15 July 2026.\" This confirms: (1) the finance pack's \"Qualified pipeline\" IS the commercial pipeline (same metric as the claim), and (2) the finance pack v2 is explicitly the final/restated authoritative version \u2014 but that restatement note only orders v1\u2192v2 within the finance-pack lineage; it does not mention or supersede the regional review. The regional review meanwhile explicitly flags \"Regional pipeline uses local CRM\" \u2014 a different measurement basis, which per the rules is a competing value (not a scope distinction), and a basis-difference flag signals no authority ordering is established.\n\nSo: two current Q2 2026 values for the same commercial-pipeline metric \u2014 13.053M (regional, local-CRM basis, rank 4, matches claim) vs 13.510M (finance pack, rank 1, explicitly restated/final) \u2014 with no explicit cross-document supersession or reconciliation. The verdict is ambiguous.\n\n```json\n{\"evidence\": [{\"doc_id\": \"vantage-regional-2026q2\", \"page\": 1, \"span_text\": \"Qualified commercial pipeline | 13.053 | - | -\", \"canonical_value\": 13053000, \"unit\": \"EUR million\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.95}, {\"doc_id\": \"vantage-regional-2026q2\", \"page\": 1, \"span_text\": \"Regional pipeline uses local CRM\", \"canonical_value\": null, \"unit\": null, \"role\": \"other\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.8}, {\"doc_id\": \"vantage-finance-v2-2026q2\", \"page\": 1, \"span_text\": \"Qualified pipeline | 13.510 | 12.888 | 13.104\", \"canonical_value\": 13510000, \"unit\": \"EUR million\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.95}, {\"doc_id\": \"vantage-finance-v2-2026q2\", \"page\": 1, \"span_text\": \"Final restatement, approved 15 July 2026.\", \"canonical_value\": null, \"unit\": null, \"role\": \"restated\", \"effective_date\": \"2026-07-15\", \"extractor_confidence\": 0.9}, {\"doc_id\": \"vantage-finance-v2-2026q2\", \"page\": 1, \"span_text\": \"Commercial indicators\\nEUR million\\nQ2 2026 actual\\nQ1 2026 actual\\nQ2 2026 budget\\nQualified pipeline\\n13.510\\n12.888\\n13.104\", \"canonical_value\": 13510000, \"unit\": \"EUR million\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.9}], \"verdict\": {\"status\": \"ambiguous\", \"delta\": -457000, \"confidence\": 0.72, \"rationale\": \"The claim's EUR 13.053M matches the regional review's 'Qualified commercial pipeline' (Q2 2026 actual, local-CRM basis), but the higher-authority finance pack v2 reports the same commercial-pipeline metric at EUR 13.510M under 'Commercial indicators' and is marked 'Final restatement, approved 15 July 2026.' The regional 'uses local CRM' note is a methodology difference (a competing value, not a scope distinction), and the finance restatement only orders v1->v2 within the finance-pack lineage without explicitly superseding or reconciling the regional figure; authority_rank alone cannot resolve the conflict.\", \"suggested_action\": \"Determine whether management's restated finance-pack figure (EUR 13.510M) or the regional local-CRM figure (EUR 13.053M) is the authoritative commercial-pipeline value for Q2 2026, and confirm whether the regional figure is intended as a non-comparable local-system view or a competing consolidated number.\"}}\n```"
+}

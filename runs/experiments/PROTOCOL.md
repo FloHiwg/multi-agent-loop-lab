@@ -273,6 +273,35 @@ pack 8.4 vs regional review 8.1, gold `ambiguous`). Guards in every run:
   outdated rubric; (c) per-claim checkpointing in eval.py (mid-variant
   crash currently loses finished claims); re-measure after (a)+(b).
 
+## exp-20260710T062010Z / 064833Z / 065923Z / 070219Z — Evidence Dossier smoke series (Vantage, 6 claims)
+
+- **Question:** does a prepared cross-source dossier eliminate the
+  prose-table conflict blind spot without regressing narrative, regional,
+  or stale-quarter judgments?
+- **Changes under test:** prose mentions plus table facts and a bounded
+  researcher sweep feed the new `dossier` judge mode. After the initial
+  crash retry, the first completed smoke (062010Z) reached 5/6: the
+  prose-table clash was found but dismissed as a forward-period snapshot.
+  The first temporal-semantics instruction (064833Z) correctly made the
+  judge treat "entering the next quarter" as the completed-quarter
+  boundary, but it still returned `supported` by treating the configured
+  `authority_rank` as automatic reconciliation. The final instruction
+  distinguishes evidence priority from a source's explicit reconciliation:
+  a same-fact, same-period disagreement remains ambiguous absent an
+  explicit supersession, restatement, scope distinction, or reconciliation.
+- **Result:** targeted regression claim 0022 passed 1/1 in 065923Z.
+  The final fresh six-claim smoke (070219Z) was **6/6, zero failures, 3.2
+  tools/claim, $0.327 real**: 0001 and 0009 supported; 0022 and 0023
+  ambiguous; 0027 and 0028 outdated.
+- **Reading:** the dossier solved retrieval recall; the required judgment
+  rule has two parts. Quarter-boundary prose is evidence of the completed
+  period, and configured source priority guides scrutiny but is not itself
+  documentary proof that a conflicting value was superseded. The full
+  smoke confirms neither clarification regressed the existing control,
+  regional-conflict, or stale-period cases.
+- **Decision / next:** run the full Vantage baseline-vs-graph-vs-dossier
+  comparison, sliced by `failure_class`, before drawing a scale conclusion.
+
 ---
 
 ## Non-experiment incident log

@@ -1,0 +1,131 @@
+{
+  "claim_id": "audit-2026-q2-vantage/claim-0027",
+  "variant": "dossier",
+  "expected_status": "outdated",
+  "status": "outdated",
+  "correct": true,
+  "tool_calls": 2,
+  "cost_usd": 0.058689719999999994,
+  "error": null,
+  "verdict": {
+    "claim_id": "audit-2026-q2-vantage/claim-0027",
+    "status": "outdated",
+    "matched_evidence_ids": [
+      "audit-2026-q2-vantage/claim-0027/evidence-001",
+      "audit-2026-q2-vantage/claim-0027/evidence-002",
+      "audit-2026-q2-vantage/claim-0027/evidence-003",
+      "audit-2026-q2-vantage/claim-0027/evidence-004",
+      "audit-2026-q2-vantage/claim-0027/evidence-005"
+    ],
+    "delta": -1295000.0,
+    "confidence": 0.95,
+    "rationale": "The claim's EUR 33.48m (33,483,000) is the Q1 2026 annualized subscription value \u2014 confirmed by vantage-customer-2026q1 (B13: 33483000) and the vantage-update-2026q1 prose \u2014 and appears only as the 'Prior' column in the Q2 2026 sheet. The current Q2 2026 authoritative value is 34,778,000 (EUR 34.78m), per vantage-customer-2026q2 (B13: 34778000) and vantage-update-2026q2. The claim asserts last quarter's value as if it were the current-quarter figure.",
+    "suggested_action": "Update the master document to use the Q2 2026 actual of EUR 34.78 million (34,778,000) rather than the carried-forward Q1 2026 prior value of EUR 33.48 million.",
+    "produced_by_run_id": "eval/dossier/audit-2026-q2-vantage/claim-0027"
+  },
+  "evidence": [
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0027/evidence-001",
+      "claim_id": "audit-2026-q2-vantage/claim-0027",
+      "doc_id": "vantage-customer-2026q2",
+      "page": null,
+      "span_text": "Annualized subscription value | B13: 34778000 (Q2 2026) | C13: 33483000 (Prior) | D13: 34378000 (Plan)",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 34778000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0027/evidence-002",
+      "claim_id": "audit-2026-q2-vantage/claim-0027",
+      "doc_id": "vantage-customer-2026q1",
+      "page": null,
+      "span_text": "Annualized subscription value | B13: 33483000 (Q1 2026) | C13: 32577000 (Prior) | D13: 33083000 (Plan)",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 33483000.0,
+      "unit": "EUR",
+      "role": "prior_period",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0027/evidence-003",
+      "claim_id": "audit-2026-q2-vantage/claim-0027",
+      "doc_id": "vantage-customer-2026q2",
+      "page": null,
+      "span_text": "Annualized subscription value | C13: 33483000 (Prior column = Q1 2026 carried value)",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 33483000.0,
+      "unit": "EUR",
+      "role": "prior_period",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.95
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0027/evidence-004",
+      "claim_id": "audit-2026-q2-vantage/claim-0027",
+      "doc_id": "vantage-update-2026q1",
+      "page": 1,
+      "span_text": "Annualized subscription value reached EUR 33.48 million, with licensed seats at 10,128.",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 33483000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2026-03-31",
+      "extractor_confidence": 0.74
+    },
+    {
+      "evidence_id": "audit-2026-q2-vantage/claim-0027/evidence-005",
+      "claim_id": "audit-2026-q2-vantage/claim-0027",
+      "doc_id": "vantage-update-2026q2",
+      "page": 1,
+      "span_text": "Annualized subscription value reached EUR 34.78 million, with licensed seats at ...",
+      "bbox": null,
+      "char_offsets": null,
+      "canonical_value": 34778000.0,
+      "unit": "EUR",
+      "role": "actual",
+      "effective_date": "2026-06-30",
+      "extractor_confidence": 0.8
+    }
+  ],
+  "tool_trace": [
+    {
+      "seq": 1,
+      "at": "2026-07-10T06:55:15.978467+00:00",
+      "tool": "mcp__proofbench_vault__entity_profile",
+      "input": {
+        "name": "Annualized subscription value"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "{\"entity\":\"Annualized subscription value\",\"conflicts\":[],\"see_also\":[],\"facts\":[{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Q2 2025\",\"period\":\"2025-Q2\",\"role\":null,\"value\":\"30400000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"30400000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"30000000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Q3 2025\",\"period\":\"2025-Q3\",\"role\":null,\"value\":\"31407000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"30400000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"31007000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Q4 2025\",\"period\":\"2025-Q4\",\"role\":null,\"value\":\"32577000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"31407000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"32177000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Q1 2026\",\"period\":\"2026-Q1\",\"role\":null,\"value\":\"33483000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"32577000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"33083000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Q2 2026\",\"period\":\"2026-Q2\",\"role\":null,\"value\":\"34778000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Prior\",\"period\":null,\"role\":null,\"value\":\"33483000\",\"span_text\":null},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics!row13\",\"attribute\":\"Plan\",\"period\":null,\"role\":null,\"value\":\"34378000\",\"span_text\":null}],\"edges\":[]}"
+        }
+      ],
+      "is_error": null
+    },
+    {
+      "seq": 2,
+      "at": "2026-07-10T06:55:16.003069+00:00",
+      "tool": "mcp__proofbench_vault__search_vault",
+      "input": {
+        "query": "annualized subscription value"
+      },
+      "output": [
+        {
+          "type": "text",
+          "text": "[{\"doc_id\":\"vantage-customer-2025q2\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Annualized] [subscription] [value]\\nB13: 30400000\\nC13: 30400000\\nD13: 30000000\\nA14: Net dollar...\"},{\"doc_id\":\"vantage-update-2025q2\",\"location\":\"page:1\",\"snippet\":\"...[Annualized] [subscription] [value] reached EUR 30.40 million, with licensed seats at...\"},{\"doc_id\":\"vantage-customer-2025q3\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Annualized] [subscription] [value]\\nB13: 31407000\\nC13: 30400000\\nD13: 31007000\\nA14: Net dollar...\"},{\"doc_id\":\"vantage-update-2025q3\",\"location\":\"page:1\",\"snippet\":\"...[Annualized] [subscription] [value] reached EUR 31.41 million, with licensed seats at...\"},{\"doc_id\":\"vantage-customer-2025q4\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Annualized] [subscription] [value]\\nB13: 32577000\\nC13: 31407000\\nD13: 32177000\\nA14: Net dollar...\"},{\"doc_id\":\"vantage-update-2025q4\",\"location\":\"page:1\",\"snippet\":\"...[Annualized] [subscription] [value] reached EUR 32.58 million, with licensed seats at...\"},{\"doc_id\":\"vantage-customer-2026q1\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Annualized] [subscription] [value]\\nB13: 33483000\\nC13: 32577000\\nD13: 33083000\\nA14: Net dollar...\"},{\"doc_id\":\"vantage-update-2026q1\",\"location\":\"page:1\",\"snippet\":\"...[Annualized] [subscription] [value] reached EUR 33.48 million, with licensed seats at...\"},{\"doc_id\":\"vantage-customer-2026q2\",\"location\":\"sheet:Metrics\",\"snippet\":\"...[Annualized] [subscription] [value]\\nB13: 34778000\\nC13: 33483000\\nD13: 34378000\\nA14: Net dollar...\"},{\"doc_id\":\"vantage-update-2026q2\",\"location\":\"page:1\",\"snippet\":\"...[Annualized] [subscription] [value] reached EUR 34.78 million, with licensed seats at...\"}]"
+        }
+      ],
+      "is_error": null
+    }
+  ],
+  "final_text": "The dossier and vault confirm a clear stale-figure pattern. The claim's EUR 33.48m is the Q1 2026 value (33,483,000), not the Q2 2026 value \u2014 the current Q2 2026 authoritative figure is 34,778,000 (EUR 34.78m).\n\n{\"evidence\": [{\"doc_id\": \"vantage-customer-2026q2\", \"page\": null, \"span_text\": \"Annualized subscription value | B13: 34778000 (Q2 2026) | C13: 33483000 (Prior) | D13: 34378000 (Plan)\", \"canonical_value\": 34778000.0, \"unit\": \"EUR\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.95}, {\"doc_id\": \"vantage-customer-2026q1\", \"page\": null, \"span_text\": \"Annualized subscription value | B13: 33483000 (Q1 2026) | C13: 32577000 (Prior) | D13: 33083000 (Plan)\", \"canonical_value\": 33483000.0, \"unit\": \"EUR\", \"role\": \"prior_period\", \"effective_date\": \"2026-03-31\", \"extractor_confidence\": 0.95}, {\"doc_id\": \"vantage-customer-2026q2\", \"page\": null, \"span_text\": \"Annualized subscription value | C13: 33483000 (Prior column = Q1 2026 carried value)\", \"canonical_value\": 33483000.0, \"unit\": \"EUR\", \"role\": \"prior_period\", \"effective_date\": \"2026-03-31\", \"extractor_confidence\": 0.95}, {\"doc_id\": \"vantage-update-2026q1\", \"page\": 1, \"span_text\": \"Annualized subscription value reached EUR 33.48 million, with licensed seats at 10,128.\", \"canonical_value\": 33483000.0, \"unit\": \"EUR\", \"role\": \"actual\", \"effective_date\": \"2026-03-31\", \"extractor_confidence\": 0.74}, {\"doc_id\": \"vantage-update-2026q2\", \"page\": 1, \"span_text\": \"Annualized subscription value reached EUR 34.78 million, with licensed seats at ...\", \"canonical_value\": 34778000.0, \"unit\": \"EUR\", \"role\": \"actual\", \"effective_date\": \"2026-06-30\", \"extractor_confidence\": 0.8}], \"verdict\": {\"status\": \"outdated\", \"delta\": -1295000.0, \"confidence\": 0.95, \"rationale\": \"The claim's EUR 33.48m (33,483,000) is the Q1 2026 annualized subscription value \u2014 confirmed by vantage-customer-2026q1 (B13: 33483000) and the vantage-update-2026q1 prose \u2014 and appears only as the 'Prior' column in the Q2 2026 sheet. The current Q2 2026 authoritative value is 34,778,000 (EUR 34.78m), per vantage-customer-2026q2 (B13: 34778000) and vantage-update-2026q2. The claim asserts last quarter's value as if it were the current-quarter figure.\", \"suggested_action\": \"Update the master document to use the Q2 2026 actual of EUR 34.78 million (34,778,000) rather than the carried-forward Q1 2026 prior value of EUR 33.48 million.\"}}"
+}
