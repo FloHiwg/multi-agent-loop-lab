@@ -25,7 +25,9 @@ researcher, and prepared-dossier retrieval strategies.
 from __future__ import annotations
 
 import asyncio
+import copy
 import json
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -178,6 +180,272 @@ async def _eval_claim(
     if dossier_out:
         dossier_path.write_text(json.dumps(dossier_out["dossier"], indent=2) + "\n")
     return record
+
+
+# Judge-replay stage (MUL-10): a dossier already gathered by a prior
+# `dossier`-variant run is fed straight to verify_claim_async as
+# dossier_data, skipping re-gathering (real API spend) so judge prompt/logic
+# changes can be tested in isolation from gathering drift, and repeated to
+# get verdict-consistency data a single run can't provide.
+
+
+def _strip_conflicts(dossier: dict) -> dict:
+    out = copy.deepcopy(dossier)
+    out["cross_source_conflicts"] = []
+    return out
+
+
+def _strip_authority_rank(dossier: dict) -> dict:
+    out = copy.deepcopy(dossier)
+    for occ in out.get("occurrences", []):
+        occ.pop("authority_rank", None)
+    return out
+
+
+def _drop_researcher(dossier: dict) -> dict:
+    out = copy.deepcopy(dossier)
+    out["occurrences"] = [occ for occ in out.get("occurrences", []) if occ.get("source") != "researcher"]
+    return out
+
+
+ABLATIONS: dict[str, Callable[[dict], dict]] = {
+    "strip_conflicts": _strip_conflicts,
+    "strip_authority_rank": _strip_authority_rank,
+    "drop_researcher": _drop_researcher,
+}
+
+
+def _load_cached_dossier(dossiers_from: str, variant_name: str, suffix: str) -> dict:
+    path = EXPERIMENTS_DIR / dossiers_from / variant_name / f"{suffix}.dossier.json"
+    if not path.exists():
+        raise FileNotFoundError(
+            f"{path} not found -- rerun experiment {dossiers_from!r} with the '{variant_name}' "
+            "variant first (only that variant persists dossiers) before replaying from it"
+        )
+    return json.loads(path.read_text())
+
+
+async def _judge_claim(
+    claim: Claim,
+    audit_id: str,
+    model: str,
+    system_prompt: str,
+    budget: _Budget,
+    semaphore: asyncio.Semaphore,
+    gold: dict[str, str],
+    variant_dir: Path,
+    dossiers_from: str,
+    dossiers_variant: str,
+    ablation: str | None,
+    repeat: int,
+) -> dict:
+    suffix = claim.claim_id.split("/")[-1]
+    # Repeat-suffixed filenames even for repeats=1: judge and gather stages
+    # can in principle share an experiment_id (nothing here forbids it), so
+    # this naming can never collide with the gather stage's plain
+    # claim-XXXX.json/dossier.json records.
+    record_path = variant_dir / f"{suffix}.repeat-{repeat:02d}.json"
+    if record_path.exists():
+        return json.loads(record_path.read_text())
+
+    expected = gold.get(claim.claim_id)
+    record: dict = {
+        "claim_id": claim.claim_id,
+        "repeat": repeat,
+        "expected_status": expected,
+        "status": None,
+        "correct": False,
+        "tool_calls": None,
+        "cost_usd": None,
+        "error": None,
+    }
+
+    dossier_data = _load_cached_dossier(dossiers_from, dossiers_variant, suffix)
+    if ablation is not None:
+        if ablation not in ABLATIONS:
+            raise ValueError(f"unknown ablation {ablation!r} (available: {sorted(ABLATIONS)})")
+        dossier_data = ABLATIONS[ablation](dossier_data)
+
+    async with semaphore:
+        if await budget.exhausted():
+            # Not written to disk (matching _eval_claim): budget exhaustion
+            # is transient, unlike a real result -- a rerun with a higher
+            # cap should retry this claim rather than replay "skipped"
+            # forever.
+            record["error"] = "skipped: experiment budget exhausted"
+            return record
+        try:
+            evidence, verdict, reply = await verify_claim_async(
+                claim,
+                audit_id,
+                run_id=f"eval-judge/{dossiers_from}/repeat-{repeat:02d}/{claim.claim_id}",
+                model=model,
+                system_prompt=system_prompt,
+                graph_tools=False,
+                rlm=False,
+                dossier=True,
+                dossier_data=dossier_data,
+            )
+        except VerifyClaimError as e:
+            record["error"] = str(e)
+            record["tool_calls"] = len(e.tool_trace)
+            record["cost_usd"] = e.cost_usd
+            record["tool_trace"] = e.tool_trace
+            record["final_text"] = e.final_text
+            await budget.add(e.cost_usd)
+            record_path.write_text(json.dumps(record, indent=2) + "\n")
+            return record
+        except Exception as e:
+            record["error"] = str(e)
+            record_path.write_text(json.dumps(record, indent=2) + "\n")
+            return record
+
+    await budget.add(reply.cost_usd)
+    record["status"] = verdict.status.value
+    record["correct"] = expected is not None and verdict.status.value == expected
+    record["tool_calls"] = len(reply.tool_trace)
+    record["cost_usd"] = reply.cost_usd
+    record["verdict"] = json.loads(verdict.model_dump_json())
+    record["evidence"] = [json.loads(ev.model_dump_json()) for ev in evidence]
+    record["tool_trace"] = reply.tool_trace
+    record["final_text"] = reply.text
+    record_path.write_text(json.dumps(record, indent=2) + "\n")
+    return record
+
+
+def _summarize_judge(records_by_repeat: list[list[dict]], claim_ids: list[str]) -> dict:
+    per_repeat = [_summarize(Variant("judge"), records) for records in records_by_repeat]
+    # Verdict consistency: for each claim, do all repeats that produced a
+    # status agree? Claims with fewer than 2 statuses recorded (e.g. every
+    # repeat errored) are excluded from the denominator -- there's nothing
+    # to be consistent or inconsistent about.
+    statuses_by_claim: dict[str, list[str]] = {cid: [] for cid in claim_ids}
+    for records in records_by_repeat:
+        for r in records:
+            if r["status"] is not None:
+                statuses_by_claim[r["claim_id"]].append(r["status"])
+    considered = {cid: statuses for cid, statuses in statuses_by_claim.items() if len(statuses) >= 2}
+    unanimous = sum(1 for statuses in considered.values() if len(set(statuses)) == 1)
+    return {
+        "per_repeat": per_repeat,
+        "n_claims": len(claim_ids),
+        "repeats": len(records_by_repeat),
+        "n_claims_with_multiple_repeats": len(considered),
+        "unanimous_claims": unanimous,
+        "verdict_consistency": unanimous / len(considered) if considered else None,
+    }
+
+
+async def run_judge_eval_async(
+    audit_id: str,
+    dossiers_from: str,
+    *,
+    variant_name: str = "dossier",
+    ablation: str | None = None,
+    repeats: int = 1,
+    max_concurrency: int = 2,
+    max_budget_usd: float | None = None,
+    experiment_id: str | None = None,
+    model: str | None = None,
+    claim_suffixes: list[str] | None = None,
+) -> dict:
+    await check_credentials_async()
+    if not db_path(audit_id).exists():
+        raise FileNotFoundError(f"{db_path(audit_id)} not found -- run `proofbench index {audit_id}` first")
+    if ablation is not None and ablation not in ABLATIONS:
+        raise ValueError(f"unknown ablation {ablation!r} (available: {sorted(ABLATIONS)})")
+
+    gold = load_gold(audit_id)
+    claims = _load_claims(audit_id)
+    if claim_suffixes is not None:
+        wanted = set(claim_suffixes)
+        claims = [c for c in claims if c.claim_id.split("/")[-1] in wanted]
+        missing = wanted - {c.claim_id.split("/")[-1] for c in claims}
+        if missing:
+            raise ValueError(f"no such claims: {sorted(missing)}")
+
+    resolved_model = resolve_model(model)
+    experiment_id = experiment_id or f"exp-judge-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
+    experiment_dir = EXPERIMENTS_DIR / experiment_id
+    variant_dir = experiment_dir / "judge"
+    variant_dir.mkdir(parents=True, exist_ok=True)
+    budget = _Budget(max_budget_usd)
+
+    system_prompt = SYSTEM_PROMPT + DOSSIER_PROMPT
+
+    semaphore = asyncio.Semaphore(max_concurrency)
+    records_by_repeat: list[list[dict]] = []
+    for repeat in range(1, repeats + 1):
+        records = await asyncio.gather(
+            *(
+                _judge_claim(
+                    claim,
+                    audit_id,
+                    resolved_model,
+                    system_prompt,
+                    budget,
+                    semaphore,
+                    gold,
+                    variant_dir,
+                    dossiers_from,
+                    variant_name,
+                    ablation,
+                    repeat,
+                )
+                for claim in claims
+            )
+        )
+        records_by_repeat.append(list(records))
+
+    claim_ids = [c.claim_id for c in claims]
+    summary = _summarize_judge(records_by_repeat, claim_ids)
+    (variant_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+
+    report = {
+        "experiment_id": experiment_id,
+        "audit_id": audit_id,
+        "stage": "judge",
+        "dossiers_from": dossiers_from,
+        "dossiers_variant": variant_name,
+        "ablation": ablation,
+        "repeats": repeats,
+        "model": resolved_model,
+        "max_concurrency": max_concurrency,
+        "max_budget_usd": max_budget_usd,
+        "total_cost_usd": budget.total_usd,
+        "summary": summary,
+    }
+    (experiment_dir / "report.json").write_text(json.dumps(report, indent=2) + "\n")
+    return report
+
+
+def run_judge_eval(
+    audit_id: str,
+    dossiers_from: str,
+    *,
+    variant_name: str = "dossier",
+    ablation: str | None = None,
+    repeats: int = 1,
+    max_concurrency: int = 2,
+    max_budget_usd: float | None = None,
+    experiment_id: str | None = None,
+    model: str | None = None,
+    claim_suffixes: list[str] | None = None,
+) -> dict:
+    return asyncio.run(
+        run_judge_eval_async(
+            audit_id,
+            dossiers_from,
+            variant_name=variant_name,
+            ablation=ablation,
+            repeats=repeats,
+            max_concurrency=max_concurrency,
+            max_budget_usd=max_budget_usd,
+            experiment_id=experiment_id,
+            model=model,
+            claim_suffixes=claim_suffixes,
+        )
+    )
 
 
 def _summarize(variant: Variant, records: list[dict]) -> dict:

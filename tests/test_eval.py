@@ -19,7 +19,10 @@ from proofbench import eval as eval_mod
 from proofbench.llm import AgentReply
 from proofbench.models import Claim
 
-pytestmark = pytest.mark.asyncio
+# asyncio_mode = "auto" in pyproject.toml already runs async defs under
+# pytest-asyncio -- no module-level marker needed, and this file also has
+# plain sync tests (the ablation unit tests) that a blanket marker would
+# wrongly tag.
 
 
 def _make_claim(suffix: str = "claim-0004") -> Claim:
@@ -199,3 +202,245 @@ async def test_verify_claim_async_without_dossier_out_is_unaffected(monkeypatch)
     assert evidence == []
     assert verdict.status.value == "supported"
     assert reply.cost_usd == 0.01
+
+
+async def test_verify_claim_async_with_dossier_data_skips_build_dossier(monkeypatch):
+    """The judge-replay path (MUL-10) passes an already-built dossier in --
+    build_dossier must not be called at all."""
+    from proofbench.verification import verify_claim_async
+
+    def fail_build_dossier(*args, **kwargs):
+        raise AssertionError("build_dossier must not be called when dossier_data is provided")
+
+    async def fake_run_agent(*args, **kwargs):
+        return AgentReply(text=_FAKE_REPLY_TEXT, cost_usd=0.03, tool_trace=[])
+
+    monkeypatch.setattr("proofbench.dossier.build_dossier", fail_build_dossier)
+    monkeypatch.setattr("proofbench.verification.run_agent", fake_run_agent)
+
+    claim = _make_claim()
+
+    evidence, verdict, reply = await verify_claim_async(
+        claim,
+        "acme-audit",
+        run_id="test-run",
+        model="test-model",
+        graph_tools=False,
+        dossier=True,
+        dossier_data=_FAKE_DOSSIER,
+    )
+
+    assert evidence == []
+    assert verdict.status.value == "supported"
+    assert reply.cost_usd == 0.03
+
+
+# --- Judge-replay stage (MUL-10) -------------------------------------------
+
+
+def test_ablation_strip_conflicts():
+    dossier = {
+        "occurrences": [{"doc_id": "d1", "source": "table"}],
+        "cross_source_conflicts": [{"period": "FY2025", "values": [1, 2]}],
+    }
+    out = eval_mod.ABLATIONS["strip_conflicts"](dossier)
+    assert out["cross_source_conflicts"] == []
+    # original untouched
+    assert dossier["cross_source_conflicts"] != []
+
+
+def test_ablation_strip_authority_rank():
+    dossier = {
+        "occurrences": [
+            {"doc_id": "d1", "authority_rank": 1},
+            {"doc_id": "d2", "authority_rank": None},
+        ]
+    }
+    out = eval_mod.ABLATIONS["strip_authority_rank"](dossier)
+    assert all("authority_rank" not in occ for occ in out["occurrences"])
+    # original untouched
+    assert dossier["occurrences"][0]["authority_rank"] == 1
+
+
+def test_ablation_drop_researcher():
+    dossier = {
+        "occurrences": [
+            {"doc_id": "d1", "source": "table"},
+            {"doc_id": "d2", "source": "researcher"},
+            {"doc_id": "d3", "source": "prose"},
+        ]
+    }
+    out = eval_mod.ABLATIONS["drop_researcher"](dossier)
+    assert [occ["source"] for occ in out["occurrences"]] == ["table", "prose"]
+    # original untouched
+    assert len(dossier["occurrences"]) == 3
+
+
+async def test_judge_claim_reads_cached_dossier_and_writes_record(tmp_path, monkeypatch, budget):
+    dossiers_from_dir = tmp_path / "src-exp" / "dossier"
+    dossiers_from_dir.mkdir(parents=True)
+    (dossiers_from_dir / "claim-0004.dossier.json").write_text(json.dumps(_FAKE_DOSSIER))
+    monkeypatch.setattr(eval_mod, "EXPERIMENTS_DIR", tmp_path)
+
+    seen_dossier_data = {}
+
+    async def fake_verify_claim_async(claim, audit_id, *, run_id, model, system_prompt, graph_tools, rlm, dossier, dossier_data):
+        seen_dossier_data["value"] = dossier_data
+        from proofbench.jsonutil import extract_json
+        from proofbench.models import Verdict, VerdictStatus
+
+        raw = extract_json(_FAKE_REPLY_TEXT)
+        verdict = Verdict(
+            claim_id=claim.claim_id,
+            status=VerdictStatus(raw["verdict"]["status"]),
+            matched_evidence_ids=[],
+            confidence=raw["verdict"]["confidence"],
+            rationale=raw["verdict"]["rationale"],
+            produced_by_run_id=run_id,
+        )
+        reply = AgentReply(text=_FAKE_REPLY_TEXT, cost_usd=0.03, tool_trace=[])
+        return [], verdict, reply
+
+    monkeypatch.setattr(eval_mod, "verify_claim_async", fake_verify_claim_async)
+
+    claim = _make_claim()
+    variant_dir = tmp_path / "out-exp" / "judge"
+    variant_dir.mkdir(parents=True)
+
+    record = await eval_mod._judge_claim(
+        claim,
+        "acme-audit",
+        "test-model",
+        "system prompt",
+        budget,
+        asyncio.Semaphore(1),
+        {claim.claim_id: "supported"},
+        variant_dir,
+        "src-exp",
+        "dossier",
+        None,
+        1,
+    )
+
+    assert record["status"] == "supported"
+    assert record["correct"] is True
+    assert seen_dossier_data["value"] == _FAKE_DOSSIER
+    record_path = variant_dir / "claim-0004.repeat-01.json"
+    assert record_path.exists()
+
+
+async def test_judge_claim_missing_dossier_raises_file_not_found(tmp_path, monkeypatch, budget):
+    monkeypatch.setattr(eval_mod, "EXPERIMENTS_DIR", tmp_path)
+    claim = _make_claim()
+    variant_dir = tmp_path / "out-exp" / "judge"
+    variant_dir.mkdir(parents=True)
+
+    with pytest.raises(FileNotFoundError):
+        await eval_mod._judge_claim(
+            claim,
+            "acme-audit",
+            "test-model",
+            "system prompt",
+            budget,
+            asyncio.Semaphore(1),
+            {claim.claim_id: "supported"},
+            variant_dir,
+            "no-such-exp",
+            "dossier",
+            None,
+            1,
+        )
+
+
+async def test_judge_claim_repeats_disagree_and_agree(tmp_path, monkeypatch, budget):
+    dossiers_from_dir = tmp_path / "src-exp" / "dossier"
+    dossiers_from_dir.mkdir(parents=True)
+    (dossiers_from_dir / "claim-0004.dossier.json").write_text(json.dumps(_FAKE_DOSSIER))
+    monkeypatch.setattr(eval_mod, "EXPERIMENTS_DIR", tmp_path)
+
+    from proofbench.models import Verdict, VerdictStatus
+
+    call_count = {"n": 0}
+
+    async def fake_verify_claim_async(claim, audit_id, *, run_id, model, system_prompt, graph_tools, rlm, dossier, dossier_data):
+        call_count["n"] += 1
+        status = VerdictStatus.SUPPORTED if call_count["n"] == 1 else VerdictStatus.CONTRADICTED
+        verdict = Verdict(
+            claim_id=claim.claim_id,
+            status=status,
+            matched_evidence_ids=[],
+            confidence=0.5,
+            rationale="r",
+            produced_by_run_id=run_id,
+        )
+        reply = AgentReply(text=_FAKE_REPLY_TEXT, cost_usd=0.01, tool_trace=[])
+        return [], verdict, reply
+
+    monkeypatch.setattr(eval_mod, "verify_claim_async", fake_verify_claim_async)
+
+    claim = _make_claim()
+    variant_dir = tmp_path / "out-exp" / "judge"
+    variant_dir.mkdir(parents=True)
+
+    records = []
+    for repeat in (1, 2):
+        record = await eval_mod._judge_claim(
+            claim,
+            "acme-audit",
+            "test-model",
+            "system prompt",
+            budget,
+            asyncio.Semaphore(1),
+            {claim.claim_id: "supported"},
+            variant_dir,
+            "src-exp",
+            "dossier",
+            None,
+            repeat,
+        )
+        records.append(record)
+
+    assert records[0]["status"] == "supported"
+    assert records[1]["status"] == "contradicted"
+    summary = eval_mod._summarize_judge([[records[0]], [records[1]]], [claim.claim_id])
+    assert summary["unanimous_claims"] == 0
+    assert summary["verdict_consistency"] == 0.0
+    assert call_count["n"] == 2
+
+    # checkpointing: rerunning repeat 1 must not call the fake judge again
+    record_again = await eval_mod._judge_claim(
+        claim,
+        "acme-audit",
+        "test-model",
+        "system prompt",
+        budget,
+        asyncio.Semaphore(1),
+        {claim.claim_id: "supported"},
+        variant_dir,
+        "src-exp",
+        "dossier",
+        None,
+        1,
+    )
+    assert record_again == records[0]
+    assert call_count["n"] == 2
+
+
+def _minimal_record(status: str) -> dict:
+    return {
+        "claim_id": "c/claim-0001",
+        "status": status,
+        "correct": True,
+        "error": None,
+        "tool_calls": 0,
+        "cost_usd": 0.0,
+    }
+
+
+def test_judge_claim_repeats_agree():
+    summary = eval_mod._summarize_judge(
+        [[_minimal_record("supported")], [_minimal_record("supported")]],
+        ["c/claim-0001"],
+    )
+    assert summary["unanimous_claims"] == 1
+    assert summary["verdict_consistency"] == 1.0

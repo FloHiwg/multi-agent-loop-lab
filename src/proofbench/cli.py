@@ -152,12 +152,84 @@ def eval_cmd(
     claims: str | None = typer.Option(
         None, help="Comma-separated claim suffixes (e.g. 'claim-0004,claim-0007') to run a cheap subset smoke test."
     ),
+    stage: str = typer.Option(
+        "full",
+        help="'full' runs gather+judge together (current default behavior); 'judge' replays cached "
+        "dossiers via --dossiers-from, no re-gathering.",
+    ),
+    dossiers_from: str | None = typer.Option(
+        None, help="Experiment id to replay cached dossiers from (required when --stage judge)."
+    ),
+    repeats: int = typer.Option(
+        1, help="Repeat each claim N times to measure verdict consistency (--stage judge only)."
+    ),
+    ablation: str | None = typer.Option(
+        None,
+        help="Dossier mutation to apply before replay (--stage judge only): "
+        "strip_conflicts, strip_authority_rank, drop_researcher.",
+    ),
 ) -> None:
     """Run Verifier variants against gold.yaml and compare cost vs accuracy.
 
     Writes only to runs/experiments/ -- never touches audits/<id>/results/,
     review_queue/, or the real run log.
+
+    --stage judge replays dossiers persisted by a prior 'dossier'-variant run
+    (see --dossiers-from) straight to the judge, skipping the gathering step
+    entirely -- cheap enough (~$0.03/claim) to afford --repeats for verdict
+    consistency data, and to test judge prompt/logic changes unconfounded by
+    gathering drift.
     """
+    if stage == "judge":
+        from proofbench.eval import run_judge_eval
+
+        if dossiers_from is None:
+            typer.echo("--dossiers-from is required when --stage judge", err=True)
+            raise typer.Exit(code=1)
+
+        claim_suffixes = [c.strip() for c in claims.split(",") if c.strip()] if claims else None
+        try:
+            report = run_judge_eval(
+                audit_id,
+                dossiers_from,
+                ablation=ablation,
+                repeats=repeats,
+                max_concurrency=max_concurrency,
+                max_budget_usd=max_budget_usd,
+                experiment_id=experiment_id,
+                claim_suffixes=claim_suffixes,
+            )
+        except PreflightError as e:
+            typer.echo(f"preflight failed: {e}", err=True)
+            raise typer.Exit(code=1) from e
+
+        summary = report["summary"]
+        typer.echo(
+            f"experiment {report['experiment_id']} (model {report['model']}, stage judge, "
+            f"dossiers from {report['dossiers_from']}, ablation {report['ablation'] or 'none'}, "
+            f"repeats {report['repeats']}) -- total cost ${report['total_cost_usd']:.4f}\n"
+        )
+        header = f"{'repeat':<8} {'accuracy':>9} {'correct':>8} {'failures':>9} {'avg cost':>10} {'total cost':>11}"
+        typer.echo(header)
+        typer.echo("-" * len(header))
+        for i, s in enumerate(summary["per_repeat"], start=1):
+            accuracy = f"{s['accuracy']:.0%}" if s["accuracy"] is not None else "-"
+            avg_cost = f"${s['avg_cost_usd']:.4f}" if s["avg_cost_usd"] is not None else "-"
+            total = f"${s['total_cost_usd']:.4f}"
+            typer.echo(
+                f"{i:<8} {accuracy:>9} {s['correct']:>5}/{s['n_claims']:<2} {s['failures']:>9} "
+                f"{avg_cost:>10} {total:>11}"
+            )
+        consistency = (
+            f"{summary['verdict_consistency']:.0%}" if summary["verdict_consistency"] is not None else "-"
+        )
+        typer.echo(
+            f"\nverdict consistency: {consistency} "
+            f"({summary['unanimous_claims']}/{summary['n_claims_with_multiple_repeats']} claims unanimous)"
+        )
+        typer.echo(f"\nfull records in runs/experiments/{report['experiment_id']}/")
+        return
+
     from proofbench.eval import run_eval
 
     variant_names = [v.strip() for v in variants.split(",") if v.strip()]

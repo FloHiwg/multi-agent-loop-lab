@@ -229,6 +229,7 @@ async def verify_claim_async(
     rlm: bool = False,
     dossier: bool = True,
     dossier_out: dict | None = None,
+    dossier_data: dict | None = None,
 ) -> tuple[list[EvidenceCandidate], Verdict, AgentReply]:
     # Eval variants override graph_tools/rlm/dossier explicitly against
     # gold.yaml; production callers use the promoted graph+dossier defaults.
@@ -257,9 +258,14 @@ async def verify_claim_async(
     # and hard claims (8-12 tool calls) were the ones losing the shape.
     dossier_section = ""
     if dossier:
-        from proofbench.dossier import build_dossier
+        # Judge-replay callers (eval.py's judge stage) already have a
+        # cached dossier -- possibly ablated -- and pass it in directly to
+        # skip re-gathering (real API spend). Production and the gather-stage
+        # eval path leave this None and pay to build it here as before.
+        if dossier_data is None:
+            from proofbench.dossier import build_dossier
 
-        dossier_data = await build_dossier(claim, audit_id, sub_costs=sub_costs)
+            dossier_data = await build_dossier(claim, audit_id, sub_costs=sub_costs)
         if dossier_out is not None:
             dossier_out["dossier"] = dossier_data
         dossier_section = (
