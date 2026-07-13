@@ -12,3 +12,6 @@ index/
 
 # secrets
 .env
+
+# personal drafts, not part of the project
+article/
