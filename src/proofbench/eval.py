@@ -118,6 +118,7 @@ async def _eval_claim(
     # crash resumes rather than starting over.
     suffix = claim.claim_id.split("/")[-1]
     record_path = variant_dir / f"{suffix}.json"
+    dossier_path = variant_dir / f"{suffix}.dossier.json"
     if record_path.exists():
         return json.loads(record_path.read_text())
 
@@ -137,6 +138,7 @@ async def _eval_claim(
         if await budget.exhausted():
             record["error"] = "skipped: experiment budget exhausted"
             return record
+        dossier_out: dict | None = {} if variant.dossier else None
         try:
             evidence, verdict, reply = await verify_claim_async(
                 claim,
@@ -147,6 +149,7 @@ async def _eval_claim(
                 graph_tools=variant.graph_tools,
                 rlm=variant.rlm,
                 dossier=variant.dossier,
+                dossier_out=dossier_out,
             )
         except VerifyClaimError as e:
             record["error"] = str(e)
@@ -172,6 +175,8 @@ async def _eval_claim(
     record["tool_trace"] = reply.tool_trace
     record["final_text"] = reply.text
     record_path.write_text(json.dumps(record, indent=2) + "\n")
+    if dossier_out:
+        dossier_path.write_text(json.dumps(dossier_out["dossier"], indent=2) + "\n")
     return record
 
 
