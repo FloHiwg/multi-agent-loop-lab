@@ -12,6 +12,7 @@ from proofbench import models
 from proofbench.extraction import extract_claims
 from proofbench.index_db import build_index
 from proofbench.ingest import ingest_audit
+from proofbench.preflight import PreflightError
 from proofbench.verification import verify_audit
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -83,7 +84,11 @@ def verify(
     max_budget_usd: float | None = typer.Option(None, help="Soft cap on total run cost; stops starting new claims once reached."),
 ) -> None:
     """Run the Verifier over every extracted claim, writing results/ and review_queue/."""
-    report = verify_audit(audit_id, max_concurrency=max_concurrency, max_budget_usd=max_budget_usd)
+    try:
+        report = verify_audit(audit_id, max_concurrency=max_concurrency, max_budget_usd=max_budget_usd)
+    except PreflightError as e:
+        typer.echo(f"preflight failed: {e}", err=True)
+        raise typer.Exit(code=1) from e
 
     results_dir = REPO_ROOT / "audits" / audit_id / "results"
     supported = 0
@@ -157,14 +162,18 @@ def eval_cmd(
 
     variant_names = [v.strip() for v in variants.split(",") if v.strip()]
     claim_suffixes = [c.strip() for c in claims.split(",") if c.strip()] if claims else None
-    report = run_eval(
-        audit_id,
-        variant_names,
-        max_concurrency=max_concurrency,
-        max_budget_usd=max_budget_usd,
-        experiment_id=experiment_id,
-        claim_suffixes=claim_suffixes,
-    )
+    try:
+        report = run_eval(
+            audit_id,
+            variant_names,
+            max_concurrency=max_concurrency,
+            max_budget_usd=max_budget_usd,
+            experiment_id=experiment_id,
+            claim_suffixes=claim_suffixes,
+        )
+    except PreflightError as e:
+        typer.echo(f"preflight failed: {e}", err=True)
+        raise typer.Exit(code=1) from e
 
     typer.echo(f"experiment {report['experiment_id']} (model {report['model']}) -- total cost ${report['total_cost_usd']:.4f}\n")
     header = f"{'variant':<18} {'accuracy':>9} {'correct':>8} {'failures':>9} {'avg tools':>10} {'avg cost':>10} {'total cost':>11}"

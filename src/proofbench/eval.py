@@ -35,6 +35,7 @@ import yaml
 from proofbench.index_db import db_path
 from proofbench.llm import resolve_model
 from proofbench.models import Claim
+from proofbench.preflight import check_credentials_async
 from proofbench.verification import (
     DOSSIER_PROMPT,
     GRAPH_TOOLS_PROMPT,
@@ -203,6 +204,7 @@ async def run_eval_async(
     model: str | None = None,
     claim_suffixes: list[str] | None = None,
 ) -> dict:
+    await check_credentials_async()
     if not db_path(audit_id).exists():
         raise FileNotFoundError(f"{db_path(audit_id)} not found -- run `proofbench index {audit_id}` first")
 

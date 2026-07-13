@@ -35,6 +35,7 @@ from proofbench.models import (
     Verdict,
     VerdictStatus,
 )
+from proofbench.preflight import check_credentials_async
 from proofbench.runlog import write_run_manifest
 from proofbench.tools import allowed_tool_names, build_server
 
@@ -365,6 +366,7 @@ async def _process_claim(run_id: str, claim: Claim, audit_id: str, model: str) -
 async def verify_audit_async(
     audit_id: str, *, max_concurrency: int = 4, max_budget_usd: float | None = None
 ) -> ManagerReport:
+    await check_credentials_async()
     if not db_path(audit_id).exists():
         raise FileNotFoundError(f"{db_path(audit_id)} not found -- run `proofbench index {audit_id}` first")
 
