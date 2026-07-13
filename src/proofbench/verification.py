@@ -228,6 +228,7 @@ async def verify_claim_async(
     graph_tools: bool = True,
     rlm: bool = False,
     dossier: bool = True,
+    dossier_out: dict | None = None,
 ) -> tuple[list[EvidenceCandidate], Verdict, AgentReply]:
     # Eval variants override graph_tools/rlm/dossier explicitly against
     # gold.yaml; production callers use the promoted graph+dossier defaults.
@@ -259,6 +260,8 @@ async def verify_claim_async(
         from proofbench.dossier import build_dossier
 
         dossier_data = await build_dossier(claim, audit_id, sub_costs=sub_costs)
+        if dossier_out is not None:
+            dossier_out["dossier"] = dossier_data
         dossier_section = (
             "EVIDENCE DOSSIER -- every known occurrence of this claim's fact, gathered by "
             "table facts, prose mentions, and a research sweep:\n"
