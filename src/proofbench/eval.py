@@ -27,6 +27,7 @@ from __future__ import annotations
 import asyncio
 import copy
 import json
+import sqlite3
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -34,6 +35,7 @@ from pathlib import Path
 
 import yaml
 
+from proofbench.dossier import build_dossier
 from proofbench.index_db import db_path
 from proofbench.llm import resolve_model
 from proofbench.models import Claim
@@ -82,6 +84,18 @@ def load_gold(audit_id: str) -> dict[str, str]:
         raise FileNotFoundError(f"{gold_path} not found -- the eval harness needs a gold fixture to score against")
     gold = yaml.safe_load(gold_path.read_text())
     return {c["claim_id"]: c["expected_status"] for c in gold["claims"]}
+
+
+def load_gold_evidence(audit_id: str) -> dict[str, list[dict]]:
+    """claim_id -> gold_evidence (the decisive occurrence(s) a correct
+    verdict must rest on) from the audit's gold.yaml fixture. Not every
+    claim is labeled yet (see MUL-8) -- unlabeled claims map to an empty
+    list and are excluded from recall scoring."""
+    gold_path = REPO_ROOT / "audits" / audit_id / "gold.yaml"
+    if not gold_path.exists():
+        raise FileNotFoundError(f"{gold_path} not found -- the eval harness needs a gold fixture to score against")
+    gold = yaml.safe_load(gold_path.read_text())
+    return {c["claim_id"]: c.get("gold_evidence") or [] for c in gold["claims"]}
 
 
 class _Budget:
@@ -443,6 +457,278 @@ def run_judge_eval(
             max_budget_usd=max_budget_usd,
             experiment_id=experiment_id,
             model=model,
+            claim_suffixes=claim_suffixes,
+        )
+    )
+
+
+# Gather-only stage (MUL-9): run build_dossier() alone -- no judge call --
+# and score evidence recall against gold.yaml's gold_evidence, isolating
+# whether gatherers missed evidence from whether the judge misjudged
+# evidence it had. Also runs the researcher quote-verifier (pure code, no
+# gold needed) on every claim, since a fabricated researcher span is a bug
+# regardless of whether that claim happens to be gold-labeled.
+
+
+def _normalize_quote(text: str) -> str:
+    return " ".join(text.split())
+
+
+def _quote_matches(gold_quote: str, occ_quote: str | None) -> bool:
+    if not occ_quote:
+        return False
+    normalized_gold = _normalize_quote(gold_quote)
+    normalized_occ = _normalize_quote(occ_quote)
+    return normalized_gold == normalized_occ or normalized_gold in normalized_occ
+
+
+def _score_recall(gold_evidence: list[dict], occurrences: list[dict]) -> dict:
+    matched: list[dict] = []
+    unmatched: list[dict] = []
+    for item in gold_evidence:
+        hit = next(
+            (
+                occ
+                for occ in occurrences
+                if occ.get("doc_id") == item["doc_id"] and _quote_matches(item["quote"], occ.get("quote"))
+            ),
+            None,
+        )
+        if hit is not None:
+            matched.append({"doc_id": item["doc_id"], "gold_source": item.get("source"), "found_via": hit["source"]})
+        else:
+            unmatched.append({"doc_id": item["doc_id"], "gold_source": item.get("source"), "quote": item["quote"]})
+    n = len(gold_evidence)
+    return {
+        "n_gold_evidence": n,
+        "n_matched": len(matched),
+        "recall": len(matched) / n if n else None,
+        "matched": matched,
+        "unmatched": unmatched,
+    }
+
+
+def _verify_researcher_quotes(conn: sqlite3.Connection, occurrences: list[dict]) -> dict:
+    """Every source=researcher occurrence claims a verbatim span exists
+    somewhere in the vault -- confirm that against spans_fts rather than
+    trusting the sub-model's citation (it is relayed LLM output)."""
+    researcher_occs = [occ for occ in occurrences if occ.get("source") == "researcher"]
+    hallucinated: list[dict] = []
+    verified = 0
+    doc_text_cache: dict[str, list[str]] = {}
+    for occ in researcher_occs:
+        doc_id = occ.get("doc_id")
+        quote = occ.get("quote")
+        if not quote or not doc_id:
+            hallucinated.append({"doc_id": doc_id, "quote": quote})
+            continue
+        if doc_id not in doc_text_cache:
+            rows = conn.execute("SELECT text FROM spans_fts WHERE doc_id = ?", (doc_id,)).fetchall()
+            doc_text_cache[doc_id] = [row[0] for row in rows]
+        normalized_quote = _normalize_quote(quote)
+        if any(normalized_quote in _normalize_quote(text) for text in doc_text_cache[doc_id]):
+            verified += 1
+        else:
+            hallucinated.append({"doc_id": doc_id, "quote": quote})
+    total = len(researcher_occs)
+    return {
+        "n_researcher_occurrences": total,
+        "n_verified": verified,
+        "n_hallucinated": len(hallucinated),
+        "hallucination_rate": len(hallucinated) / total if total else None,
+        "hallucinated": hallucinated,
+    }
+
+
+async def _gather_claim(
+    claim: Claim,
+    audit_id: str,
+    use_researcher: bool,
+    budget: _Budget,
+    semaphore: asyncio.Semaphore,
+    gold_evidence: list[dict],
+    variant_dir: Path,
+) -> dict:
+    suffix = claim.claim_id.split("/")[-1]
+    # Same dossier_path naming as the "dossier" variant: a gather-stage run
+    # can be replayed later via --stage judge --dossiers-from <this-exp>
+    # --variant-name gather with no code changes needed on that side.
+    record_path = variant_dir / f"{suffix}.json"
+    dossier_path = variant_dir / f"{suffix}.dossier.json"
+    if record_path.exists():
+        return json.loads(record_path.read_text())
+
+    async with semaphore:
+        if await budget.exhausted():
+            record = {
+                "claim_id": claim.claim_id,
+                "use_researcher": use_researcher,
+                "cost_usd": None,
+                "error": "skipped: experiment budget exhausted",
+            }
+            return record
+        sub_costs: list[float] = []
+        try:
+            dossier = await build_dossier(claim, audit_id, use_researcher=use_researcher, sub_costs=sub_costs)
+        except Exception as e:
+            record = {"claim_id": claim.claim_id, "use_researcher": use_researcher, "cost_usd": None, "error": str(e)}
+            record_path.write_text(json.dumps(record, indent=2) + "\n")
+            return record
+
+    cost_usd = sum(sub_costs) if sub_costs else 0.0
+    await budget.add(cost_usd)
+
+    conn = sqlite3.connect(db_path(audit_id))
+    try:
+        researcher_quotes = _verify_researcher_quotes(conn, dossier.get("occurrences", []))
+    finally:
+        conn.close()
+
+    record = {
+        "claim_id": claim.claim_id,
+        "use_researcher": use_researcher,
+        "cost_usd": cost_usd,
+        "error": None,
+        "gold_evidence": _score_recall(gold_evidence, dossier.get("occurrences", [])),
+        "researcher_quotes": researcher_quotes,
+    }
+    record_path.write_text(json.dumps(record, indent=2) + "\n")
+    dossier_path.write_text(json.dumps(dossier, indent=2) + "\n")
+    return record
+
+
+def _summarize_gather(records: list[dict]) -> dict:
+    scored = [r for r in records if r.get("gold_evidence") and r["gold_evidence"]["n_gold_evidence"] > 0]
+    total_gold = sum(r["gold_evidence"]["n_gold_evidence"] for r in scored)
+    total_matched = sum(r["gold_evidence"]["n_matched"] for r in scored)
+
+    by_source: dict[str, dict] = {}
+    for r in scored:
+        for m in r["gold_evidence"]["matched"]:
+            bucket = by_source.setdefault(m["gold_source"] or "unknown", {"matched": 0, "total": 0})
+            bucket["matched"] += 1
+            bucket["total"] += 1
+        for m in r["gold_evidence"]["unmatched"]:
+            bucket = by_source.setdefault(m["gold_source"] or "unknown", {"matched": 0, "total": 0})
+            bucket["total"] += 1
+    for bucket in by_source.values():
+        bucket["recall"] = bucket["matched"] / bucket["total"] if bucket["total"] else None
+
+    # Which gatherer mechanism actually produced each matched item -- unlike
+    # by_source (the gold label's own doc source), this answers the
+    # use_researcher=False question directly: how much of recall does each
+    # gatherer contribute.
+    by_found_via: dict[str, int] = {}
+    for r in scored:
+        for m in r["gold_evidence"]["matched"]:
+            by_found_via[m["found_via"]] = by_found_via.get(m["found_via"], 0) + 1
+
+    researcher_records = [r["researcher_quotes"] for r in records if r.get("researcher_quotes")]
+    total_researcher = sum(r["n_researcher_occurrences"] for r in researcher_records)
+    total_verified = sum(r["n_verified"] for r in researcher_records)
+
+    costs = [r["cost_usd"] for r in records if r.get("cost_usd") is not None]
+    return {
+        "n_claims": len(records),
+        "n_claims_with_gold_evidence": len(scored),
+        "n_gold_evidence": total_gold,
+        "n_matched": total_matched,
+        "recall": total_matched / total_gold if total_gold else None,
+        "by_source": by_source,
+        "found_via": {
+            source: {"matched": count, "share_of_gold": count / total_gold if total_gold else None}
+            for source, count in by_found_via.items()
+        },
+        "researcher_total": total_researcher,
+        "researcher_verified": total_verified,
+        "researcher_hallucinated": total_researcher - total_verified,
+        "researcher_hallucination_rate": (
+            (total_researcher - total_verified) / total_researcher if total_researcher else None
+        ),
+        "failures": sum(1 for r in records if r.get("error") is not None),
+        "avg_cost_usd": sum(costs) / len(costs) if costs else None,
+        "total_cost_usd": sum(costs) if costs else 0.0,
+    }
+
+
+async def run_gather_eval_async(
+    audit_id: str,
+    *,
+    use_researcher: bool = True,
+    max_concurrency: int = 2,
+    max_budget_usd: float | None = None,
+    experiment_id: str | None = None,
+    claim_suffixes: list[str] | None = None,
+) -> dict:
+    await check_credentials_async()
+    if not db_path(audit_id).exists():
+        raise FileNotFoundError(f"{db_path(audit_id)} not found -- run `proofbench index {audit_id}` first")
+
+    gold_evidence_by_claim = load_gold_evidence(audit_id)
+    claims = _load_claims(audit_id)
+    if claim_suffixes is not None:
+        wanted = set(claim_suffixes)
+        claims = [c for c in claims if c.claim_id.split("/")[-1] in wanted]
+        missing = wanted - {c.claim_id.split("/")[-1] for c in claims}
+        if missing:
+            raise ValueError(f"no such claims: {sorted(missing)}")
+
+    experiment_id = experiment_id or f"exp-gather-{datetime.now(timezone.utc):%Y%m%dT%H%M%SZ}"
+    experiment_dir = EXPERIMENTS_DIR / experiment_id
+    variant_dir = experiment_dir / "gather"
+    variant_dir.mkdir(parents=True, exist_ok=True)
+    budget = _Budget(max_budget_usd)
+
+    semaphore = asyncio.Semaphore(max_concurrency)
+    records = await asyncio.gather(
+        *(
+            _gather_claim(
+                claim,
+                audit_id,
+                use_researcher,
+                budget,
+                semaphore,
+                gold_evidence_by_claim.get(claim.claim_id, []),
+                variant_dir,
+            )
+            for claim in claims
+        )
+    )
+    records = list(records)
+
+    summary = _summarize_gather(records)
+    (variant_dir / "summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+
+    report = {
+        "experiment_id": experiment_id,
+        "audit_id": audit_id,
+        "stage": "gather",
+        "use_researcher": use_researcher,
+        "max_concurrency": max_concurrency,
+        "max_budget_usd": max_budget_usd,
+        "total_cost_usd": budget.total_usd,
+        "summary": summary,
+    }
+    (experiment_dir / "report.json").write_text(json.dumps(report, indent=2) + "\n")
+    return report
+
+
+def run_gather_eval(
+    audit_id: str,
+    *,
+    use_researcher: bool = True,
+    max_concurrency: int = 2,
+    max_budget_usd: float | None = None,
+    experiment_id: str | None = None,
+    claim_suffixes: list[str] | None = None,
+) -> dict:
+    return asyncio.run(
+        run_gather_eval_async(
+            audit_id,
+            use_researcher=use_researcher,
+            max_concurrency=max_concurrency,
+            max_budget_usd=max_budget_usd,
+            experiment_id=experiment_id,
             claim_suffixes=claim_suffixes,
         )
     )
