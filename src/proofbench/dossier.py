@@ -34,7 +34,6 @@ from proofbench.graph import _close, entity_profile_data, parse_number
 from proofbench.index_db import db_path
 from proofbench.ingest import load_audit_config
 from proofbench.jsonutil import extract_json
-from proofbench.llm import run_agent
 from proofbench.mentions import matching_mentions
 from proofbench.models import Claim
 
