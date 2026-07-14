@@ -85,6 +85,24 @@ DISTRACTORS = [
  ["Scope 1","74","69","282"],["Renewable electricity","68.0%","61.0%","64.0%"],["Women in leadership","41.0%","39.0%","40.0%"],
 ]
 
+# gold_evidence for the smoke subset only (MUL-8): one claim per verdict
+# status (claim-0001/0018/0021/0024/0027). Conflict/outdated claims label
+# both sides; the rest of CLAIMS is unlabeled pending a full labeling pass.
+GOLD_EVIDENCE = {
+    1: [{"doc_id": DOCS[1][0], "source": "table", "quote": "Net revenue | 12.480 | 10.960 | 11.900"}],
+    18: [{"doc_id": DOCS[2][0], "source": "table", "quote": "FTE, period end | 142 | 136 | 130"}],
+    21: [
+        {"doc_id": DOCS[3][0], "source": "table", "quote": "New enterprise accounts | 46 | 41 | 39"},
+        {"doc_id": DOCS[2][0], "source": "table", "quote": "New enterprise accounts | 49 | 42 | 38"},
+    ],
+    24: [
+        {"doc_id": DOCS[0][0], "source": "table", "quote": "Net revenue | 12.310 | 10.960 | 11.900"},
+        {"doc_id": DOCS[1][0], "source": "table", "quote": "Net revenue | 12.480 | 10.960 | 11.900"},
+    ],
+    27: [],
+}
+
+
 def pdf_header(page, title, subtitle):
     page.insert_text((50, 48), "MERIDIAN CLOUD SYSTEMS", fontsize=9, fontname="hebo", color=TEAL)
     page.insert_text((50, 78), title, fontsize=22, fontname="hebo", color=NAVY)
@@ -213,7 +231,10 @@ def emit_metadata():
     (BASE/"audit.yaml").write_text(yaml.safe_dump(audit,sort_keys=False,allow_unicode=False))
     gold=[]
     for n,text,value,unit,status,doc,page,span,rule,notes in CLAIMS:
-        gold.append({"claim_id":f"{AUDIT_ID}/claim-{n:04d}","claim_text":text,"canonical_value":value,"unit":unit,"currency":"EUR" if unit.startswith("currency") else None,"expected_status":status,"source_doc":doc,"source_page":page,"source_span":span,"tolerance_rule":rule,"notes":notes})
+        entry={"claim_id":f"{AUDIT_ID}/claim-{n:04d}","claim_text":text,"canonical_value":value,"unit":unit,"currency":"EUR" if unit.startswith("currency") else None,"expected_status":status,"source_doc":doc,"source_page":page,"source_span":span,"tolerance_rule":rule,"notes":notes}
+        if n in GOLD_EVIDENCE:
+            entry["gold_evidence"]=GOLD_EVIDENCE[n]
+        gold.append(entry)
         claim={"claim_id":f"{AUDIT_ID}/claim-{n:04d}","label":text.rstrip("."),"raw_text":text,"canonical_value":value,"unit":unit,"currency":"EUR" if unit.startswith("currency") else None,"entity":"Meridian Cloud Systems SE","time_scope":"Q1 2026","tolerance_rule":rule,"expected_evidence_type":None,"status":"pending","source_doc_id":"meridian-master-q1-2026","source_page":((n-1)//7)+1}
         (BASE/"claims").mkdir(parents=True,exist_ok=True); (BASE/"claims"/f"claim-{n:04d}.json").write_text(json.dumps(claim,indent=2)+"\n")
     (BASE/"gold.yaml").write_text(yaml.safe_dump({"fixture_version":"2.0.0","audit_id":AUDIT_ID,"description":"Deterministic Meridian Q1 2026 retrieval and verification stress fixture.","claims":gold},sort_keys=False,allow_unicode=False))

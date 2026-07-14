@@ -15,6 +15,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: turnover vs Net revenue
+  gold_evidence:
+  - doc_id: vantage-finance-v2-2026q2
+    source: table
+    quote: Net revenue | 21.895
 - claim_id: audit-2026-q2-vantage/claim-0002
   claim_text: Operating contribution reached EUR 5.75 million.
   canonical_value: 5755000
@@ -27,6 +31,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-finance-v2-2026q2
+    source: table
+    quote: Adjusted operating result | 5.755
 - claim_id: audit-2026-q2-vantage/claim-0003
   claim_text: Headcount at quarter end was 224.
   canonical_value: 224
@@ -39,6 +47,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-operations-2026q2
+    source: table
+    quote: FTE, period end | 224
 - claim_id: audit-2026-q2-vantage/claim-0004
   claim_text: The enterprise client base closed at 329.
   canonical_value: 329
@@ -51,6 +63,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-customer-2026q2
+    source: table
+    quote: Enterprise accounts | 329
 - claim_id: audit-2026-q2-vantage/claim-0005
   claim_text: Recurring revenue retention was 113.6%.
   canonical_value: 1.136
@@ -63,6 +79,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-customer-2026q2
+    source: table
+    quote: Net dollar retention
 - claim_id: audit-2026-q2-vantage/claim-0006
   claim_text: Unearned revenue on the balance sheet was EUR 9.69 million.
   canonical_value: 9685000
@@ -75,6 +95,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-finance-v2-2026q2
+    source: table
+    quote: Deferred revenue | 9.685
 - claim_id: audit-2026-q2-vantage/claim-0007
   claim_text: DACH contributed EUR 6.63 million of quarterly sales.
   canonical_value: 6631000
@@ -87,6 +111,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-regional-2026q2
+    source: table
+    quote: DACH | 6.631
 - claim_id: audit-2026-q2-vantage/claim-0008
   claim_text: The external delivery workforce numbered 26.
   canonical_value: 26
@@ -99,6 +127,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-people-2026q2
+    source: table
+    quote: Contract personnel | 26
 - claim_id: audit-2026-q2-vantage/claim-0009
   claim_text: The group net promoter score was 38.
   canonical_value: 38
@@ -111,6 +143,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-commentary-2026q2
+    source: prose
+    quote: net promoter score came in at 38
 - claim_id: audit-2026-q2-vantage/claim-0010
   claim_text: Gross renewal rate held at 91.4%.
   canonical_value: 0.914
@@ -123,6 +159,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-commentary-2026q2
+    source: prose
+    quote: gross renewal rate held at 91.4%
 - claim_id: audit-2026-q2-vantage/claim-0011
   claim_text: Median onboarding cycle for new enterprise customers was 27 days.
   canonical_value: 27
@@ -135,6 +175,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-commentary-2026q2
+    source: prose
+    quote: median onboarding cycle for new enterprise customers was 27 days
 - claim_id: audit-2026-q2-vantage/claim-0012
   claim_text: The certified implementation partner network stood at 80 partners.
   canonical_value: 80
@@ -147,6 +191,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-commentary-2026q2
+    source: prose
+    quote: certified implementation partner network grew to 80 partners
 - claim_id: audit-2026-q2-vantage/claim-0013
   claim_text: The gross margin was 59.5%.
   canonical_value: 0.5952
@@ -161,6 +209,13 @@ claims:
     formula: gross_profit / net_revenue
     tolerance_pct: 0.2
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-finance-v2-2026q2
+    source: table
+    quote: Gross profit | 13.032
+  - doc_id: vantage-finance-v2-2026q2
+    source: table
+    quote: Net revenue | 21.895
 - claim_id: audit-2026-q2-vantage/claim-0014
   claim_text: Quarterly sales per employee were about EUR 97.7 thousand.
   canonical_value: 97745.54
@@ -175,6 +230,13 @@ claims:
     formula: net_revenue / fte_period_end
     tolerance_pct: 0.2
   notes: 'cross-document: finance revenue / operations FTE'
+  gold_evidence:
+  - doc_id: vantage-finance-v2-2026q2
+    source: table
+    quote: Net revenue | 21.895
+  - doc_id: vantage-operations-2026q2
+    source: table
+    quote: FTE, period end | 224
 - claim_id: audit-2026-q2-vantage/claim-0015
   claim_text: Available liquidity at quarter end was EUR 7.28 million.
   canonical_value: 7281000
@@ -187,6 +249,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: source is kEUR
+  gold_evidence:
+  - doc_id: vantage-treasury-2026q2
+    source: table
+    quote: Total | 7,281
 - claim_id: audit-2026-q2-vantage/claim-0016
   claim_text: Cash burn from operations was EUR 1.52 million.
   canonical_value: -1520000
@@ -199,6 +265,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: kEUR and parentheses sign
+  gold_evidence:
+  - doc_id: vantage-treasury-2026q2
+    source: table
+    quote: Net operating cash outflow | (1,520)
 - claim_id: audit-2026-q2-vantage/claim-0017
   claim_text: The closing workforce was 226 FTE.
   canonical_value: 226
@@ -211,6 +281,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: off by two
+  gold_evidence:
+  - doc_id: vantage-operations-2026q2
+    source: table
+    quote: FTE, period end | 224
 - claim_id: audit-2026-q2-vantage/claim-0018
   claim_text: The unresolved support queue ended at 422 cases.
   canonical_value: 422
@@ -223,6 +297,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-operations-2026q2
+    source: table
+    quote: Open case inventory | 434
 - claim_id: audit-2026-q2-vantage/claim-0019
   claim_text: Licensed seats totalled 10,381.
   canonical_value: 10381
@@ -235,6 +313,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-customer-2026q2
+    source: table
+    quote: Licensed seats | 10231
 - claim_id: audit-2026-q2-vantage/claim-0020
   claim_text: The group net promoter score improved to 44.
   canonical_value: 44
@@ -247,6 +329,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-commentary-2026q2
+    source: prose
+    quote: net promoter score came in at 38
 - claim_id: audit-2026-q2-vantage/claim-0021
   claim_text: Median onboarding cycle was 22 days.
   canonical_value: 22
@@ -259,6 +345,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-commentary-2026q2
+    source: prose
+    quote: median onboarding cycle for new enterprise customers was 27 days
 - claim_id: audit-2026-q2-vantage/claim-0022
   claim_text: Qualified pipeline stood at EUR 13.51 million.
   canonical_value: 13510000
@@ -271,6 +361,18 @@ claims:
   tolerance_rule:
     kind: exact
   notes: quarterly update prose says EUR 13.26 million; no ordering stated
+  gold_evidence:
+  - doc_id: vantage-finance-v2-2026q2
+    source: table
+    quote: Qualified pipeline | 13.510
+    period: 2026-Q2
+  - doc_id: vantage-update-2026q2
+    source: prose
+    quote: The qualified pipeline stood at EUR 13.26 million entering the next quarter.
+    period: 2026-Q2
+    period_label_note: surface reading suggests the forward quarter; the boundary-snapshot
+      convention resolves 'entering the next quarter' to the period just closed (2026-Q2),
+      same period as the claim
 - claim_id: audit-2026-q2-vantage/claim-0023
   claim_text: The commercial pipeline was EUR 13.05 million.
   canonical_value: 13053000
@@ -283,6 +385,13 @@ claims:
   tolerance_rule:
     kind: exact
   notes: finance pack reports a different value; regional explicitly unranked
+  gold_evidence:
+  - doc_id: vantage-regional-2026q2
+    source: table
+    quote: Qualified commercial pipeline | 13.053
+  - doc_id: vantage-finance-v2-2026q2
+    source: table
+    quote: Qualified pipeline | 13.510
 - claim_id: audit-2026-q2-vantage/claim-0024
   claim_text: New enterprise wins totalled 43.
   canonical_value: 43
@@ -295,6 +404,13 @@ claims:
   tolerance_rule:
     kind: exact
   notes: customer workbook says 41; equal authority
+  gold_evidence:
+  - doc_id: vantage-operations-2026q2
+    source: table
+    quote: New enterprise accounts | 43
+  - doc_id: vantage-customer-2026q2
+    source: table
+    quote: New enterprise accounts | 41
 - claim_id: audit-2026-q2-vantage/claim-0025
   claim_text: Quarterly revenue came to EUR 21.71 million.
   canonical_value: 21712000
@@ -307,6 +423,13 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-finance-v1-2026q2
+    source: table
+    quote: Net revenue | 21.712
+  - doc_id: vantage-finance-v2-2026q2
+    source: table
+    quote: Net revenue | 21.895
 - claim_id: audit-2026-q2-vantage/claim-0026
   claim_text: Gross profit was EUR 12.85 million.
   canonical_value: 12849000
@@ -319,6 +442,13 @@ claims:
   tolerance_rule:
     kind: exact
   notes: ''
+  gold_evidence:
+  - doc_id: vantage-finance-v1-2026q2
+    source: table
+    quote: Gross profit | 12.849
+  - doc_id: vantage-finance-v2-2026q2
+    source: table
+    quote: Gross profit | 13.032
 - claim_id: audit-2026-q2-vantage/claim-0027
   claim_text: Annualized subscription value stood at EUR 33.48 million.
   canonical_value: 33483000
@@ -331,6 +461,13 @@ claims:
   tolerance_rule:
     kind: exact
   notes: that is the Q1 2026 figure; Q2 2026 differs
+  gold_evidence:
+  - doc_id: vantage-customer-2026q1
+    source: table
+    quote: Annualized subscription value | 33483000
+  - doc_id: vantage-customer-2026q2
+    source: table
+    quote: Annualized subscription value | 34778000
 - claim_id: audit-2026-q2-vantage/claim-0028
   claim_text: Structured learning hours totalled 1,673.
   canonical_value: 1673
@@ -343,6 +480,13 @@ claims:
   tolerance_rule:
     kind: exact
   notes: prior-quarter figure asserted as current
+  gold_evidence:
+  - doc_id: vantage-people-2026q1
+    source: table
+    quote: Structured learning hours | 1673
+  - doc_id: vantage-people-2026q2
+    source: table
+    quote: Structured learning hours | 1757
 - claim_id: audit-2026-q2-vantage/claim-0029
   claim_text: Monthly active platform seats were 8,912.
   canonical_value: 8912
@@ -356,6 +500,7 @@ claims:
     kind: exact
   notes: Licensed seats exists as near-name distractor; monthly active seats appears
     nowhere
+  gold_evidence: []
 - claim_id: audit-2026-q2-vantage/claim-0030
   claim_text: Weighted services backlog was EUR 5.30 million.
   canonical_value: 5300000
@@ -368,6 +513,7 @@ claims:
   tolerance_rule:
     kind: exact
   notes: pipeline metrics exist as near-name distractors; backlog appears nowhere
+  gold_evidence: []
 - claim_id: audit-2026-q2-vantage/claim-0031
   claim_text: Employee engagement index was 7.9.
   canonical_value: 7.9
@@ -380,3 +526,4 @@ claims:
   tolerance_rule:
     kind: exact
   notes: NPS exists in prose as a near-name score distractor
+  gold_evidence: []
