@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import sqlite3
 
 import pytest
 
@@ -444,3 +445,183 @@ def test_judge_claim_repeats_agree():
     )
     assert summary["unanimous_claims"] == 1
     assert summary["verdict_consistency"] == 1.0
+
+
+# --- Gather-only stage (MUL-9) ---------------------------------------------
+
+
+def test_score_recall_matches_by_doc_id_and_quote():
+    gold_evidence = [
+        {"doc_id": "d1", "source": "table", "quote": "Net revenue | 12.480"},
+        {"doc_id": "d2", "source": "prose", "quote": "revenue grew to EUR 12.48 million"},
+    ]
+    occurrences = [
+        {"doc_id": "d1", "source": "table", "quote": "Net revenue | 12.480"},
+        {"doc_id": "d2", "source": "researcher", "quote": "in Q1, revenue grew to EUR 12.48 million overall"},
+    ]
+    result = eval_mod._score_recall(gold_evidence, occurrences)
+    assert result["n_gold_evidence"] == 2
+    assert result["n_matched"] == 2
+    assert result["recall"] == 1.0
+    assert {m["found_via"] for m in result["matched"]} == {"table", "researcher"}
+    assert result["unmatched"] == []
+
+
+def test_score_recall_reports_unmatched_when_no_occurrence_found():
+    gold_evidence = [{"doc_id": "d1", "source": "table", "quote": "Net revenue | 12.480"}]
+    occurrences = [{"doc_id": "d1", "source": "table", "quote": "totally different span"}]
+    result = eval_mod._score_recall(gold_evidence, occurrences)
+    assert result["n_matched"] == 0
+    assert result["recall"] == 0.0
+    assert result["unmatched"] == [{"doc_id": "d1", "gold_source": "table", "quote": "Net revenue | 12.480"}]
+
+
+def test_score_recall_empty_gold_evidence_is_not_scored():
+    result = eval_mod._score_recall([], [{"doc_id": "d1", "source": "table", "quote": "x"}])
+    assert result["n_gold_evidence"] == 0
+    assert result["recall"] is None
+
+
+def _fts_conn(rows: list[tuple[str, str, str]]) -> sqlite3.Connection:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE VIRTUAL TABLE spans_fts USING fts5(doc_id, location, text)")
+    conn.executemany("INSERT INTO spans_fts (doc_id, location, text) VALUES (?, ?, ?)", rows)
+    return conn
+
+
+def test_verify_researcher_quotes_marks_verbatim_quote_verified():
+    conn = _fts_conn([("d1", "page-1", "Net revenue was EUR 12.48 million in the quarter.")])
+    occurrences = [{"source": "researcher", "doc_id": "d1", "quote": "Net revenue was EUR 12.48 million"}]
+    result = eval_mod._verify_researcher_quotes(conn, occurrences)
+    assert result["n_researcher_occurrences"] == 1
+    assert result["n_verified"] == 1
+    assert result["n_hallucinated"] == 0
+    assert result["hallucination_rate"] == 0.0
+
+
+def test_verify_researcher_quotes_flags_quote_not_found_in_doc():
+    conn = _fts_conn([("d1", "page-1", "Net revenue was EUR 12.48 million in the quarter.")])
+    occurrences = [{"source": "researcher", "doc_id": "d1", "quote": "a number that was never said"}]
+    result = eval_mod._verify_researcher_quotes(conn, occurrences)
+    assert result["n_verified"] == 0
+    assert result["n_hallucinated"] == 1
+    assert result["hallucination_rate"] == 1.0
+    assert result["hallucinated"] == [{"doc_id": "d1", "quote": "a number that was never said"}]
+
+
+def test_verify_researcher_quotes_ignores_non_researcher_occurrences():
+    conn = _fts_conn([])
+    occurrences = [{"source": "table", "doc_id": "d1", "quote": "anything"}]
+    result = eval_mod._verify_researcher_quotes(conn, occurrences)
+    assert result["n_researcher_occurrences"] == 0
+    assert result["hallucination_rate"] is None
+
+
+_FAKE_GATHER_DOSSIER = {
+    "claim_id": "acme-audit/claim-0004",
+    "occurrences": [
+        {"source": "table", "doc_id": "vault-doc-1", "quote": "Revenue: $10.0M"},
+        {"source": "researcher", "doc_id": "vault-doc-1", "quote": "some researcher span"},
+    ],
+}
+
+
+async def test_gather_claim_builds_dossier_and_writes_record_and_dossier_file(tmp_path, monkeypatch, budget):
+    async def fake_build_dossier(claim, audit_id, *, use_researcher, sub_costs=None):
+        if sub_costs is not None:
+            sub_costs.append(0.02)
+        return _FAKE_GATHER_DOSSIER
+
+    fake_conn = _fts_conn([("vault-doc-1", "p1", "some researcher span, in context")])
+    monkeypatch.setattr(eval_mod, "build_dossier", fake_build_dossier)
+    monkeypatch.setattr(eval_mod, "db_path", lambda audit_id: ":memory:")
+    monkeypatch.setattr(eval_mod.sqlite3, "connect", lambda path: fake_conn)
+
+    claim = _make_claim()
+    variant_dir = tmp_path / "gather"
+    variant_dir.mkdir()
+    gold_evidence = [{"doc_id": "vault-doc-1", "source": "table", "quote": "Revenue: $10.0M"}]
+
+    record = await eval_mod._gather_claim(
+        claim, "acme-audit", True, budget, asyncio.Semaphore(1), gold_evidence, variant_dir
+    )
+
+    assert record["error"] is None
+    assert record["cost_usd"] == 0.02
+    assert record["gold_evidence"]["recall"] == 1.0
+    assert record["researcher_quotes"]["n_verified"] == 1
+
+    record_path = variant_dir / "claim-0004.json"
+    dossier_path = variant_dir / "claim-0004.dossier.json"
+    assert record_path.exists()
+    assert dossier_path.exists()
+    assert json.loads(dossier_path.read_text()) == _FAKE_GATHER_DOSSIER
+
+
+async def test_gather_claim_checkpoint_hit_skips_build_dossier(tmp_path, monkeypatch, budget):
+    def fail_build_dossier(*args, **kwargs):
+        raise AssertionError("build_dossier must not be called on a checkpoint hit")
+
+    monkeypatch.setattr(eval_mod, "build_dossier", fail_build_dossier)
+
+    claim = _make_claim()
+    variant_dir = tmp_path / "gather"
+    variant_dir.mkdir()
+    existing_record = {"claim_id": claim.claim_id, "use_researcher": True, "cost_usd": 0.0, "error": None}
+    (variant_dir / "claim-0004.json").write_text(json.dumps(existing_record))
+
+    record = await eval_mod._gather_claim(claim, "acme-audit", True, budget, asyncio.Semaphore(1), [], variant_dir)
+
+    assert record == existing_record
+    assert not (variant_dir / "claim-0004.dossier.json").exists()
+
+
+def test_summarize_gather_aggregates_recall_by_source_and_hallucination_rate():
+    records = [
+        {
+            "claim_id": "c/claim-0001",
+            "cost_usd": 0.01,
+            "error": None,
+            "gold_evidence": {
+                "n_gold_evidence": 1,
+                "n_matched": 1,
+                "recall": 1.0,
+                "matched": [{"doc_id": "d1", "gold_source": "table", "found_via": "table"}],
+                "unmatched": [],
+            },
+            "researcher_quotes": {"n_researcher_occurrences": 1, "n_verified": 1, "n_hallucinated": 0},
+        },
+        {
+            "claim_id": "c/claim-0002",
+            "cost_usd": 0.02,
+            "error": None,
+            "gold_evidence": {
+                "n_gold_evidence": 1,
+                "n_matched": 0,
+                "recall": 0.0,
+                "matched": [],
+                "unmatched": [{"doc_id": "d2", "gold_source": "prose", "quote": "x"}],
+            },
+            "researcher_quotes": {"n_researcher_occurrences": 1, "n_verified": 0, "n_hallucinated": 1},
+        },
+        {
+            "claim_id": "c/claim-0003",
+            "cost_usd": 0.0,
+            "error": None,
+            "gold_evidence": {"n_gold_evidence": 0, "n_matched": 0, "recall": None, "matched": [], "unmatched": []},
+            "researcher_quotes": {"n_researcher_occurrences": 0, "n_verified": 0, "n_hallucinated": 0},
+        },
+    ]
+    summary = eval_mod._summarize_gather(records)
+    assert summary["n_claims"] == 3
+    assert summary["n_claims_with_gold_evidence"] == 2
+    assert summary["n_gold_evidence"] == 2
+    assert summary["n_matched"] == 1
+    assert summary["recall"] == 0.5
+    assert summary["by_source"]["table"] == {"matched": 1, "total": 1, "recall": 1.0}
+    assert summary["by_source"]["prose"] == {"matched": 0, "total": 1, "recall": 0.0}
+    assert summary["found_via"]["table"] == {"matched": 1, "share_of_gold": 0.5}
+    assert summary["researcher_total"] == 2
+    assert summary["researcher_verified"] == 1
+    assert summary["researcher_hallucinated"] == 1
+    assert summary["researcher_hallucination_rate"] == 0.5

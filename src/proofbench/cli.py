@@ -154,7 +154,8 @@ def eval_cmd(
     ),
     stage: str = typer.Option(
         "full",
-        help="'full' runs gather+judge together (current default behavior); 'judge' replays cached "
+        help="'full' runs gather+judge together (current default behavior); 'gather' runs build_dossier() "
+        "alone and scores evidence recall against gold_evidence, no judge call; 'judge' replays cached "
         "dossiers via --dossiers-from, no re-gathering.",
     ),
     dossiers_from: str | None = typer.Option(
@@ -168,6 +169,12 @@ def eval_cmd(
         help="Dossier mutation to apply before replay (--stage judge only): "
         "strip_conflicts, strip_authority_rank, drop_researcher.",
     ),
+    use_researcher: bool = typer.Option(
+        True,
+        "--use-researcher/--no-use-researcher",
+        help="Include the researcher gap-check sweep when gathering (--stage gather only): "
+        "run --no-use-researcher to measure what the sweep adds to recall and cost.",
+    ),
 ) -> None:
     """Run Verifier variants against gold.yaml and compare cost vs accuracy.
 
@@ -180,6 +187,58 @@ def eval_cmd(
     consistency data, and to test judge prompt/logic changes unconfounded by
     gathering drift.
     """
+    if stage == "gather":
+        from proofbench.eval import run_gather_eval
+
+        claim_suffixes = [c.strip() for c in claims.split(",") if c.strip()] if claims else None
+        try:
+            report = run_gather_eval(
+                audit_id,
+                use_researcher=use_researcher,
+                max_concurrency=max_concurrency,
+                max_budget_usd=max_budget_usd,
+                experiment_id=experiment_id,
+                claim_suffixes=claim_suffixes,
+            )
+        except PreflightError as e:
+            typer.echo(f"preflight failed: {e}", err=True)
+            raise typer.Exit(code=1) from e
+        except FileNotFoundError as e:
+            typer.echo(str(e), err=True)
+            raise typer.Exit(code=1) from e
+
+        summary = report["summary"]
+        recall = f"{summary['recall']:.0%}" if summary["recall"] is not None else "-"
+        typer.echo(
+            f"experiment {report['experiment_id']} (stage gather, use_researcher {report['use_researcher']}) "
+            f"-- total cost ${report['total_cost_usd']:.4f}\n"
+        )
+        typer.echo(
+            f"evidence recall: {recall} ({summary['n_matched']}/{summary['n_gold_evidence']} "
+            f"over {summary['n_claims_with_gold_evidence']} labeled claims)"
+        )
+        if summary["by_source"]:
+            typer.echo("by gold source:")
+            for src, bucket in sorted(summary["by_source"].items()):
+                src_recall = f"{bucket['recall']:.0%}" if bucket["recall"] is not None else "-"
+                typer.echo(f"  {src:<12} {bucket['matched']}/{bucket['total']:<4} ({src_recall})")
+        if summary["found_via"]:
+            typer.echo("found via (share of all gold evidence):")
+            for src, bucket in sorted(summary["found_via"].items()):
+                share = f"{bucket['share_of_gold']:.0%}" if bucket["share_of_gold"] is not None else "-"
+                typer.echo(f"  {src:<12} {bucket['matched']:<4} ({share})")
+        halluc = (
+            f"{summary['researcher_hallucination_rate']:.0%}"
+            if summary["researcher_hallucination_rate"] is not None
+            else "-"
+        )
+        typer.echo(
+            f"\nresearcher quote hallucination rate: {halluc} "
+            f"({summary['researcher_hallucinated']}/{summary['researcher_total']} quotes)"
+        )
+        typer.echo(f"\nfull records in runs/experiments/{report['experiment_id']}/")
+        return
+
     if stage == "judge":
         from proofbench.eval import run_judge_eval
 
