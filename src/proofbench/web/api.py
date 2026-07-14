@@ -419,6 +419,50 @@ def _experiment_dir(experiment_id: str) -> Path:
     return path
 
 
+def _claim_record_paths(variant_dir: Path) -> list[Path]:
+    """Per-claim record files in a variant dir, excluding summary.json and
+    the persisted *.dossier.json sidecars (MUL-7) -- those aren't eval
+    records and don't parse as one (no expected_status/status fields)."""
+    return sorted(p for p in variant_dir.glob("claim-*.json") if not p.name.endswith(".dossier.json"))
+
+
+def _headline(report: dict) -> dict:
+    """Reduce a report.json (any stage) to the flat fields the experiment
+    list and its dropdown label need."""
+    stage = report.get("stage", "full")
+    if stage == "gather":
+        summary = report["summary"]
+        researcher = "with researcher" if report.get("use_researcher") else "no researcher"
+        return {
+            "stage": stage,
+            "label": f"gather ({researcher})",
+            "accuracy": summary.get("recall"),
+            "n_claims": summary.get("n_claims"),
+            "dossiers_from": None,
+        }
+    if stage == "judge":
+        summary = report["summary"]
+        per_repeat = summary.get("per_repeat") or []
+        label = f"judge x{report.get('repeats', 1)}"
+        if report.get("ablation"):
+            label += f" ({report['ablation']})"
+        return {
+            "stage": stage,
+            "label": label,
+            "accuracy": per_repeat[-1]["accuracy"] if per_repeat else None,
+            "n_claims": summary.get("n_claims"),
+            "dossiers_from": report.get("dossiers_from"),
+        }
+    summaries = report.get("summaries") or []
+    return {
+        "stage": stage,
+        "label": " vs ".join(s["variant"] for s in summaries),
+        "accuracy": summaries[0]["accuracy"] if summaries else None,
+        "n_claims": summaries[0]["n_claims"] if summaries else None,
+        "dossiers_from": None,
+    }
+
+
 @app.get("/api/experiments")
 def list_experiments(audit_id: str | None = None) -> list[dict]:
     if not EXPERIMENTS_DIR.exists():
@@ -428,12 +472,17 @@ def list_experiments(audit_id: str | None = None) -> list[dict]:
         report = json.loads(report_path.read_text())
         if audit_id and report.get("audit_id") != audit_id:
             continue
+        hl = _headline(report)
         experiments.append(
             {
                 "experiment_id": report["experiment_id"],
                 "audit_id": report["audit_id"],
-                "model": report["model"],
-                "variants": [s["variant"] for s in report["summaries"]],
+                "model": report.get("model"),
+                "stage": hl["stage"],
+                "label": hl["label"],
+                "accuracy": hl["accuracy"],
+                "n_claims": hl["n_claims"],
+                "dossiers_from": hl["dossiers_from"],
                 "total_cost_usd": report["total_cost_usd"],
             }
         )
@@ -443,17 +492,68 @@ def list_experiments(audit_id: str | None = None) -> list[dict]:
 
 @app.get("/api/experiments/{experiment_id}")
 def experiment_detail(experiment_id: str) -> dict:
-    """The full report plus a light per-claim row for every variant --
-    heavy fields (tool_trace, final_text, evidence) stay behind the
-    per-claim endpoint so the comparison view loads fast."""
+    """The full report plus a light per-claim row (or rows, for judge
+    repeats) -- heavy fields (tool_trace, final_text, evidence) stay behind
+    the per-claim endpoint so this loads fast."""
     exp_dir = _experiment_dir(experiment_id)
     report = json.loads((exp_dir / "report.json").read_text())
+    stage = report.get("stage", "full")
+
+    if stage == "gather":
+        rows = []
+        for path in _claim_record_paths(exp_dir / "gather"):
+            record = json.loads(path.read_text())
+            gold_evidence = record.get("gold_evidence") or {}
+            researcher = record.get("researcher_quotes") or {}
+            rows.append(
+                {
+                    "claim_id": record["claim_id"],
+                    "recall": gold_evidence.get("recall"),
+                    "n_matched": gold_evidence.get("n_matched"),
+                    "n_gold_evidence": gold_evidence.get("n_gold_evidence"),
+                    "researcher_hallucinated": researcher.get("n_hallucinated"),
+                    "researcher_total": researcher.get("n_researcher_occurrences"),
+                    "cost_usd": record.get("cost_usd"),
+                    "error": record.get("error"),
+                }
+            )
+        return {"report": report, "stage": stage, "claims": rows}
+
+    if stage == "judge":
+        by_claim: dict[str, list[dict]] = {}
+        for path in _claim_record_paths(exp_dir / "judge"):
+            record = json.loads(path.read_text())
+            by_claim.setdefault(record["claim_id"], []).append(record)
+        rows = []
+        for claim_id, records in sorted(by_claim.items()):
+            records.sort(key=lambda r: r["repeat"])
+            statuses = [r["status"] for r in records if r["status"] is not None]
+            rows.append(
+                {
+                    "claim_id": claim_id,
+                    "expected_status": records[0]["expected_status"],
+                    "repeats": [
+                        {
+                            "repeat": r["repeat"],
+                            "status": r["status"],
+                            "correct": r["correct"],
+                            "cost_usd": r["cost_usd"],
+                            "tool_calls": r["tool_calls"],
+                            "error": r["error"],
+                        }
+                        for r in records
+                    ],
+                    "majority_status": (max(set(statuses), key=statuses.count) if statuses else None),
+                    "unanimous": (len(set(statuses)) <= 1) if statuses else None,
+                }
+            )
+        return {"report": report, "stage": stage, "claims": rows}
 
     claims_by_variant: dict[str, list[dict]] = {}
     for summary in report["summaries"]:
         variant = summary["variant"]
         rows = []
-        for path in sorted((exp_dir / variant).glob("claim-*.json")):
+        for path in _claim_record_paths(exp_dir / variant):
             record = json.loads(path.read_text())
             rows.append(
                 {
@@ -467,15 +567,18 @@ def experiment_detail(experiment_id: str) -> dict:
                 }
             )
         claims_by_variant[variant] = rows
-    return {"report": report, "claims_by_variant": claims_by_variant}
+    return {"report": report, "stage": stage, "claims_by_variant": claims_by_variant}
 
 
 @app.get("/api/experiments/{experiment_id}/{variant}/{claim_suffix}")
-def experiment_claim(experiment_id: str, variant: str, claim_suffix: str) -> dict:
+def experiment_claim(experiment_id: str, variant: str, claim_suffix: str, repeat: int | None = None) -> dict:
     exp_dir = _experiment_dir(experiment_id)
-    path = (exp_dir / variant / f"{claim_suffix}.json").resolve()
+    # Judge-stage records are repeat-suffixed (claim-XXXX.repeat-NN.json);
+    # every other stage/variant uses the plain claim-XXXX.json name.
+    filename = f"{claim_suffix}.repeat-{repeat:02d}.json" if repeat is not None else f"{claim_suffix}.json"
+    path = (exp_dir / variant / filename).resolve()
     if exp_dir not in path.parents or not path.exists():
-        raise HTTPException(404, f"no such record: {experiment_id}/{variant}/{claim_suffix}")
+        raise HTTPException(404, f"no such record: {experiment_id}/{variant}/{filename}")
     return json.loads(path.read_text())
 
 

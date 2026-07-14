@@ -738,9 +738,10 @@ async function loadEvalView() {
     return;
   }
   const prev = state.evalExpId;
-  select.innerHTML = experiments.map(e =>
-    `<option value="${e.experiment_id}">${e.experiment_id} — ${e.variants.join(" vs ")} — ${fmtCost(e.total_cost_usd)}</option>`
-  ).join("");
+  select.innerHTML = experiments.map(e => {
+    const acc = e.accuracy != null ? (e.accuracy * 100).toFixed(0) + "%" : "–";
+    return `<option value="${e.experiment_id}">${e.experiment_id} — ${e.label} — ${acc} — ${fmtCost(e.total_cost_usd)}</option>`;
+  }).join("");
   state.evalExpId = prev && experiments.some(e => e.experiment_id === prev) ? prev : experiments[0].experiment_id;
   select.value = state.evalExpId;
 
@@ -749,6 +750,117 @@ async function loadEvalView() {
 }
 
 function renderEval(detail, content) {
+  if (detail.stage === "gather") return renderEvalGather(detail, content);
+  if (detail.stage === "judge") return renderEvalJudge(detail, content);
+  return renderEvalFull(detail, content);
+}
+
+function renderEvalGather(detail, content) {
+  const summary = detail.report.summary;
+  const recall = summary.recall != null ? (summary.recall * 100).toFixed(0) + "%" : "–";
+  const halluc = summary.researcher_hallucination_rate != null
+    ? (summary.researcher_hallucination_rate * 100).toFixed(0) + "%" : "–";
+
+  const bySource = Object.entries(summary.by_source || {}).map(([src, b]) => `
+    <tr><td>${src}</td><td>${b.matched}/${b.total}</td><td>${b.recall != null ? (b.recall * 100).toFixed(0) + "%" : "–"}</td></tr>
+  `).join("");
+  const foundVia = Object.entries(summary.found_via || {}).map(([src, b]) => `
+    <tr><td>${src}</td><td>${b.matched}</td><td>${b.share_of_gold != null ? (b.share_of_gold * 100).toFixed(0) + "%" : "–"}</td></tr>
+  `).join("");
+
+  const summaryHtml = `
+    <div class="cards">
+      <div class="card"><div class="n">${recall}</div><div class="l">Evidence recall</div></div>
+      <div class="card"><div class="n">${summary.n_matched}/${summary.n_gold_evidence}</div><div class="l">Matched / gold</div></div>
+      <div class="card"><div class="n">${halluc}</div><div class="l">Researcher hallucination</div></div>
+      <div class="card"><div class="n">${fmtCost(summary.total_cost_usd)}</div><div class="l">Total cost</div></div>
+    </div>
+    <div style="display:flex; gap:16px; margin-bottom:16px; flex-wrap:wrap;">
+      <table style="flex:1; min-width:220px;">
+        <thead><tr><th>By gold source</th><th>Matched</th><th>Recall</th></tr></thead>
+        <tbody>${bySource || `<tr><td colspan="3" class="muted">no labeled gold_evidence</td></tr>`}</tbody>
+      </table>
+      <table style="flex:1; min-width:220px;">
+        <thead><tr><th>Found via</th><th>Matched</th><th>Share of gold</th></tr></thead>
+        <tbody>${foundVia || `<tr><td colspan="3" class="muted">no matches</td></tr>`}</tbody>
+      </table>
+    </div>`;
+
+  const rows = detail.claims.map(r => `
+    <tr class="clickable" onclick="showEvalClaim('gather', '${r.claim_id.split("/").pop()}')">
+      <td>${r.claim_id.split("/").pop()}</td>
+      <td>${r.recall != null ? (r.recall * 100).toFixed(0) + "%" : "–"}</td>
+      <td>${r.n_matched ?? "–"}/${r.n_gold_evidence ?? "–"}</td>
+      <td>${r.researcher_hallucinated ?? "–"}/${r.researcher_total ?? "–"}</td>
+      <td>${r.error ? `<span class="status failed">failed</span>` : fmtCost(r.cost_usd)}</td>
+    </tr>`).join("");
+
+  const table = `
+    <table>
+      <thead><tr><th>Claim</th><th>Recall</th><th>Matched/Gold</th><th>Hallucinated/Researcher</th><th>Cost</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="muted" style="margin-top: 8px;">Click a row to see the gathered dossier and its tool trace.</div>`;
+
+  content.innerHTML = summaryHtml + table;
+}
+
+function renderEvalJudge(detail, content) {
+  const summary = detail.report.summary;
+  const consistency = summary.verdict_consistency != null ? (summary.verdict_consistency * 100).toFixed(0) + "%" : "–";
+  const lineage = `dossiers from <b>${detail.report.dossiers_from}</b> (variant ${detail.report.dossiers_variant || "dossier"})`
+    + (detail.report.ablation ? ` · ablation <b>${detail.report.ablation}</b>` : "");
+
+  const perRepeatRows = (summary.per_repeat || []).map((s, i) => `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${s.accuracy != null ? (s.accuracy * 100).toFixed(0) + "%" : "–"}</td>
+      <td>${s.correct}/${s.n_claims}</td>
+      <td>${s.failures}</td>
+      <td>${fmtCost(s.avg_cost_usd)}</td>
+    </tr>`).join("");
+
+  const summaryHtml = `
+    <div class="muted" style="margin-bottom: 8px;">${lineage}</div>
+    <div class="cards">
+      <div class="card"><div class="n">${consistency}</div><div class="l">Verdict consistency</div></div>
+      <div class="card"><div class="n">${summary.unanimous_claims}/${summary.n_claims_with_multiple_repeats}</div><div class="l">Unanimous claims</div></div>
+      <div class="card"><div class="n">${summary.repeats}</div><div class="l">Repeats</div></div>
+      <div class="card"><div class="n">${fmtCost(detail.report.total_cost_usd)}</div><div class="l">Total cost</div></div>
+    </div>
+    <table style="margin-bottom: 16px;">
+      <thead><tr><th>Repeat</th><th>Accuracy</th><th>Correct</th><th>Failures</th><th>Avg cost</th></tr></thead>
+      <tbody>${perRepeatRows}</tbody>
+    </table>`;
+
+  const rows = detail.claims.map(r => {
+    const dots = r.repeats.map(rep => {
+      const on = rep.status === r.majority_status;
+      const suffix = r.claim_id.split("/").pop();
+      return `<span class="clickable" style="cursor:pointer; padding: 0 2px;" title="repeat ${rep.repeat}: ${rep.status ?? "error"}"
+        onclick="showEvalClaim('judge', '${suffix}', ${rep.repeat})">${on ? "●" : "○"}</span>`;
+    }).join("");
+    const last = r.repeats[r.repeats.length - 1];
+    return `<tr>
+      <td>${r.claim_id.split("/").pop()}</td>
+      <td>${r.expected_status ? statusBadge(r.expected_status) : "–"}</td>
+      <td>${last.status ? statusBadge(last.status) : "–"}</td>
+      <td>${dots}</td>
+      <td>${fmtCost(last.cost_usd)}</td>
+    </tr>`;
+  }).join("");
+
+  const table = `
+    <table>
+      <thead><tr><th>Claim</th><th>Expected</th><th>Latest verdict</th><th>Consistency</th><th>Cost</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="muted" style="margin-top: 8px;">Click a dot to see that repeat's full tool trace.</div>`;
+
+  content.innerHTML = summaryHtml + table;
+}
+
+function renderEvalFull(detail, content) {
   const summaries = detail.report.summaries;
   const variants = summaries.map(s => s.variant);
 
@@ -811,8 +923,9 @@ function renderEval(detail, content) {
   content.innerHTML = summaryTable + matrix;
 }
 
-async function showEvalClaim(variant, claimSuffix) {
-  const r = await api(`/api/experiments/${encodeURIComponent(state.evalExpId)}/${encodeURIComponent(variant)}/${encodeURIComponent(claimSuffix)}`);
+async function showEvalClaim(variant, claimSuffix, repeat) {
+  const repeatQuery = repeat != null ? `?repeat=${repeat}` : "";
+  const r = await api(`/api/experiments/${encodeURIComponent(state.evalExpId)}/${encodeURIComponent(variant)}/${encodeURIComponent(claimSuffix)}${repeatQuery}`);
   const panel = document.getElementById("eval-claim-panel");
 
   const trace = (r.tool_trace || []).map(t => `
@@ -823,20 +936,34 @@ async function showEvalClaim(variant, claimSuffix) {
     </div>
   `).join("") || `<div class="muted">No tool calls recorded.</div>`;
 
+  // gather-stage records never call the judge (no verdict/tool_trace) --
+  // the useful detail there is the recall breakdown instead.
+  const gatherEvidence = r.gold_evidence ? `
+    <h3>Evidence recall</h3>
+    <div class="kv">
+      <div>Recall</div><div>${r.gold_evidence.recall != null ? (r.gold_evidence.recall * 100).toFixed(0) + "%" : "–"}
+        (${r.gold_evidence.n_matched}/${r.gold_evidence.n_gold_evidence})</div>
+    </div>
+    ${r.gold_evidence.unmatched?.length ? `<div class="muted">Unmatched gold evidence:</div>
+      <div class="mono">${r.gold_evidence.unmatched.map(u => escHtml(`${u.doc_id} (${u.gold_source}): ${u.quote}`)).join("\n")}</div>` : ""}
+    ${r.researcher_quotes?.hallucinated?.length ? `<div class="muted" style="margin-top:8px;">Hallucinated researcher quotes:</div>
+      <div class="mono">${r.researcher_quotes.hallucinated.map(h => escHtml(`${h.doc_id}: ${h.quote}`)).join("\n")}</div>` : ""}
+  ` : "";
+
   panel.innerHTML = `
     <div class="panel">
       <span class="back-link" onclick="document.getElementById('eval-claim-panel').innerHTML=''">✕ close</span>
-      <h3>${r.claim_id.split("/").pop()} — variant: ${r.variant}</h3>
+      <h3>${r.claim_id.split("/").pop()} — variant: ${r.variant || variant}${r.repeat != null ? ` (repeat ${r.repeat})` : ""}</h3>
       <div class="kv">
         <div>Expected</div><div>${r.expected_status ? statusBadge(r.expected_status) : "–"}</div>
-        <div>Got</div><div>${r.status ? statusBadge(r.status) : "–"} ${r.correct ? "✓ correct" : "✗"}</div>
-        <div>Tool calls</div><div>${r.tool_calls ?? "–"}</div>
+        <div>Got</div><div>${r.status ? statusBadge(r.status) : "–"} ${r.correct ? "✓ correct" : ""}</div>
         <div>Cost</div><div>${fmtCost(r.cost_usd)}</div>
+        ${r.tool_calls != null ? `<div>Tool calls</div><div>${r.tool_calls}</div>` : ""}
         ${r.verdict ? `<div>Rationale</div><div>${r.verdict.rationale}</div>` : ""}
         ${r.error ? `<div>Error</div><div class="mono">${r.error}</div>` : ""}
       </div>
-      <h3>Tool trace</h3>
-      ${trace}
+      ${gatherEvidence}
+      ${r.tool_trace ? `<h3>Tool trace</h3>${trace}` : ""}
       ${r.final_text ? `<h3>Final answer</h3><div class="mono">${fmtFinalAnswer(r.final_text)}</div>` : ""}
     </div>
   `;
