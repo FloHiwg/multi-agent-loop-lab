@@ -14,6 +14,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: 'Vocabulary mismatch: net sales vs Net revenue; EUR millions.'
+  gold_evidence:
+  - doc_id: meridian-finance-v2-q1-2026
+    source: table
+    quote: Net revenue | 12.480 | 10.960 | 11.900
 - claim_id: audit-2026-q1-meridian/claim-0002
   claim_text: Operating contribution reached EUR 2.14 million.
   canonical_value: 2140000
@@ -229,6 +233,10 @@ claims:
   tolerance_rule:
     kind: exact
   notes: 'Subtle contradiction: right period/entity, off by one.'
+  gold_evidence:
+  - doc_id: meridian-operations-q1-2026
+    source: table
+    quote: FTE, period end | 142 | 136 | 130
 - claim_id: audit-2026-q1-meridian/claim-0019
   claim_text: Quarterly customer attrition was 2.8%.
   canonical_value: 0.028
@@ -265,6 +273,13 @@ claims:
   tolerance_rule:
     kind: exact
   notes: Operations review says 49; equal authority, same period.
+  gold_evidence:
+  - doc_id: meridian-customer-q1-2026
+    source: table
+    quote: New enterprise accounts | 46 | 41 | 39
+  - doc_id: meridian-operations-q1-2026
+    source: table
+    quote: New enterprise accounts | 49 | 42 | 38
 - claim_id: audit-2026-q1-meridian/claim-0022
   claim_text: Qualified commercial pipeline stood at EUR 8.4 million.
   canonical_value: 8400000
@@ -301,6 +316,13 @@ claims:
   tolerance_rule:
     kind: exact
   notes: Supported only by superseded v1; v2 restates EUR 12.48m.
+  gold_evidence:
+  - doc_id: meridian-finance-v1-q1-2026
+    source: table
+    quote: Net revenue | 12.310 | 10.960 | 11.900
+  - doc_id: meridian-finance-v2-q1-2026
+    source: table
+    quote: Net revenue | 12.480 | 10.960 | 11.900
 - claim_id: audit-2026-q1-meridian/claim-0025
   claim_text: The operating contribution came to EUR 2.05 million.
   canonical_value: 2050000
@@ -337,6 +359,7 @@ claims:
   tolerance_rule:
     kind: exact
   notes: Similar-sounding Licensed seats (7,020) exists; must not force-match.
+  gold_evidence: []
 - claim_id: audit-2026-q1-meridian/claim-0028
   claim_text: Median implementation cycle was 31 days.
   canonical_value: 31

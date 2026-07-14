@@ -427,10 +427,16 @@ def build_claims(w: dict) -> list[dict]:
     v1d = w["_v1_revenue_delta"][L]
     c: list[dict] = []
 
-    def add(text, value, unit, status, fclass, source_doc, span, rule=None, notes=""):
+    def add(text, value, unit, status, fclass, source_doc, span, rule=None, notes="", evidence=None):
+        # gold_evidence: the decisive occurrence(s) a correct verdict must rest
+        # on. Defaults to the single (doc_id, span) pair above; conflict and
+        # formula claims pass `evidence` explicitly to label both sides / both
+        # terms, per MUL-8.
+        if evidence is None:
+            evidence = [{"doc_id": source_doc, "source": "table", "quote": span}] if source_doc else []
         c.append({"text": text, "value": value, "unit": unit, "status": status,
                   "failure_class": fclass, "source_doc": source_doc, "span": span,
-                  "rule": rule or {"kind": "exact"}, "notes": notes})
+                  "rule": rule or {"kind": "exact"}, "notes": notes, "evidence": evidence})
 
     e3 = lambda k: round(k * 1000)  # kEUR -> EUR
 
@@ -454,24 +460,37 @@ def build_claims(w: dict) -> list[dict]:
 
     # narrative_only: evidence exists ONLY in prose documents
     add(f"The group net promoter score was {w['nps'][L]}.", w["nps"][L], "score",
-        "supported", "narrative_only", doc_id("commentary", L), f"net promoter score came in at {w['nps'][L]}")
+        "supported", "narrative_only", doc_id("commentary", L), f"net promoter score came in at {w['nps'][L]}",
+        evidence=[{"doc_id": doc_id("commentary", L), "source": "prose", "quote": f"net promoter score came in at {w['nps'][L]}"}])
     add(f"Gross renewal rate held at {fpct(w['renewal_bp'][L])}.", w["renewal_bp"][L] / 1000, "percent",
-        "supported", "narrative_only", doc_id("commentary", L), f"gross renewal rate held at {fpct(w['renewal_bp'][L])}")
+        "supported", "narrative_only", doc_id("commentary", L), f"gross renewal rate held at {fpct(w['renewal_bp'][L])}",
+        evidence=[{"doc_id": doc_id("commentary", L), "source": "prose", "quote": f"gross renewal rate held at {fpct(w['renewal_bp'][L])}"}])
     add(f"Median onboarding cycle for new enterprise customers was {w['onboarding_days'][L]} days.", w["onboarding_days"][L], "days",
-        "supported", "narrative_only", doc_id("commentary", L), f"median onboarding cycle")
+        "supported", "narrative_only", doc_id("commentary", L), f"median onboarding cycle",
+        evidence=[{"doc_id": doc_id("commentary", L), "source": "prose", "quote": f"median onboarding cycle for new enterprise customers was {w['onboarding_days'][L]} days"}])
     add(f"The certified implementation partner network stood at {w['certified_partners'][L]} partners.", w["certified_partners"][L], "count",
-        "supported", "narrative_only", doc_id("commentary", L), f"certified implementation partner network grew to {w['certified_partners'][L]}")
+        "supported", "narrative_only", doc_id("commentary", L), f"certified implementation partner network grew to {w['certified_partners'][L]}",
+        evidence=[{"doc_id": doc_id("commentary", L), "source": "prose", "quote": f"certified implementation partner network grew to {w['certified_partners'][L]} partners"}])
 
-    # formula: derived figures
+    # formula: derived figures -- gold_evidence carries BOTH terms, since the
+    # single source_span above only names the numerator
     margin = w["gross_profit"][L] / w["revenue"][L]
     add(f"The gross margin was {margin * 100:.1f}%.", round(margin, 4), "percent",
         "supported", "formula", fin2, f"Gross profit | {fm(w['gross_profit'][L])}",
-        rule={"kind": "formula", "formula": "gross_profit / net_revenue", "tolerance_pct": 0.2})
+        rule={"kind": "formula", "formula": "gross_profit / net_revenue", "tolerance_pct": 0.2},
+        evidence=[
+            {"doc_id": fin2, "source": "table", "quote": f"Gross profit | {fm(w['gross_profit'][L])}"},
+            {"doc_id": fin2, "source": "table", "quote": f"Net revenue | {fm(w['revenue'][L])}"},
+        ])
     rev_per_fte = round(w["revenue"][L] * 1000 / w["fte"][L], 2)
     add(f"Quarterly sales per employee were about EUR {rev_per_fte / 1000:.1f} thousand.", rev_per_fte, "currency_per_fte",
         "supported", "formula", fin2, f"Net revenue | {fm(w['revenue'][L])}",
         rule={"kind": "formula", "formula": "net_revenue / fte_period_end", "tolerance_pct": 0.2},
-        notes="cross-document: finance revenue / operations FTE")
+        notes="cross-document: finance revenue / operations FTE",
+        evidence=[
+            {"doc_id": fin2, "source": "table", "quote": f"Net revenue | {fm(w['revenue'][L])}"},
+            {"doc_id": doc_id("operations", L), "source": "table", "quote": f"FTE, period end | {w['fte'][L]}"},
+        ])
 
     # scale_trap: kEUR treasury vs EUR-million claims
     add(f"Available liquidity at quarter end was {prose_m(w['cash_total'][L])}.", e3(w["cash_total"][L]), "currency",
@@ -490,37 +509,83 @@ def build_claims(w: dict) -> list[dict]:
 
     # contradicted_prose: only prose evidence exists, and it disagrees
     add(f"The group net promoter score improved to {w['nps'][L] + 6}.", w["nps"][L] + 6, "score",
-        "contradicted", "contradicted_prose", doc_id("commentary", L), f"net promoter score came in at {w['nps'][L]}")
+        "contradicted", "contradicted_prose", doc_id("commentary", L), f"net promoter score came in at {w['nps'][L]}",
+        evidence=[{"doc_id": doc_id("commentary", L), "source": "prose", "quote": f"net promoter score came in at {w['nps'][L]}"}])
     add(f"Median onboarding cycle was {w['onboarding_days'][L] - 5} days.", w["onboarding_days"][L] - 5, "days",
-        "contradicted", "contradicted_prose", doc_id("commentary", L), f"median onboarding cycle")
+        "contradicted", "contradicted_prose", doc_id("commentary", L), f"median onboarding cycle",
+        evidence=[{"doc_id": doc_id("commentary", L), "source": "prose", "quote": f"median onboarding cycle for new enterprise customers was {w['onboarding_days'][L]} days"}])
 
-    # prose_table_clash: quarterly update prose vs finance table, no ordering
+    # prose_table_clash: quarterly update prose vs finance table, no ordering.
+    # The prose says the pipeline value "entering the next quarter" -- by the
+    # judge's boundary-snapshot convention (verification.py DOSSIER_PROMPT)
+    # that describes the just-closed quarter (L), not the forward one, so
+    # both occurrences are gold evidence FOR THE SAME PERIOD, not a
+    # period-scope escape from the clash.
     upd = w["pipeline_fin"][L] - w["_update_pipeline_delta"][L]
     add(f"Qualified pipeline stood at {prose_m(w['pipeline_fin'][L])}.", e3(w["pipeline_fin"][L]), "currency",
         "ambiguous", "prose_table_clash", fin2, f"Qualified pipeline | {fm(w['pipeline_fin'][L])}",
-        notes=f"quarterly update prose says {prose_m(upd)}; no ordering stated")
+        notes=f"quarterly update prose says {prose_m(upd)}; no ordering stated",
+        evidence=[
+            {"doc_id": fin2, "source": "table", "quote": f"Qualified pipeline | {fm(w['pipeline_fin'][L])}", "period": L},
+            {"doc_id": doc_id("update", L), "source": "prose",
+             "quote": f"The qualified pipeline stood at {prose_m(upd)} entering the next quarter.",
+             "period": L,
+             "period_label_note": (
+                 "surface reading suggests the forward quarter; the boundary-snapshot "
+                 f"convention resolves 'entering the next quarter' to the period just "
+                 f"closed ({L}), same period as the claim"
+             )},
+        ])
 
     # regional_clash: regional cut vs finance, explicitly unranked
     add(f"The commercial pipeline was {prose_m(w['pipeline_reg'][L])}.", e3(w["pipeline_reg"][L]), "currency",
         "ambiguous", "regional_clash", doc_id("regional", L), f"Qualified commercial pipeline | {fm(w['pipeline_reg'][L])}",
-        notes="finance pack reports a different value; regional explicitly unranked")
+        notes="finance pack reports a different value; regional explicitly unranked",
+        evidence=[
+            {"doc_id": doc_id("regional", L), "source": "table", "quote": f"Qualified commercial pipeline | {fm(w['pipeline_reg'][L])}"},
+            {"doc_id": fin2, "source": "table", "quote": f"Qualified pipeline | {fm(w['pipeline_fin'][L])}"},
+        ])
     add(f"New enterprise wins totalled {w['new_wins_ops'][L]}.", w["new_wins_ops"][L], "count",
         "ambiguous", "regional_clash", doc_id("operations", L), f"New enterprise accounts | {w['new_wins_ops'][L]}",
-        notes=f"customer workbook says {w['new_wins_cust'][L]}; equal authority")
+        notes=f"customer workbook says {w['new_wins_cust'][L]}; equal authority",
+        evidence=[
+            {"doc_id": doc_id("operations", L), "source": "table", "quote": f"New enterprise accounts | {w['new_wins_ops'][L]}"},
+            {"doc_id": doc_id("customer", L), "source": "table", "quote": f"New enterprise accounts | {w['new_wins_cust'][L]}"},
+        ])
 
-    # superseded_v1: matches preliminary v1 figures only
+    # superseded_v1: matches preliminary v1 figures only -- gold_evidence
+    # carries the v1 occurrence the claim matches AND the v2 restatement that
+    # makes it outdated
     add(f"Quarterly revenue came to {prose_m(w['revenue'][L] - v1d)}.", e3(w["revenue"][L] - v1d), "currency",
-        "outdated", "superseded_v1", fin1, f"Net revenue | {fm(w['revenue'][L] - v1d)}")
+        "outdated", "superseded_v1", fin1, f"Net revenue | {fm(w['revenue'][L] - v1d)}",
+        evidence=[
+            {"doc_id": fin1, "source": "table", "quote": f"Net revenue | {fm(w['revenue'][L] - v1d)}"},
+            {"doc_id": fin2, "source": "table", "quote": f"Net revenue | {fm(w['revenue'][L])}"},
+        ])
     add(f"Gross profit was {prose_m(w['gross_profit'][L] - v1d)}.", e3(w["gross_profit"][L] - v1d), "currency",
-        "outdated", "superseded_v1", fin1, f"Gross profit | {fm(w['gross_profit'][L] - v1d)}")
+        "outdated", "superseded_v1", fin1, f"Gross profit | {fm(w['gross_profit'][L] - v1d)}",
+        evidence=[
+            {"doc_id": fin1, "source": "table", "quote": f"Gross profit | {fm(w['gross_profit'][L] - v1d)}"},
+            {"doc_id": fin2, "source": "table", "quote": f"Gross profit | {fm(w['gross_profit'][L])}"},
+        ])
 
-    # stale_quarter: prior quarter's value asserted as current
+    # stale_quarter: prior quarter's value asserted as current -- gold_evidence
+    # carries the prior-quarter occurrence the claim matches AND the current
+    # quarter's true value
     add(f"Annualized subscription value stood at {prose_m(w['asv'][P])}.", e3(w["asv"][P]), "currency",
         "outdated", "stale_quarter", doc_id("customer", P), "Annualized subscription value",
-        notes=f"that is the {QLABEL[P]} figure; {lm} differs")
+        notes=f"that is the {QLABEL[P]} figure; {lm} differs",
+        evidence=[
+            {"doc_id": doc_id("customer", P), "source": "table", "quote": f"Annualized subscription value | {w['asv'][P] * 1000}"},
+            {"doc_id": doc_id("customer", L), "source": "table", "quote": f"Annualized subscription value | {w['asv'][L] * 1000}"},
+        ])
     add(f"Structured learning hours totalled {w['learning_hours'][P]:,}.", w["learning_hours"][P], "hours",
         "outdated", "stale_quarter", doc_id("people", P), "Structured learning hours",
-        notes=f"prior-quarter figure asserted as current")
+        notes=f"prior-quarter figure asserted as current",
+        evidence=[
+            {"doc_id": doc_id("people", P), "source": "table", "quote": f"Structured learning hours | {w['learning_hours'][P]}"},
+            {"doc_id": doc_id("people", L), "source": "table", "quote": f"Structured learning hours | {w['learning_hours'][L]}"},
+        ])
 
     # absent_near_name: no evidence, near-name distractor exists
     add("Monthly active platform seats were 8,912.", 8912, "count",
@@ -574,7 +639,7 @@ def emit_metadata(claims: list[dict], docs: list[tuple[str, str, str, str]]):
                      "unit": cl["unit"], "currency": "EUR" if cl["unit"].startswith("currency") else None,
                      "expected_status": cl["status"], "failure_class": cl["failure_class"],
                      "source_doc": cl["source_doc"], "source_span": cl["span"],
-                     "tolerance_rule": cl["rule"], "notes": cl["notes"]})
+                     "tolerance_rule": cl["rule"], "notes": cl["notes"], "gold_evidence": cl["evidence"]})
         claim = {"claim_id": cid, "label": cl["text"].rstrip("."), "raw_text": cl["text"],
                  "canonical_value": cl["value"], "unit": cl["unit"],
                  "currency": "EUR" if cl["unit"].startswith("currency") else None,
