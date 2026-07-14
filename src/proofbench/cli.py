@@ -203,7 +203,7 @@ def eval_cmd(
         except PreflightError as e:
             typer.echo(f"preflight failed: {e}", err=True)
             raise typer.Exit(code=1) from e
-        except FileNotFoundError as e:
+        except (ValueError, FileNotFoundError) as e:
             typer.echo(str(e), err=True)
             raise typer.Exit(code=1) from e
 
